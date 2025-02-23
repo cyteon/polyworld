@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cuxg835ieti4n"]
+[gd_scene load_steps=6 format=3 uid="uid://cuxg835ieti4n"]
 
 [ext_resource type="Script" uid="uid://tr66h8uhdbnd" path="res://scripts/player.gd" id="1_p0vlq"]
 
@@ -15,17 +15,6 @@ properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 1
 
-[sub_resource type="GDScript" id="GDScript_3vyb7"]
-script/source = "extends MultiplayerSynchronizer
-
-var position: Vector3:
-	set(val):
-		if is_multiplayer_authority():
-			position = val
-		else:
-			get_parent().position = val
-"
-
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_p0vlq")
 
@@ -40,4 +29,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.608455, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_3vyb7")
-script = SubResource("GDScript_3vyb7")
