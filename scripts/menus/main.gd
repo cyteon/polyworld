@@ -25,3 +25,7 @@ func _on_port_edit_value_changed(value: float) -> void:
 
 func _on_ip_edit_text_changed(new_text: String) -> void:
 	ip = new_text
+
+
+func _on_quit_button_pressed() -> void:
+	get_tree().quit()

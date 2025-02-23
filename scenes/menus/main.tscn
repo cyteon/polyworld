@@ -28,6 +28,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Connect"
 
+[node name="QuitButton" type="Button" parent="Buttons"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Quit"
+
 [node name="PopupPanel" type="PopupPanel" parent="."]
 transparent_bg = false
 mode = 2
@@ -81,6 +86,7 @@ text = "Connect
 "
 
 [connection signal="pressed" from="Buttons/ConnectButton" to="." method="_on_connect_button_pressed"]
+[connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="text_changed" from="PopupPanel/VBoxContainer/IPEdit" to="." method="_on_ip_edit_text_changed"]
 [connection signal="value_changed" from="PopupPanel/VBoxContainer/PortEdit" to="." method="_on_port_edit_value_changed"]
 [connection signal="pressed" from="PopupPanel/VBoxContainer/ConnectButtonFinal" to="." method="_on_connect_button_final_pressed"]
