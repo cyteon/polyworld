@@ -4,6 +4,7 @@ extends Node
 
 signal disconnected(reason: String)
 signal add_players(ids)
+signal remove_player(id: int)
 
 @rpc("authority")
 func _disconnect(reason: String):
@@ -13,6 +14,10 @@ func _disconnect(reason: String):
 @rpc("authority")
 func _add_players(ids):
 	add_players.emit(ids)
+
+@rpc("authority")
+func _remove_player(id):
+	remove_player.emit(id)
 
 # -- SERVER -- #
 

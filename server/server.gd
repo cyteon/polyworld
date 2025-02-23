@@ -68,7 +68,6 @@ func _peer_connected(target_id: int):
 	peers.set(target_id, { })
 	$"../Info/Players".text = "Players: %s" % len(peers)
 	
-	
 	var player = preload("res://scenes/player.tscn").instantiate()
 	player.set_multiplayer_authority(target_id)
 	player.name = str(target_id)
@@ -84,6 +83,8 @@ func _peer_disconnected(target_id: int):
 	log_event("Peer disconnected: %s" % target_id)
 	peers.erase(target_id)
 	$"../Info/Players".text = "Players: %s" % len(peers)
+	
+	Network.rpc("_remove_player", target_id)
 
 func _peer_authorized(unique_id: String, peer_id: int):
 	var data = peers.get(peer_id, null)

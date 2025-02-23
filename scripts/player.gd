@@ -7,6 +7,20 @@ func _ready() -> void:
 	if is_multiplayer_authority():
 		$MultiplayerSynchronizer.set_multiplayer_authority(name.to_int())
 
+func _unhandled_input(event: InputEvent) -> void:
+	if not is_multiplayer_authority():
+		return
+	
+	if event is InputEventMouseButton:
+		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	if event is InputEventMouseMotion:
+		rotate_y(deg_to_rad(-event.relative.x * .1))
+		
+		$Camera3D.rotate_x(deg_to_rad(-event.relative.y * .1))
+		$Camera3D.rotation.x = clamp($Camera3D.rotation.x, deg_to_rad(-89), deg_to_rad(89))
+
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
 		return

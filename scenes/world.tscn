@@ -67,6 +67,3 @@ shadow_enabled = true
 [node name="ReflectionProbe" type="ReflectionProbe" parent="StaticBody3D/WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.8991, 25.834, -30.0061)
 size = Vector3(10000, 10000, 1000)
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.671837, 0.740699, 0, -0.740699, 0.671837, 0, 18.2708, 30.0336)
