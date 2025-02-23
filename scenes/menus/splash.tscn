@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://ckkqvmx41cg4t"]
+
+[ext_resource type="Script" uid="uid://c8dgwj1xoxyvd" path="res://scripts/menus/splash.gd" id="1_2xb4f"]
+
+[sub_resource type="Animation" id="Animation_2xb4f"]
+resource_name = "splash"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_22lt3"]
+_data = {
+&"splash": SubResource("Animation_2xb4f")
+}
+
+[node name="Splash" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_2xb4f")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_22lt3")
+}
+autoplay = "splash"
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

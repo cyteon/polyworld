@@ -1,0 +1,79 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwqylnjol6jt0"]
+
+[ext_resource type="Script" uid="uid://eksna10s7kwx" path="res://server/server.gd" id="1_avf6q"]
+
+[node name="World" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Node" type="Node" parent="."]
+script = ExtResource("1_avf6q")
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 64
+text = "Server Status View"
+
+[node name="Notice" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -209.0
+offset_top = 72.0
+offset_right = 209.0
+offset_bottom = 117.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "Run with --headless to hide"
+horizontal_alignment = 1
+
+[node name="Info" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 209.0
+offset_bottom = 640.0
+
+[node name="MaxPlayers" type="Label" parent="Info"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Max Players: 123"
+
+[node name="Players" type="Label" parent="Info"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Players: 0"
+
+[node name="Port" type="Label" parent="Info"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Port: 12345"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 936.0
+offset_top = 400.0
+offset_right = 1141.0
+offset_bottom = 445.0
+theme_override_font_sizes/font_size = 32
+text = "Latest Events"
+
+[node name="Events" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 704.0
+offset_top = 456.0
+offset_right = 1136.0
+offset_bottom = 640.0
+alignment = 2

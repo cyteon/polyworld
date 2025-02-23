@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3f7jes1mwg41"]
+
+[ext_resource type="Script" uid="uid://crirca5tbgqwn" path="res://scripts/menus/loading.gd" id="1_en1jp"]
+
+[node name="Loading" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_en1jp")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_right = 354.0
+offset_bottom = 45.0
+theme_override_font_sizes/font_size = 32
+text = "Connecting to server..."
