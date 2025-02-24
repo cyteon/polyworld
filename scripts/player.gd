@@ -10,9 +10,17 @@ var max_stamina: int = 100
 var stamina: float = max_stamina
 var sprinting: bool = false
 
+# temp
+var stone = BaseItem.new()
+
+var current_hotbar_slot: int = 1
+var hotbar_items: Array[BaseItem] = [stone]
+
 func _ready() -> void:
 	if is_multiplayer_authority():
 		$MultiplayerSynchronizer.set_multiplayer_authority(name.to_int())
+	else:
+		Network.rpc_id(name.to_int(), "_ready_to_send_to", multiplayer.get_unique_id())
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
@@ -62,3 +70,18 @@ func _physics_process(delta: float) -> void:
 	$"../CanvasLayer/Control/StaminaBar".max_value = max_stamina
 	$"../CanvasLayer/Control/StaminaBar".value = stamina
 	$"../CanvasLayer/Control/HealthBar".value = health
+	
+	for hotbar_slot in $"../CanvasLayer/Control/Hotbar".get_children():
+		if hotbar_slot.name != str(current_hotbar_slot):
+			hotbar_slot.color = Color.from_hsv(0, 0, 0, 0.4)
+		else:
+			hotbar_slot.color = Color.from_hsv(0.6, 1, 1, 0.4)
+		
+		if len(hotbar_items) >= hotbar_slot.name.to_int():
+			hotbar_slot.get_node("TextureRect").texture = hotbar_items[hotbar_slot.name.to_int() - 1].icon
+	
+	if Input.is_key_pressed(KEY_1): current_hotbar_slot = 1
+	elif Input.is_key_pressed(KEY_2): current_hotbar_slot = 2
+	elif Input.is_key_pressed(KEY_3): current_hotbar_slot = 3
+	elif Input.is_key_pressed(KEY_4): current_hotbar_slot = 4
+	elif Input.is_key_pressed(KEY_5): current_hotbar_slot = 5

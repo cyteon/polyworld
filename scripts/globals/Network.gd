@@ -2,6 +2,8 @@ extends Node
 
 # -- CLIENT -- #
 
+signal ready_to_send_to(id: int)
+
 signal disconnected(reason: String)
 signal add_players(ids)
 signal remove_player(id: int)
@@ -18,6 +20,10 @@ func _add_players(ids):
 @rpc("authority")
 func _remove_player(id):
 	remove_player.emit(id)
+
+@rpc("any_peer", "call_remote")
+func _ready_to_send_to(id: int):
+	ready_to_send_to.emit(id)
 
 # -- SERVER -- #
 

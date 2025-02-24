@@ -32,6 +32,8 @@ func _input_loop() -> void:
 				
 				if len(peers) == 0:
 					print("[CMD] No connected peers")
+			"":
+				pass
 			_:
 				print("[CMD] Unknown command: %s" % input)
 
@@ -73,11 +75,13 @@ func _peer_connected(target_id: int):
 	player.name = str(target_id)
 	get_parent().add_child(player)
 	
-	Network.rpc_id(target_id, "_add_players", peers.keys())
-	
 	for id in peers.keys():
 		if id != target_id:
 			Network.rpc_id(id, "_add_players", [target_id])
+			
+	await get_tree().create_timer(1).timeout
+	
+	Network.rpc_id(target_id, "_add_players", peers.keys())
 
 func _peer_disconnected(target_id: int):
 	log_event("Peer disconnected: %s" % target_id)

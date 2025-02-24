@@ -119,6 +119,118 @@ theme_override_styles/background = SubResource("StyleBoxFlat_rwgxs")
 theme_override_styles/fill = SubResource("StyleBoxFlat_4wyf3")
 value = 50.0
 
+[node name="Hotbar" type="HBoxContainer" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = -72.0
+offset_right = 320.0
+offset_bottom = -8.0
+grow_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="1" type="ColorRect" parent="CanvasLayer/Control/Hotbar"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/Hotbar/1"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="2" type="ColorRect" parent="CanvasLayer/Control/Hotbar"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/Hotbar/2"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="3" type="ColorRect" parent="CanvasLayer/Control/Hotbar"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/Hotbar/3"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="4" type="ColorRect" parent="CanvasLayer/Control/Hotbar"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/Hotbar/4"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="5" type="ColorRect" parent="CanvasLayer/Control/Hotbar"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/Hotbar/5"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="PauseMenu" type="ColorRect" parent="CanvasLayer/Control"]
 visible = false
 layout_mode = 1

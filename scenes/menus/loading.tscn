@@ -8,7 +8,7 @@ bg_color = Color(0, 0, 0, 0.619608)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_72pgf"]
 bg_color = Color(0, 0.466667, 1, 1)
 
-[node name="Loading" type="Control"]
+[node name="World" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

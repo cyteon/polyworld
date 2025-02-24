@@ -38,6 +38,11 @@ func _process(delta: float) -> void:
 		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 			$ProgressBar.value = progress[0] * 100
 		ResourceLoader.THREAD_LOAD_LOADED:
-			$ProgressBar.value = 100
 			if not connected: return
+			#if len(Network.player_ids_to_spawn_on_world_entry) == 0:
+				#$ProgressBar.value = 98
+				#return
+			
+			$ProgressBar.value = 100
+			
 			get_tree().change_scene_to_packed(ResourceLoader.load_threaded_get("res://scenes/world.tscn"))
