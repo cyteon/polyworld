@@ -1,7 +1,7 @@
 extends Control
 
 func _ready() -> void:
-	if OS.has_feature("server"):
+	if OS.has_feature("server") or OS.get_cmdline_user_args().has("--server") or DisplayServer.get_name() == "headless":
 		print("Running server mode")
 		get_tree().change_scene_to_file("res://server/view.tscn")
 

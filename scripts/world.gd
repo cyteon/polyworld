@@ -9,7 +9,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if (
 			Input.mouse_mode == Input.MOUSE_MODE_CAPTURED) else Input.MOUSE_MODE_CAPTURED
 		
-		$CanvasLayer/PauseMenu.visible = not $CanvasLayer/PauseMenu.visible
+		$CanvasLayer/Control/PauseMenu.visible = not $CanvasLayer/Control/PauseMenu.visible
 
 func _add_players(ids) -> void:
 	for id in ids:

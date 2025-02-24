@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://glr6s5xa8vim"]
+[gd_scene load_steps=12 format=3 uid="uid://glr6s5xa8vim"]
 
 [ext_resource type="Texture2D" uid="uid://jrumoe5ieo40" path="res://assets/world/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="1_nnsk1"]
 [ext_resource type="Script" uid="uid://c7rwssxcxjshr" path="res://scripts/world.gd" id="1_rwgxs"]
@@ -45,6 +45,15 @@ dof_blur_far_distance = 1.44
 dof_blur_near_distance = 0.01
 auto_exposure_min_sensitivity = 8.01
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rwgxs"]
+bg_color = Color(0, 0, 0, 0.290196)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k0juu"]
+bg_color = Color(0.24, 0.632667, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4wyf3"]
+bg_color = Color(1, 0.24, 0.24, 1)
+
 [node name="World" type="Node3D"]
 script = ExtResource("1_rwgxs")
 
@@ -70,8 +79,49 @@ size = Vector3(10000, 10000, 1000)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="PauseMenu" type="ColorRect" parent="CanvasLayer"]
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="StaminaBar" type="ProgressBar" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -256.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = 53.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/background = SubResource("StyleBoxFlat_rwgxs")
+theme_override_styles/fill = SubResource("StyleBoxFlat_k0juu")
+value = 50.0
+fill_mode = 1
+
+[node name="HealthBar" type="ProgressBar" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -1144.0
+offset_top = 8.0
+offset_right = -896.0
+offset_bottom = 53.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/background = SubResource("StyleBoxFlat_rwgxs")
+theme_override_styles/fill = SubResource("StyleBoxFlat_4wyf3")
+value = 50.0
+
+[node name="PauseMenu" type="ColorRect" parent="CanvasLayer/Control"]
 visible = false
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -79,7 +129,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.376471)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/PauseMenu"]
 custom_minimum_size = Vector2(300, 300)
 layout_mode = 1
 anchors_preset = 8
@@ -95,21 +145,21 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="Label" type="Label" parent="CanvasLayer/PauseMenu/VBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/Control/PauseMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Pause Menu"
 horizontal_alignment = 1
 
-[node name="Disconnect" type="Button" parent="CanvasLayer/PauseMenu/VBoxContainer"]
+[node name="Disconnect" type="Button" parent="CanvasLayer/Control/PauseMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Disconnect"
 
-[node name="ExitToDesktop" type="Button" parent="CanvasLayer/PauseMenu/VBoxContainer"]
+[node name="ExitToDesktop" type="Button" parent="CanvasLayer/Control/PauseMenu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Exit To Desktop"
 
-[connection signal="pressed" from="CanvasLayer/PauseMenu/VBoxContainer/Disconnect" to="." method="_on_disconnect_pressed"]
-[connection signal="pressed" from="CanvasLayer/PauseMenu/VBoxContainer/ExitToDesktop" to="." method="_on_exit_to_desktop_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/PauseMenu/VBoxContainer/Disconnect" to="." method="_on_disconnect_pressed"]
+[connection signal="pressed" from="CanvasLayer/Control/PauseMenu/VBoxContainer/ExitToDesktop" to="." method="_on_exit_to_desktop_pressed"]
