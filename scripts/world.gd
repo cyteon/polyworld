@@ -3,6 +3,7 @@ extends Node3D
 func _ready() -> void:
 	push_warning("[Client] Entered world") # for time refrence in debuggers
 	
+	Network.despawn_item.connect(_despawn_item)
 	Network.add_players.connect(_add_players)
 	Network.remove_player.connect(_remove_player)
 
@@ -14,6 +15,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		
 		$CanvasLayer/Control/PauseMenu.visible = not $CanvasLayer/Control/PauseMenu.visible
 
+func _despawn_item(path: NodePath) -> void:
+	get_node(path).queue_free()
+
 func _add_players(ids) -> void:
 	for id in ids:
 		var player = preload("res://scenes/player.tscn").instantiate()
@@ -22,6 +26,7 @@ func _add_players(ids) -> void:
 		add_child(player)
 		
 		if id == multiplayer.get_unique_id():
+			player.position.y += 5
 			player.get_node("Camera3D").current = true
 
 func _remove_player(id) -> void:

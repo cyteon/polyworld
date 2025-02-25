@@ -65,6 +65,30 @@ func _physics_process(delta: float) -> void:
 			stamina -= 10 * delta
 		else:
 			speed = normal_speed
+		
+		if Input.is_action_just_released("interact") and $Camera3D/RayCast3D.is_colliding():
+			var collider = $Camera3D/RayCast3D.get_collider()
+			
+			if collider is BaseItem:
+				var found_slot: bool = false
+				
+				for slot in hotbar_items:
+					if slot.unique_id == collider.unique_id and collider.stackable:
+						slot.item_count += 1
+						found_slot = true
+				
+				if not found_slot:
+					if len(hotbar_items) == 5:
+						pass # TODO: Add to an inventory
+					else:
+						hotbar_items[len(hotbar_items)] = BaseItem.new()
+						hotbar_items[len(hotbar_items)].unique_id = collider.unique_id
+						hotbar_items[len(hotbar_items)].icon = collider.icon
+						hotbar_items[len(hotbar_items)].stackable = collider.stackable
+						hotbar_items[len(hotbar_items)].item_count = collider.item_count
+				
+				Network.rpc("_despawn_item", collider.get_path())
+				
 
 	move_and_slide()
 	
@@ -80,6 +104,12 @@ func _physics_process(delta: float) -> void:
 		
 		if len(hotbar_items) >= hotbar_slot.name.to_int():
 			hotbar_slot.get_node("TextureRect").texture = hotbar_items[hotbar_slot.name.to_int() - 1].icon
+			
+			hotbar_slot.get_node("ItemCount").text = str(
+				hotbar_items[hotbar_slot.name.to_int() - 1].item_count
+			) if hotbar_items[hotbar_slot.name.to_int() - 1].stackable else ""
+		else:
+			hotbar_slot.get_node("ItemCount").text = ""
 	
 	if Input.is_key_pressed(KEY_1): current_hotbar_slot = 1
 	elif Input.is_key_pressed(KEY_2): current_hotbar_slot = 2

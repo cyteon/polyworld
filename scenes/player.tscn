@@ -59,6 +59,9 @@ shape = SubResource("CapsuleShape3D_5q5h1")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.608455, 0)
 
+[node name="RayCast3D" type="RayCast3D" parent="Camera3D" groups=["PlayerRaycast"]]
+target_position = Vector3(0, 0, -3)
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_3vyb7")
 script = SubResource("GDScript_3vyb7")

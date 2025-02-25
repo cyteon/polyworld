@@ -3,6 +3,9 @@ extends Control
 var ip: String = "127.0.0.1"
 var port: int = 4040
 
+func _ready() -> void:
+	$Version.text = ProjectSettings.get_setting("application/config/version")
+
 func _on_connect_button_pressed() -> void:
 	$PopupPanel.show()
 

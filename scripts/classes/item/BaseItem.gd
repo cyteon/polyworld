@@ -1,5 +1,8 @@
-extends Node3D
+extends RigidBody3D
 class_name BaseItem
 
-var icon: CompressedTexture2D = load("res://assets/placeholders/placeholder_64.png")
-var stackable: bool = true
+@export var unique_id: String = "stone"
+
+@export var icon: CompressedTexture2D = load("res://assets/placeholders/placeholder_64.png")
+@export var stackable: bool = true
+@export var item_count: int = 1

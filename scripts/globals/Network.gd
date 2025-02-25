@@ -1,9 +1,18 @@
 extends Node
 
-# -- CLIENT -- #
-
+# -- Client -> Client -- #
 signal ready_to_send_to(id: int)
+signal despawn_item(path: NodePath)
 
+@rpc("any_peer", "call_remote")
+func _ready_to_send_to(id: int):
+	ready_to_send_to.emit(id)
+
+@rpc("any_peer", "call_local")
+func _despawn_item(path: NodePath):
+	despawn_item.emit(path)
+
+# -- Server -> Client -- #
 signal disconnected(reason: String)
 signal add_players(ids)
 signal remove_player(id: int)
@@ -21,12 +30,7 @@ func _add_players(ids):
 func _remove_player(id):
 	remove_player.emit(id)
 
-@rpc("any_peer", "call_remote")
-func _ready_to_send_to(id: int):
-	ready_to_send_to.emit(id)
-
-# -- SERVER -- #
-
+# -- Client -> Server -- #
 signal authorized(unique_id: String, peer_id: int)
 
 @rpc("any_peer", "call_remote")
