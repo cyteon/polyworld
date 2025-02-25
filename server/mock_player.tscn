@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dg5kii47n3kt0"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xrfv4"]
+
+[node name="Player" type="Node"]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_xrfv4")
