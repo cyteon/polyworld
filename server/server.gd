@@ -70,11 +70,6 @@ func _peer_connected(target_id: int):
 	peers.set(target_id, { })
 	$"../Info/Players".text = "Players: %s" % len(peers)
 	
-	var player = preload("res://scenes/player.tscn").instantiate()
-	player.set_multiplayer_authority(target_id)
-	player.name = str(target_id)
-	get_parent().add_child(player)
-	
 	for id in peers.keys():
 		if id != target_id:
 			Network.rpc_id(id, "_add_players", [target_id])
