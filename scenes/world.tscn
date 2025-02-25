@@ -361,6 +361,1182 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Exit To Desktop"
 
+[node name="InventoryBG" type="ColorRect" parent="CanvasLayer/Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.121569)
+
+[node name="Inventory" type="ColorRect" parent="CanvasLayer/Control/InventoryBG"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -536.0
+offset_top = -212.0
+offset_right = -40.0
+offset_bottom = 212.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0, 0, 0, 0.443137)
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/Control/InventoryBG/Inventory"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -226.0
+offset_top = -188.0
+offset_right = 226.0
+offset_bottom = 188.0
+grow_horizontal = 2
+grow_vertical = 2
+columns = 6
+
+[node name="1" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/1"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/1"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="2" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/2"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/2"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="3" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/3"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/3"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="4" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/4"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/4"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="5" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/5"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/5"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="6" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/6"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/6"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="7" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/7"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/7"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="8" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/8"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/8"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="9" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/9"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/9"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="10" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/10"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/10"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="11" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/11"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/11"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="12" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/12"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/12"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="13" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/13"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/13"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="14" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/14"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/14"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="15" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/15"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/15"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="16" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/16"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/16"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="17" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/17"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/17"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="18" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/18"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/18"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="19" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/19"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/19"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="20" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/20"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/20"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="21" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/21"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/21"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="22" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/22"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/22"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="23" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/23"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/23"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="24" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/24"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/24"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="25" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/25"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/25"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="26" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/26"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/26"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="27" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/27"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/27"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="28" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/28"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/28"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="29" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/29"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/29"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="30" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/30"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer/30"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="Loading" type="ColorRect" parent="CanvasLayer/Control"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.147672, 0.147672, 0.147672, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/Loading"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -149.0
+offset_top = -44.0
+offset_right = 149.0
+offset_bottom = 44.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 64
+text = "Loading..."
+
 [node name="Items" type="Node" parent="."]
 
 [node name="Stone" parent="Items" instance=ExtResource("3_4wyf3")]

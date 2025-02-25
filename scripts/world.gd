@@ -16,7 +16,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		$CanvasLayer/Control/PauseMenu.visible = not $CanvasLayer/Control/PauseMenu.visible
 
 func _despawn_item(path: NodePath) -> void:
-	get_node(path).queue_free()
+	if has_node(path):
+		get_node(path).queue_free()
 
 func _add_players(ids) -> void:
 	for id in ids:
@@ -28,6 +29,7 @@ func _add_players(ids) -> void:
 		if id == multiplayer.get_unique_id():
 			player.position.y += 5
 			player.get_node("Camera3D").current = true
+			$CanvasLayer/Control/Loading.hide()
 
 func _remove_player(id) -> void:
 	if has_node(str(id)):
@@ -35,7 +37,7 @@ func _remove_player(id) -> void:
 
 func _on_disconnect_pressed() -> void:
 	multiplayer.multiplayer_peer.close()
-	Input.mouse_mode == Input.MOUSE_MODE_VISIBLE
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().change_scene_to_file("res://scenes/menus/main.tscn")
 
 func _on_exit_to_desktop_pressed() -> void:

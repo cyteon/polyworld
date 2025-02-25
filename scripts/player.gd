@@ -10,17 +10,22 @@ var max_stamina: int = 100
 var stamina: float = max_stamina
 var sprinting: bool = false
 
-# temp
-var stone = BaseItem.new()
-
 var current_hotbar_slot: int = 1
-var hotbar_items: Array[BaseItem] = [stone]
+var hotbar_items: Array[BaseItem] = []
+var inventory_items: Array[BaseItem] = []
 
 func _ready() -> void:
 	if is_multiplayer_authority():
 		$MultiplayerSynchronizer.set_multiplayer_authority(name.to_int())
 	else:
 		Network.rpc_id(name.to_int(), "_ready_to_send_to", multiplayer.get_unique_id())
+	
+	#var a = BaseItem.new(); a.unique_id = "a"
+	#var b = BaseItem.new(); b.unique_id = "b"
+	#var c = BaseItem.new(); c.unique_id = "c"
+	#var d = BaseItem.new(); d.unique_id = "d"
+	#var e = BaseItem.new(); e.unique_id = "e"
+	#hotbar_items = [a, b, c, d, e]
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
@@ -36,6 +41,27 @@ func _unhandled_input(event: InputEvent) -> void:
 		$Camera3D.rotate_x(deg_to_rad(-event.relative.y * .1))
 		$Camera3D.rotation.x = clamp($Camera3D.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
+func add_item_to_inv(item: BaseItem) -> bool:
+	for slot in hotbar_items:
+		if slot.unique_id == item.unique_id and item.stackable:
+			slot.item_count += 1
+			return true
+	
+	if len(hotbar_items) == 5:
+		for slot in inventory_items:
+			if slot.unique_id == item.unique_id and item.stackable:
+				slot.item_count += 1
+				return true
+		
+		if len(inventory_items) == 30:
+			return false
+		
+		inventory_items.append(item)
+	else:
+		hotbar_items.append(item)
+		
+	return true
+
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
@@ -43,7 +69,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	
-	# Have this so u still get stamina even if in pause menu cause it dosent actually paulse
+	# Have this so u still get stamina even if in pause menu cause it dosent actually pause
 	if stamina < 100 and not Input.is_action_pressed("sprint"):
 		stamina += 5 * delta
 
@@ -70,25 +96,22 @@ func _physics_process(delta: float) -> void:
 			var collider = $Camera3D/RayCast3D.get_collider()
 			
 			if collider is BaseItem:
-				var found_slot: bool = false
+				var item = BaseItem.new()
+				item.unique_id = collider.unique_id
+				item.icon = collider.icon
+				item.stackable = collider.stackable
+				item.item_count = collider.item_count
 				
-				for slot in hotbar_items:
-					if slot.unique_id == collider.unique_id and collider.stackable:
-						slot.item_count += 1
-						found_slot = true
-				
-				if not found_slot:
-					if len(hotbar_items) == 5:
-						pass # TODO: Add to an inventory
-					else:
-						hotbar_items[len(hotbar_items)] = BaseItem.new()
-						hotbar_items[len(hotbar_items)].unique_id = collider.unique_id
-						hotbar_items[len(hotbar_items)].icon = collider.icon
-						hotbar_items[len(hotbar_items)].stackable = collider.stackable
-						hotbar_items[len(hotbar_items)].item_count = collider.item_count
-				
-				Network.rpc("_despawn_item", collider.get_path())
-				
+				if add_item_to_inv(item):
+					Network.rpc("_despawn_item", collider.get_path())
+		
+		if Input.is_action_just_pressed("inventory"):
+			$"../CanvasLayer/Control/InventoryBG".visible = not $"../CanvasLayer/Control/InventoryBG".visible
+			
+			if $"../CanvasLayer/Control/InventoryBG".visible:
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			else:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 	move_and_slide()
 	
@@ -110,6 +133,16 @@ func _physics_process(delta: float) -> void:
 			) if hotbar_items[hotbar_slot.name.to_int() - 1].stackable else ""
 		else:
 			hotbar_slot.get_node("ItemCount").text = ""
+	
+	for inventory_slot in $"../CanvasLayer/Control/InventoryBG/Inventory/GridContainer".get_children():
+		if len(inventory_items) >= inventory_slot.name.to_int():
+			inventory_slot.get_node("TextureRect").texture = inventory_items[inventory_slot.name.to_int() - 1].icon
+			
+			inventory_slot.get_node("ItemCount").text = str(
+				inventory_items[inventory_slot.name.to_int() - 1].item_count
+			) if inventory_items[inventory_slot.name.to_int() - 1].stackable else ""
+		else:
+			inventory_slot.get_node("ItemCount").text = ""
 	
 	if Input.is_key_pressed(KEY_1): current_hotbar_slot = 1
 	elif Input.is_key_pressed(KEY_2): current_hotbar_slot = 2
