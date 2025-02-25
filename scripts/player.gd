@@ -42,6 +42,10 @@ func _physics_process(delta: float) -> void:
 	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
+	
+	# Have this so u still get stamina even if in pause menu cause it dosent actually paulse
+	if stamina < 100 and not Input.is_action_pressed("sprint"):
+		stamina += 5 * delta
 
 	if not $"../CanvasLayer/Control/PauseMenu".visible: 
 		if Input.is_action_just_pressed("jump") and is_on_floor():
@@ -56,14 +60,11 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, speed)
 			velocity.z = move_toward(velocity.z, 0, speed)
 		
-		if Input.is_action_pressed("sprint") && stamina > 0:
+		if Input.is_action_pressed("sprint") and stamina > 0:
 			speed = normal_speed * 1.5
 			stamina -= 10 * delta
 		else:
 			speed = normal_speed
-			
-			if stamina < 100:
-				stamina += 5 * delta
 
 	move_and_slide()
 	
