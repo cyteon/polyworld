@@ -59,7 +59,7 @@ func add_item_to_inv(item: BaseItem) -> bool:
 		inventory_items.append(item)
 	else:
 		hotbar_items.append(item)
-		
+	
 	return true
 
 func _physics_process(delta: float) -> void:
@@ -101,6 +101,7 @@ func _physics_process(delta: float) -> void:
 				item.icon = collider.icon
 				item.stackable = collider.stackable
 				item.item_count = collider.item_count
+				item.scene = collider.scene
 				
 				if add_item_to_inv(item):
 					Network.rpc("_despawn_item", collider.get_path())
