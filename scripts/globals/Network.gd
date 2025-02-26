@@ -3,6 +3,7 @@ extends Node
 # -- Client -> Client -- #
 signal ready_to_send_to(id: int)
 signal despawn_item(path: NodePath)
+signal spawn_item(scene, unique_id, icon_path, stackable, item_count, location) 
 
 @rpc("any_peer", "call_remote")
 func _ready_to_send_to(id: int):
@@ -11,6 +12,10 @@ func _ready_to_send_to(id: int):
 @rpc("any_peer", "call_local")
 func _despawn_item(path: NodePath):
 	despawn_item.emit(path)
+
+@rpc("any_peer", "call_remote")
+func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location):
+	spawn_item.emit(scene, unique_id, icon_path, stackable, item_count, location)
 
 # -- Server -> Client -- #
 signal disconnected(reason: String)

@@ -173,7 +173,7 @@ func _physics_process(delta: float) -> void:
 			
 			var scene = load(item.scene).instantiate()
 			scene.unique_id = item.unique_id
-			scene.icon = item.icon
+			scene.icon_path = item.icon_path
 			scene.stackable = item.stackable
 			scene.item_count = item.item_count
 			scene.scene = item.scene
@@ -182,3 +182,10 @@ func _physics_process(delta: float) -> void:
 			scene.global_position = global_position
 			scene.global_position.y += 0.5
 			scene.global_position += -global_transform.basis.z.normalized()
+			
+			Network.rpc(
+				"_spawn_item", 
+				scene.scene, scene.unique_id, 
+				scene.icon_path, scene.stackable, 
+				scene.item_count, scene.global_position
+			)
