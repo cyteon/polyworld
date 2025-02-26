@@ -150,3 +150,35 @@ func _physics_process(delta: float) -> void:
 	elif Input.is_key_pressed(KEY_3): current_hotbar_slot = 3
 	elif Input.is_key_pressed(KEY_4): current_hotbar_slot = 4
 	elif Input.is_key_pressed(KEY_5): current_hotbar_slot = 5
+	
+	if Input.is_action_just_pressed("drop"):
+		if len(hotbar_items) >= current_hotbar_slot:
+			var item = hotbar_items[current_hotbar_slot - 1]
+			
+			var slot = get_node(
+				"../CanvasLayer/Control/Hotbar/%s" % current_hotbar_slot
+			)
+			
+			if hotbar_items[current_hotbar_slot - 1].stackable:
+				hotbar_items[current_hotbar_slot - 1].item_count -= 1
+				
+				if hotbar_items[current_hotbar_slot - 1].item_count <= 0:
+					hotbar_items.remove_at(current_hotbar_slot - 1)
+					slot.get_node("TextureRect").texture = null
+					slot.get_node("ItemCount").text = ""
+			else:
+				hotbar_items.remove_at(current_hotbar_slot - 1)
+				slot.get_node("TextureRect").textur = null
+				slot.get_node("ItemCount").text = ""
+			
+			var scene = load(item.scene).instantiate()
+			scene.unique_id = item.unique_id
+			scene.icon = item.icon
+			scene.stackable = item.stackable
+			scene.item_count = item.item_count
+			scene.scene = item.scene
+			
+			get_parent().get_node("Items").add_child(scene)
+			scene.global_position = global_position
+			scene.global_position.y += 0.5
+			scene.global_position += -global_transform.basis.z.normalized()
