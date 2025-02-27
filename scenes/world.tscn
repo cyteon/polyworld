@@ -1,8 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://glr6s5xa8vim"]
+[gd_scene load_steps=15 format=3 uid="uid://glr6s5xa8vim"]
 
 [ext_resource type="Texture2D" uid="uid://jrumoe5ieo40" path="res://assets/world/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="1_nnsk1"]
 [ext_resource type="Script" uid="uid://c7rwssxcxjshr" path="res://scripts/world.gd" id="1_rwgxs"]
 [ext_resource type="PackedScene" uid="uid://inw6nhr5dhto" path="res://scenes/items/stone.tscn" id="3_4wyf3"]
+[ext_resource type="PackedScene" uid="uid://gep3rmqomnfw" path="res://scenes/items/wood_axe.tscn" id="4_k0juu"]
+[ext_resource type="PackedScene" uid="uid://dkshbuml6fjiu" path="res://scenes/world/harvestables/Tree.tscn" id="5_71j4m"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_e5uuo"]
 size = Vector3(50, 1, 50)
@@ -1554,6 +1556,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.45289, 1.84042, 0.845974)
 
 [node name="Stone6" parent="Items" instance=ExtResource("3_4wyf3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.04466, 1.84042, -0.146701)
+
+[node name="WoodAxe" parent="Items" instance=ExtResource("4_k0juu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.39157, 1.06837, -1.15226)
+
+[node name="Tree" parent="." instance=ExtResource("5_71j4m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.992844, 0.7, 9.53041)
 
 [connection signal="pressed" from="CanvasLayer/Control/PauseMenu/VBoxContainer/Disconnect" to="." method="_on_disconnect_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/PauseMenu/VBoxContainer/ExitToDesktop" to="." method="_on_exit_to_desktop_pressed"]

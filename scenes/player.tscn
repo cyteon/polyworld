@@ -62,6 +62,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.608455, 0)
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D" groups=["PlayerRaycast"]]
 target_position = Vector3(0, 0, -3)
 
+[node name="ShortRaycast" type="RayCast3D" parent="Camera3D" groups=["PlayerRaycast"]]
+target_position = Vector3(0, 0, -1.5)
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_3vyb7")
 script = SubResource("GDScript_3vyb7")
@@ -69,3 +72,6 @@ script = SubResource("GDScript_3vyb7")
 [node name="Eyes" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.608, -0.261153)
 mesh = SubResource("BoxMesh_3vyb7")
+
+[node name="Hold" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.490938, 0.223552, -0.505612)

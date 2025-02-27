@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://dkshbuml6fjiu"]
+
+[ext_resource type="Script" uid="uid://c7qbppit8cg5c" path="res://scripts/world/harvestable.gd" id="1_25vxf"]
+[ext_resource type="PackedScene" uid="uid://ygo60grsig57" path="res://scenes/items/wood.tscn" id="2_1jn02"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1jn02"]
+albedo_color = Color(0.5, 0.206667, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1jn02"]
+material = SubResource("StandardMaterial3D_1jn02")
+size = Vector3(0.8, 4, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1jn02"]
+size = Vector3(0.8, 4, 0.8)
+
+[node name="Tree" type="StaticBody3D" node_paths=PackedStringArray("yields") groups=["harvestable"]]
+script = ExtResource("1_25vxf")
+yields = NodePath("Wood")
+
+[node name="Wood" parent="." instance=ExtResource("2_1jn02")]
+visible = false
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+mesh = SubResource("BoxMesh_1jn02")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("BoxShape3D_1jn02")

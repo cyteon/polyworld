@@ -1,0 +1,88 @@
+[gd_scene load_steps=11 format=3 uid="uid://gep3rmqomnfw"]
+
+[ext_resource type="Script" uid="uid://bestq367x6owr" path="res://scripts/classes/item/ToolItem.gd" id="1_cn6sw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7iuhr"]
+albedo_color = Color(0.580392, 0.294118, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_i672m"]
+material = SubResource("StandardMaterial3D_7iuhr")
+size = Vector3(0.1, 1, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0ttmh"]
+albedo_color = Color(0.52, 0.52, 0.52, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n8nbq"]
+material = SubResource("StandardMaterial3D_0ttmh")
+size = Vector3(0.1, 0.2, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7iuhr"]
+size = Vector3(0.1, 1, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cn6sw"]
+size = Vector3(0.1, 0.2, 0.2)
+
+[sub_resource type="Animation" id="Animation_7iuhr"]
+resource_name = "use"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.610865, 0, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_cn6sw"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0ttmh"]
+_data = {
+&"RESET": SubResource("Animation_cn6sw"),
+&"use": SubResource("Animation_7iuhr")
+}
+
+[node name="WoodAxe" type="RigidBody3D"]
+script = ExtResource("1_cn6sw")
+type = 1
+unique_id = "wood_axe"
+stackable = false
+scene = "res://scenes/items/wood_axe.tscn"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_i672m")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.399576, -0.145606)
+mesh = SubResource("BoxMesh_n8nbq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_7iuhr")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.399148, -0.146038)
+shape = SubResource("BoxShape3D_cn6sw")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_0ttmh")
+}
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://ygo60grsig57"]
+
+[ext_resource type="Script" uid="uid://b5flad33836qg" path="res://scripts/classes/item/BaseItem.gd" id="1_46edr"]
+[ext_resource type="Texture2D" uid="uid://ciio7y3l3eyl1" path="res://assets/placeholders/placeholder_64.png" id="2_kvx2t"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_46edr"]
+albedo_color = Color(0.5, 0.191667, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_kvx2t"]
+material = SubResource("StandardMaterial3D_46edr")
+size = Vector3(0.4, 0.4, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_i672m"]
+size = Vector3(0.4, 0.4, 0.4)
+
+[node name="Wood" type="RigidBody3D"]
+script = ExtResource("1_46edr")
+unique_id = "wood"
+icon = ExtResource("2_kvx2t")
+scene = "res://scenes/items/wood.tscn"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_kvx2t")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_i672m")

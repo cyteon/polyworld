@@ -1,9 +1,14 @@
 extends Node
 
 # -- Client -> Client -- #
+signal set_holding(peer: int, scene: String) 
 signal ready_to_send_to(id: int)
 signal despawn_item(path: NodePath)
 signal spawn_item(scene, unique_id, icon_path, stackable, item_count, location) 
+
+@rpc("any_peer", "call_remote")
+func _set_holding(peer: int, scene: String):
+	set_holding.emit(peer, scene)
 
 @rpc("any_peer", "call_remote")
 func _ready_to_send_to(id: int):

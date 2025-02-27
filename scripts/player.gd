@@ -19,6 +19,7 @@ func _ready() -> void:
 		$MultiplayerSynchronizer.set_multiplayer_authority(name.to_int())
 	else:
 		Network.rpc_id(name.to_int(), "_ready_to_send_to", multiplayer.get_unique_id())
+		Network.set_holding.connect(_set_holding)
 	
 	#var a = BaseItem.new(); a.unique_id = "a"
 	#var b = BaseItem.new(); b.unique_id = "b"
@@ -26,6 +27,22 @@ func _ready() -> void:
 	#var d = BaseItem.new(); d.unique_id = "d"
 	#var e = BaseItem.new(); e.unique_id = "e"
 	#hotbar_items = [a, b, c, d, e]
+
+func _set_holding(peer: int, scene: String) -> void:
+	if is_multiplayer_authority() or peer != name.to_int(): 
+		# is_multiplayer_authority() should be same as: if peer == multiplayer.get_unique_id()
+		return
+	
+	for child in $Hold.get_children():
+		child.queue_free()
+	
+	if not scene or scene == "":
+		return
+	
+	var node = load(scene).instantiate()
+	node.name = "Item"
+	
+	$Hold.add_child(node)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
@@ -44,13 +61,13 @@ func _unhandled_input(event: InputEvent) -> void:
 func add_item_to_inv(item: BaseItem) -> bool:
 	for slot in hotbar_items:
 		if slot.unique_id == item.unique_id and item.stackable:
-			slot.item_count += 1
+			slot.item_count += item.item_count
 			return true
 	
 	if len(hotbar_items) == 5:
 		for slot in inventory_items:
 			if slot.unique_id == item.unique_id and item.stackable:
-				slot.item_count += 1
+				slot.item_count += item.item_count
 				return true
 		
 		if len(inventory_items) == 30:
@@ -97,6 +114,17 @@ func _physics_process(delta: float) -> void:
 			
 			if collider is BaseItem:
 				var item = BaseItem.new()
+				
+				# other cases
+				if collider is ToolItem:
+					item = ToolItem.new()
+					collider = collider as ToolItem
+					item.damage = collider.damage
+					item.attacking_reduces_dur_by = collider.attacking_reduces_dur_by
+					item.durability = collider.durability
+					item.harvesting_reduces_dur_by = collider.harvesting_reduces_dur_by
+					item.type = collider.type
+				
 				item.unique_id = collider.unique_id
 				item.icon = collider.icon
 				item.stackable = collider.stackable
@@ -120,6 +148,8 @@ func _physics_process(delta: float) -> void:
 	$"../CanvasLayer/Control/StaminaBar".value = stamina
 	$"../CanvasLayer/Control/HealthBar".value = health
 	
+	var item_to_hold: bool = false
+	
 	for hotbar_slot in $"../CanvasLayer/Control/Hotbar".get_children():
 		if hotbar_slot.name != str(current_hotbar_slot):
 			hotbar_slot.color = Color.from_hsv(0, 0, 0, 0.4)
@@ -127,23 +157,57 @@ func _physics_process(delta: float) -> void:
 			hotbar_slot.color = Color.from_hsv(0.6, 1, 1, 0.4)
 		
 		if len(hotbar_items) >= hotbar_slot.name.to_int():
-			hotbar_slot.get_node("TextureRect").texture = hotbar_items[hotbar_slot.name.to_int() - 1].icon
+			var item = hotbar_items[hotbar_slot.name.to_int() - 1]
+			
+			hotbar_slot.get_node("TextureRect").texture = item.icon
 			
 			hotbar_slot.get_node("ItemCount").text = str(
-				hotbar_items[hotbar_slot.name.to_int() - 1].item_count
-			) if hotbar_items[hotbar_slot.name.to_int() - 1].stackable else ""
+				item.item_count
+			) if item.stackable else ""
+
+			if item is ToolItem:
+				if str(current_hotbar_slot) == hotbar_slot.name:
+					item_to_hold = true
+					
+					if $Hold.get_child_count() <= 0 or ($Hold/Item and $Hold/Item.unique_id != item.unique_id):
+						# so the thingies remove the uh thingies
+						Network.rpc("_set_holding", multiplayer.get_unique_id(), "")
+						
+						var node = load(item.scene).instantiate()
+						node.freeze = true
+						
+						for child in $Hold.get_children():
+							child.queue_free()
+						
+						node.name = "Item"
+						node.damage = item.damage
+						node.attacking_reduces_dur_by = item.attacking_reduces_dur_by
+						node.type = item.type
+						node.harvestable_damage = item.harvestable_damage	
+						node.harvesting_reduces_dur_by = item.harvesting_reduces_dur_by
+						$Hold.add_child(node)
+						
+						Network.rpc("_set_holding", multiplayer.get_unique_id(), item.scene)
 		else:
+			hotbar_slot.get_node("TextureRect").texture = null
 			hotbar_slot.get_node("ItemCount").text = ""
 	
-	for inventory_slot in $"../CanvasLayer/Control/InventoryBG/Inventory/GridContainer".get_children():
-		if len(inventory_items) >= inventory_slot.name.to_int():
-			inventory_slot.get_node("TextureRect").texture = inventory_items[inventory_slot.name.to_int() - 1].icon
-			
-			inventory_slot.get_node("ItemCount").text = str(
-				inventory_items[inventory_slot.name.to_int() - 1].item_count
-			) if inventory_items[inventory_slot.name.to_int() - 1].stackable else ""
-		else:
-			inventory_slot.get_node("ItemCount").text = ""
+	if not item_to_hold:
+		for child in $Hold.get_children():
+			child.queue_free()
+		
+		Network.rpc("_set_holding", multiplayer.get_unique_id(), "")
+	
+	if $"../CanvasLayer/Control/InventoryBG".visible:
+		for inventory_slot in $"../CanvasLayer/Control/InventoryBG/Inventory/GridContainer".get_children():
+			if len(inventory_items) >= inventory_slot.name.to_int():
+				inventory_slot.get_node("TextureRect").texture = inventory_items[inventory_slot.name.to_int() - 1].icon
+				
+				inventory_slot.get_node("ItemCount").text = str(
+					inventory_items[inventory_slot.name.to_int() - 1].item_count
+				) if inventory_items[inventory_slot.name.to_int() - 1].stackable else ""
+			else:
+				inventory_slot.get_node("ItemCount").text = ""
 	
 	if Input.is_key_pressed(KEY_1): current_hotbar_slot = 1
 	elif Input.is_key_pressed(KEY_2): current_hotbar_slot = 2
@@ -175,7 +239,7 @@ func _physics_process(delta: float) -> void:
 			scene.unique_id = item.unique_id
 			scene.icon_path = item.icon_path
 			scene.stackable = item.stackable
-			scene.item_count = item.item_count
+			scene.item_count = 1 # if not this glitch
 			scene.scene = item.scene
 			
 			get_parent().get_node("Items").add_child(scene)
