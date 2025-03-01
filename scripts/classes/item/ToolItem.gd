@@ -37,9 +37,9 @@ func _process(delta: float) -> void:
 				
 				if get_parent().get_parent().get_node("Camera3D/ShortRaycast").is_colliding() and (
 					get_parent().get_parent().get_node("Camera3D/ShortRaycast")
-						.get_collider().is_in_group("harvestable") and type == ToolType.HARVESTING
+						.get_collider().is_in_group("Harvestable") and type == ToolType.HARVESTING
 					or get_parent().get_parent().get_node("Camera3D/ShortRaycast")
-						.get_collider().is_in_group("mineable") and type == ToolType.MINING
+						.get_collider().is_in_group("Mineable") and type == ToolType.MINING
 				): # We use this to see if its being used :P
 					var collider = get_parent().get_parent().get_node("Camera3D/ShortRaycast").get_collider()
 					
@@ -65,6 +65,11 @@ func _process(delta: float) -> void:
 					item.item_count = collider.yields_per_damage * harvestable_damage
 					
 					get_parent().get_parent().add_item_to_inv(item)
+				elif damage > 0 and get_parent().get_parent().get_node("Camera3D/ShortRaycast").is_colliding():
+					var collider = get_parent().get_parent().get_node("Camera3D/ShortRaycast").get_collider()
+					
+					if collider.is_in_group("Player"):
+						Network.rpc_id(1, "_attack_player", collider.name.to_int(), damage)
 
 
 func _on_animation_player_animation_finished(_anim_name: StringName) -> void:

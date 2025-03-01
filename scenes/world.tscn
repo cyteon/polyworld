@@ -109,14 +109,10 @@ fill_mode = 1
 
 [node name="HealthBar" type="ProgressBar" parent="CanvasLayer/Control"]
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -1144.0
+offset_left = 8.0
 offset_top = 8.0
-offset_right = -896.0
+offset_right = 256.0
 offset_bottom = 53.0
-grow_horizontal = 0
 theme_override_font_sizes/font_size = 32
 theme_override_styles/background = SubResource("StyleBoxFlat_rwgxs")
 theme_override_styles/fill = SubResource("StyleBoxFlat_4wyf3")
@@ -846,6 +842,7 @@ theme_override_constants/outline_size = 2
 horizontal_alignment = 2
 
 [node name="13" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Inventory/GridContainer"]
+process_mode = 4
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 color = Color(0, 0, 0, 0.552941)

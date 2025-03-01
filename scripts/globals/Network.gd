@@ -31,6 +31,7 @@ func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location):
 signal disconnected(reason: String)
 signal add_players(ids)
 signal remove_player(id: int)
+signal take_damage(damage: int)
 
 @rpc("authority")
 func _disconnect(reason: String):
@@ -45,9 +46,19 @@ func _add_players(ids):
 func _remove_player(id):
 	remove_player.emit(id)
 
+@rpc("authority")
+func _take_damage(damage: int):
+	take_damage.emit(damage)
+
 # -- Client -> Server -- #
 signal authorized(unique_id: String, peer_id: int)
+signal attack_player(target_id: int, damage: int)
 
 @rpc("any_peer", "call_remote")
 func _authorize(unique_id: String):
 	authorized.emit(unique_id, multiplayer.get_remote_sender_id())
+
+
+@rpc("any_peer", "call_remote")
+func _attack_player(target_id: int, damage: int):
+	attack_player.emit(target_id, damage)

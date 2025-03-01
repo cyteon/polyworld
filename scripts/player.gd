@@ -15,17 +15,17 @@ var hotbar_items: Array[BaseItem] = []
 var inventory_items: Array[BaseItem] = []
 
 func _ready() -> void:
-	if not is_multiplayer_authority():
+	if is_multiplayer_authority():
+		Network.take_damage.connect(_take_damage)
+	else:
 		Network.rpc_id(name.to_int(), "_ready_to_send_to", multiplayer.get_unique_id())
 		Network.set_holding.connect(_set_holding)
 		Network.play_item_anim.connect(_play_item_anim)
-	
-	#var a = BaseItem.new(); a.unique_id = "a"
-	#var b = BaseItem.new(); b.unique_id = "b"
-	#var c = BaseItem.new(); c.unique_id = "c"
-	#var d = BaseItem.new(); d.unique_id = "d"
-	#var e = BaseItem.new(); e.unique_id = "e"
-	#hotbar_items = [a, b, c, d, e]
+
+func _take_damage(damage: int) -> void:
+	health -= damage
+	# TODO: maybe smth to indicate like sound effect or sum
+	# TODO: add death
 
 func _play_item_anim(peer: int) -> void:
 	if peer == name.to_int():

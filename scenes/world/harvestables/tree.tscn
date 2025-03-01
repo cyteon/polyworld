@@ -13,7 +13,7 @@ size = Vector3(0.8, 4, 0.8)
 [sub_resource type="BoxShape3D" id="BoxShape3D_1jn02"]
 size = Vector3(0.8, 4, 0.8)
 
-[node name="Tree" type="StaticBody3D" node_paths=PackedStringArray("yields") groups=["harvestable"]]
+[node name="Tree" type="StaticBody3D" node_paths=PackedStringArray("yields") groups=["Harvestable"]]
 script = ExtResource("1_25vxf")
 yields = NodePath("Wood")
 

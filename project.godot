@@ -31,8 +31,8 @@ enabled=PackedStringArray()
 
 [global_group]
 
-mineable="Harvestables to be destructed with mining items"
-harvestable="Harvestables to be destructed with harvesting (like axe for example) items"
+Harvestable="Harvestables to be destructed with harvesting (like axe for example) items"
+Mineable="Harvestables to be destructed with mining items"
 
 [input]
 

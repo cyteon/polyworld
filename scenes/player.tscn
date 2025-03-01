@@ -23,7 +23,7 @@ script/source = "extends MultiplayerSynchronizer
 
 @export var filter_enabled: bool = true
 
-var clients_send_to: Array[int] = []
+var clients_send_to: Array[int] = [1]
 
 func filter(id: int) -> bool:
 	return (
@@ -42,12 +42,16 @@ func _ready() -> void:
 			Network.rpc_id(id, \"_ready_to_send_to\", multiplayer.get_unique_id())
 			clients_send_to.append(id)
 	)
+	
+	Network.remove_player.connect(func(id: int):
+		clients_send_to.erase(id)
+	)
 "
 
 [sub_resource type="BoxMesh" id="BoxMesh_3vyb7"]
 size = Vector3(0.4, 0.2, 0.5)
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" groups=["Player"]]
 script = ExtResource("1_p0vlq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
