@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://c7rwssxcxjshr" path="res://scripts/world.gd" id="1_rwgxs"]
 [ext_resource type="PackedScene" uid="uid://inw6nhr5dhto" path="res://scenes/items/stone.tscn" id="3_4wyf3"]
 [ext_resource type="PackedScene" uid="uid://gep3rmqomnfw" path="res://scenes/items/wood_axe.tscn" id="4_k0juu"]
-[ext_resource type="PackedScene" uid="uid://dkshbuml6fjiu" path="res://scenes/world/harvestables/Tree.tscn" id="5_71j4m"]
+[ext_resource type="PackedScene" uid="uid://dkshbuml6fjiu" path="res://scenes/world/harvestables/tree.tscn" id="5_71j4m"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_e5uuo"]
 size = Vector3(50, 1, 50)
