@@ -32,6 +32,7 @@ func _process(delta: float) -> void:
 			
 			if slot.unique_id == unique_id and is_ready:
 				$AnimationPlayer.play("use")
+				Network.rpc("_play_item_anim", get_parent().get_parent().name.to_int())
 				is_ready = false
 				
 				if get_parent().get_parent().get_node("Camera3D/ShortRaycast").is_colliding() and (

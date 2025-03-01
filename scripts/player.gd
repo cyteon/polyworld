@@ -15,11 +15,10 @@ var hotbar_items: Array[BaseItem] = []
 var inventory_items: Array[BaseItem] = []
 
 func _ready() -> void:
-	if is_multiplayer_authority():
-		$MultiplayerSynchronizer.set_multiplayer_authority(name.to_int())
-	else:
+	if not is_multiplayer_authority():
 		Network.rpc_id(name.to_int(), "_ready_to_send_to", multiplayer.get_unique_id())
 		Network.set_holding.connect(_set_holding)
+		Network.play_item_anim.connect(_play_item_anim)
 	
 	#var a = BaseItem.new(); a.unique_id = "a"
 	#var b = BaseItem.new(); b.unique_id = "b"
@@ -27,6 +26,11 @@ func _ready() -> void:
 	#var d = BaseItem.new(); d.unique_id = "d"
 	#var e = BaseItem.new(); e.unique_id = "e"
 	#hotbar_items = [a, b, c, d, e]
+
+func _play_item_anim(peer: int) -> void:
+	if peer == name.to_int():
+		if $Hold.get_child_count() == 1:
+			$Hold/Item/AnimationPlayer.play("use")
 
 func _set_holding(peer: int, scene: String) -> void:
 	if is_multiplayer_authority() or peer != name.to_int(): 
@@ -232,7 +236,7 @@ func _physics_process(delta: float) -> void:
 					slot.get_node("ItemCount").text = ""
 			else:
 				hotbar_items.remove_at(current_hotbar_slot - 1)
-				slot.get_node("TextureRect").textur = null
+				slot.get_node("TextureRect").texture = null
 				slot.get_node("ItemCount").text = ""
 			
 			var scene = load(item.scene).instantiate()
