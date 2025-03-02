@@ -132,26 +132,7 @@ func _physics_process(delta: float) -> void:
 			var collider = $Camera3D/RayCast3D.get_collider()
 			
 			if collider is BaseItem:
-				
-				var item = BaseItem.new()
-				
-				# other cases
-				if collider is ToolItem:
-					item = ToolItem.new()
-					collider = collider as ToolItem
-					item.damage = collider.damage
-					item.attacking_reduces_dur_by = collider.attacking_reduces_dur_by
-					item.durability = collider.durability
-					item.harvesting_reduces_dur_by = collider.harvesting_reduces_dur_by
-					item.type = collider.type
-				
-				item.unique_id = collider.unique_id
-				item.icon = collider.icon
-				item.stackable = collider.stackable
-				item.item_count = collider.item_count
-				item.scene = collider.scene
-				
-				if add_item_to_inv(item):
+				if add_item_to_inv(collider.duplicate()):
 					Network.rpc("_despawn_item", collider.get_path())
 		
 		if Input.is_action_just_pressed("inventory"):
