@@ -8,14 +8,6 @@ func _ready() -> void:
 	Network.add_players.connect(_add_players)
 	Network.remove_player.connect(_remove_player)
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if (
-			Input.mouse_mode == Input.MOUSE_MODE_CAPTURED
-		) else Input.MOUSE_MODE_CAPTURED
-		
-		$CanvasLayer/Control/PauseMenu.visible = not $CanvasLayer/Control/PauseMenu.visible
-
 func _despawn_item(path: NodePath) -> void:
 	if has_node(path):
 		get_node(path).queue_free()

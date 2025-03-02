@@ -38,7 +38,7 @@ func _set_holding(peer: int, scene: String) -> void:
 		return
 	
 	for child in $Hold.get_children():
-		child.queue_free()
+		child.free()
 	
 	if not scene or scene == "":
 		return
@@ -93,6 +93,17 @@ func _physics_process(delta: float) -> void:
 	# Have this so u still get stamina even if in pause menu cause it dosent actually pause
 	if stamina < 100 and not Input.is_action_pressed("sprint"):
 		stamina += 5 * delta
+	
+	if Input.is_action_just_pressed("pause"):
+		if $"../CanvasLayer/Control/InventoryBG".visible:
+			$"../CanvasLayer/Control/InventoryBG".hide()
+		else:
+			$"../CanvasLayer/Control/PauseMenu".visible = not $"../CanvasLayer/Control/PauseMenu".visible
+			
+			if $"../CanvasLayer/Control/PauseMenu".visible:
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			else:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 	if not $"../CanvasLayer/Control/PauseMenu".visible: 
 		if Input.is_action_just_pressed("jump") and is_on_floor():
@@ -154,6 +165,12 @@ func _physics_process(delta: float) -> void:
 	
 	var item_to_hold: bool = false
 	
+	if Input.is_key_pressed(KEY_1): current_hotbar_slot = 1
+	elif Input.is_key_pressed(KEY_2): current_hotbar_slot = 2
+	elif Input.is_key_pressed(KEY_3): current_hotbar_slot = 3
+	elif Input.is_key_pressed(KEY_4): current_hotbar_slot = 4
+	elif Input.is_key_pressed(KEY_5): current_hotbar_slot = 5
+	
 	for hotbar_slot in $"../CanvasLayer/Control/Hotbar".get_children():
 		if hotbar_slot.name != str(current_hotbar_slot):
 			hotbar_slot.color = Color.from_hsv(0, 0, 0, 0.4)
@@ -170,18 +187,18 @@ func _physics_process(delta: float) -> void:
 			) if item.stackable else ""
 
 			if item is ToolItem:
+				hotbar_slot.get_node("Durability").value = item.durability
+				hotbar_slot.get_node("Durability").show()
+				
 				if str(current_hotbar_slot) == hotbar_slot.name:
 					item_to_hold = true
 					
-					if $Hold.get_child_count() <= 0 or ($Hold/Item and $Hold/Item.unique_id != item.unique_id):
-						# so the thingies remove the uh thingies
-						Network.rpc("_set_holding", multiplayer.get_unique_id(), "")
-						
+					if $Hold.get_child_count() == 0 or ($Hold/Item and $Hold/Item.unique_id != item.unique_id):
 						var node = load(item.scene).instantiate()
 						node.freeze = true
 						
 						for child in $Hold.get_children():
-							child.queue_free()
+							child.free()
 						
 						node.name = "Item"
 						node.damage = item.damage
@@ -192,9 +209,12 @@ func _physics_process(delta: float) -> void:
 						$Hold.add_child(node)
 						
 						Network.rpc("_set_holding", multiplayer.get_unique_id(), item.scene)
+			else:
+				hotbar_slot.get_node("Durability").hide()
 		else:
 			hotbar_slot.get_node("TextureRect").texture = null
 			hotbar_slot.get_node("ItemCount").text = ""
+			hotbar_slot.get_node("Durability").hide()
 	
 	if not item_to_hold:
 		for child in $Hold.get_children():
@@ -212,12 +232,6 @@ func _physics_process(delta: float) -> void:
 				) if inventory_items[inventory_slot.name.to_int() - 1].stackable else ""
 			else:
 				inventory_slot.get_node("ItemCount").text = ""
-	
-	if Input.is_key_pressed(KEY_1): current_hotbar_slot = 1
-	elif Input.is_key_pressed(KEY_2): current_hotbar_slot = 2
-	elif Input.is_key_pressed(KEY_3): current_hotbar_slot = 3
-	elif Input.is_key_pressed(KEY_4): current_hotbar_slot = 4
-	elif Input.is_key_pressed(KEY_5): current_hotbar_slot = 5
 	
 	if Input.is_action_just_pressed("drop"):
 		if len(hotbar_items) >= current_hotbar_slot:

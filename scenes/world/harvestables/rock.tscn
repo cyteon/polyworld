@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://bkvbke6rqyilk"]
+
+[ext_resource type="Script" uid="uid://c7qbppit8cg5c" path="res://scripts/world/harvestable.gd" id="1_u16gu"]
+[ext_resource type="PackedScene" uid="uid://inw6nhr5dhto" path="res://scenes/items/stone.tscn" id="2_u16gu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1jn02"]
+albedo_color = Color(0.2, 0.2, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1jn02"]
+material = SubResource("StandardMaterial3D_1jn02")
+size = Vector3(1.2, 1, 1.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u16gu"]
+size = Vector3(1.2, 1, 1.2)
+
+[node name="Rock" type="StaticBody3D" node_paths=PackedStringArray("yields") groups=["Mineable"]]
+script = ExtResource("1_u16gu")
+yields = NodePath("Stone")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_1jn02")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_u16gu")
+
+[node name="Stone" parent="." instance=ExtResource("2_u16gu")]
+visible = false

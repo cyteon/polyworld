@@ -4,26 +4,27 @@ class_name ToolItem
 # when reach 100, poof
 @export var durability: int = 100
 
-# Will take 10 damage when used to attack entity
-@export var damage: int = 10
-@export var attacking_reduces_dur_by: int = 2
+# Will take 5 damage, and reduce dur by 3, when used to attack entity
+@export var damage: int = 5
+@export var attacking_reduces_dur_by: int = 3
 
 enum ToolType {
 	MINING,
-	HARVESTING
+	HARVESTING,
+	WEAPON
 }
 
 @export var type: ToolType
 
 # Example: tree is 100, 10 hits required to down tree
 @export var harvestable_damage: int = 10
-@export var harvesting_reduces_dur_by: int = 1
+@export var harvesting_reduces_dur_by: int = 2
 
 # We use harvestable/harvesting even if its mining for simplicity
 
 var is_ready = true
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if get_parent().name != "Hold": return
 	
 	if Input.is_action_just_pressed("use"):
@@ -60,7 +61,7 @@ func _process(delta: float) -> void:
 					
 					var item = collider.yields.duplicate() as BaseItem
 					for child in item.get_children():
-						child.queue_free()
+						child.free()
 					
 					item.item_count = collider.yields_per_damage * harvestable_damage
 					
