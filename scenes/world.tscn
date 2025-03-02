@@ -70,6 +70,8 @@ bg_color = Color(0.390333, 1, 0.38, 1)
 script = ExtResource("1_rwgxs")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 3
+collision_mask = 3
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
 mesh = SubResource("BoxMesh_e5uuo")
@@ -1577,6 +1579,96 @@ grow_vertical = 0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 horizontal_alignment = 2
+
+[node name="Crafting" type="ColorRect" parent="CanvasLayer/Control/InventoryBG"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -1111.0
+offset_top = -212.0
+offset_right = -615.0
+offset_bottom = 212.0
+grow_horizontal = 0
+grow_vertical = 2
+color = Color(0, 0, 0, 0.443137)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Control/InventoryBG/Crafting"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = 40.0
+offset_right = -9.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+columns = 6
+
+[node name="1" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer"]
+visible = false
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="TextureBtn" type="TextureButton" parent="CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer/1"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemCount" type="Label" parent="CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer/1"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -39.0
+offset_top = -22.0
+offset_right = -3.0
+offset_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+horizontal_alignment = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+text = "You can't craft anything"
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/InventoryBG/Crafting"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -83.0
+offset_right = 83.0
+offset_bottom = 34.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+text = "Crafting Menu - Press to craft"
 
 [node name="Loading" type="ColorRect" parent="CanvasLayer/Control"]
 visible = false

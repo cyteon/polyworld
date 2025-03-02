@@ -60,6 +60,8 @@ _data = {
 }
 
 [node name="WoodAxe" type="RigidBody3D"]
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("1_cn6sw")
 type = 1
 unique_id = "wood_axe"

@@ -52,7 +52,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
 	
-	if event is InputEventMouseButton:
+	if (
+		event is InputEventMouseButton
+		and not $"../CanvasLayer/Control/InventoryBG".visible
+	):
 		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
@@ -90,7 +93,8 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	
-	# Have this so u still get stamina even if in pause menu cause it dosent actually pause
+	# Have this not inside the if not visible statement
+	# so u still get stamina even if in pause menu cause it dosent actually pause
 	if stamina < 100 and not Input.is_action_pressed("sprint"):
 		stamina += 5 * delta
 	
@@ -128,6 +132,7 @@ func _physics_process(delta: float) -> void:
 			var collider = $Camera3D/RayCast3D.get_collider()
 			
 			if collider is BaseItem:
+				
 				var item = BaseItem.new()
 				
 				# other cases
@@ -232,6 +237,35 @@ func _physics_process(delta: float) -> void:
 				) if inventory_items[inventory_slot.name.to_int() - 1].stackable else ""
 			else:
 				inventory_slot.get_node("ItemCount").text = ""
+		
+		for val in Recipes.recipes:
+			var recipe = Recipes.recipes[val]
+			var reqs_met: int = 0
+			var remove_that_are_not = ["1"]
+			
+			for material in recipe.requires:
+				for item in hotbar_items:
+					if item.unique_id == material and item.item_count >= recipe.requires[material]:
+						reqs_met += 1
+						break
+			
+			if reqs_met == len(recipe.requires):
+				var node = $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer/1".duplicate()
+				node.get_node("TextureBtn").texture_normal = load(recipe.icon)
+				node.get_node("TextureBtn").pressed.connect((func ():
+					add_item_to_inv(load(recipe.scene).instantiate())
+				))
+				node.get_node("ItemCount").text = str(recipe.amount)
+				node.name = val
+				
+				remove_that_are_not.append(val)
+				
+				$"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".add_child(node)
+				node.show()
+			
+			for child in $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_children():
+				if child.name not in remove_that_are_not:
+					child.queue_free()
 	
 	if Input.is_action_just_pressed("drop"):
 		if len(hotbar_items) >= current_hotbar_slot:

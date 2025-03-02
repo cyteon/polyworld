@@ -65,9 +65,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.608455, 0)
 
 [node name="RayCast3D" type="RayCast3D" parent="Camera3D" groups=["PlayerRaycast"]]
 target_position = Vector3(0, 0, -3)
+collision_mask = 3
 
 [node name="ShortRaycast" type="RayCast3D" parent="Camera3D" groups=["PlayerRaycast"]]
 target_position = Vector3(0, 0, -1.5)
+collision_mask = 3
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_3vyb7")
