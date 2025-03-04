@@ -8,7 +8,6 @@ const JUMP_VELOCITY: float = 4.5
 
 @export var max_stamina: int = 100
 @export var stamina: float = max_stamina
-var sprinting: bool = false
 
 var current_hotbar_slot: int = 1
 @export var hotbar_items: Array[BaseItem] = []
@@ -25,7 +24,40 @@ func _ready() -> void:
 func _take_damage(damage: int) -> void:
 	health -= damage
 	# TODO: maybe smth to indicate like sound effect or sum
-	# TODO: add death
+	# TODO: add death screen
+	
+	if health <= 0:
+		var all_items = hotbar_items + inventory_items
+		hotbar_items = []
+		inventory_items = []
+		
+		for item in all_items:
+			var scene = load(item.scene).instantiate()
+			scene.unique_id = item.unique_id
+			scene.icon_path = item.icon_path
+			scene.stackable = item.stackable
+			scene.item_count = item.item_count
+			scene.scene = item.scene
+			
+			get_parent().get_node("Items").add_child(scene)
+			scene.global_position = global_position
+			scene.global_position.y += 0.5
+			scene.global_position += -global_transform.basis.z.normalized()
+			
+			Network.rpc(
+				"_spawn_item", 
+				scene.scene, scene.unique_id, 
+				scene.icon_path, scene.stackable, 
+				scene.item_count, scene.global_position,
+				scene.name
+			)
+		
+		# TODO: spawn loc or sum
+		health = 100
+		stamina = max_stamina
+		speed = normal_speed
+		
+		global_position = Vector3(0, 10, 0)
 
 func _play_item_anim(peer: int) -> void:
 	if peer == name.to_int():
@@ -293,7 +325,7 @@ func _physics_process(delta: float) -> void:
 			scene.unique_id = item.unique_id
 			scene.icon_path = item.icon_path
 			scene.stackable = item.stackable
-			scene.item_count = 1 # if not this glitch
+			scene.item_count = item.item_count
 			scene.scene = item.scene
 			
 			get_parent().get_node("Items").add_child(scene)
