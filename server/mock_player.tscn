@@ -34,4 +34,6 @@ script = ExtResource("1_k31lb")
 replication_config = SubResource("SceneReplicationConfig_xrfv4")
 
 [node name="ServerOnlySync" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.1
+delta_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_k31lb")

@@ -71,6 +71,7 @@ properties/4/replication_mode = 1
 [sub_resource type="GDScript" id="GDScript_qhqgy"]
 script/source = "extends MultiplayerSynchronizer
 # This synces data we dont want other clients to know, but that server has to know to save state
+# This has a interval of 0.1s cause it dosent have to change 24/7
 
 func filter(id: int) -> bool:
 	return id == 1
@@ -111,5 +112,7 @@ mesh = SubResource("BoxMesh_3vyb7")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.490938, 0.223552, -0.505612)
 
 [node name="ServerOnlySync" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.1
+delta_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_g2els")
 script = SubResource("GDScript_qhqgy")
