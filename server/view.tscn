@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://cwqylnjol6jt0"]
+[gd_scene load_steps=7 format=3 uid="uid://cwqylnjol6jt0"]
 
 [ext_resource type="Script" uid="uid://eksna10s7kwx" path="res://server/server.gd" id="1_avf6q"]
+[ext_resource type="PackedScene" uid="uid://inw6nhr5dhto" path="res://scenes/items/stone.tscn" id="2_8jcgd"]
+[ext_resource type="PackedScene" uid="uid://gep3rmqomnfw" path="res://scenes/items/wood_axe.tscn" id="3_tk6kl"]
+[ext_resource type="PackedScene" uid="uid://dh256q8bjdnkl" path="res://scenes/items/wood_pickaxe.tscn" id="4_tydnw"]
+[ext_resource type="PackedScene" uid="uid://dkshbuml6fjiu" path="res://scenes/world/harvestables/tree.tscn" id="5_tydnw"]
+[ext_resource type="PackedScene" uid="uid://bkvbke6rqyilk" path="res://scenes/world/harvestables/rock.tscn" id="6_255f4"]
 
 [node name="World" type="Control"]
 layout_mode = 3
@@ -10,8 +15,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_avf6q")
-
-[node name="Node" type="Node" parent="."]
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 1
@@ -77,3 +80,63 @@ offset_top = 456.0
 offset_right = 1136.0
 offset_bottom = 640.0
 alignment = 2
+
+[node name="Items" type="Node" parent="."]
+
+[node name="Stone" parent="Items" instance=ExtResource("2_8jcgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 3.26324, 0.813621)
+freeze = true
+
+[node name="Stone2" parent="Items" instance=ExtResource("2_8jcgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 3.26324, -0.150696)
+freeze = true
+
+[node name="Stone3" parent="Items" instance=ExtResource("2_8jcgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 2.38655, -0.353889)
+freeze = true
+
+[node name="Stone4" parent="Items" instance=ExtResource("2_8jcgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 2.38655, 1.07694)
+freeze = true
+
+[node name="Stone5" parent="Items" instance=ExtResource("2_8jcgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.45289, 1.84042, 0.845974)
+freeze = true
+
+[node name="Stone6" parent="Items" instance=ExtResource("2_8jcgd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.04466, 1.84042, -0.146701)
+freeze = true
+
+[node name="WoodAxe" parent="Items" instance=ExtResource("3_tk6kl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.39157, 1.06837, -1.15226)
+freeze = true
+
+[node name="WoodPickaxe" parent="Items" instance=ExtResource("4_tydnw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.32611, 0.9, 0.201487)
+freeze = true
+
+[node name="World" type="Node" parent="."]
+
+[node name="Tree" parent="World" instance=ExtResource("5_tydnw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.992844, 0.7, 9.53041)
+
+[node name="Tree2" parent="World" instance=ExtResource("5_tydnw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.992844, 0.7, 11.0539)
+
+[node name="Tree3" parent="World" instance=ExtResource("5_tydnw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.10787, 0.7, 11.0539)
+
+[node name="Tree4" parent="World" instance=ExtResource("5_tydnw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.10787, 0.7, 9.58883)
+
+[node name="Rock" parent="World" instance=ExtResource("6_255f4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.36683, 1, 8.79826)
+
+[node name="Rock2" parent="World" instance=ExtResource("6_255f4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.36683, 1, 10.2528)
+
+[node name="Rock3" parent="World" instance=ExtResource("6_255f4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89578, 1, 10.2528)
+
+[node name="Rock4" parent="World" instance=ExtResource("6_255f4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89578, 1, 8.72699)

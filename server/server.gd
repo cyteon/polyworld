@@ -23,7 +23,7 @@ func _ready() -> void:
 
 func _input_loop() -> void:
 	while true:
-		var input = OS.read_string_from_stdin(256)
+		var input = OS.read_string_from_stdin(64)
 		
 		match input:
 			"peers":
@@ -54,8 +54,29 @@ func start_server():
 	network.peer_connected.connect(_peer_connected)
 	network.peer_disconnected.connect(_peer_disconnected)
 	
+	Network.despawn_item.connect(_despawn_item)
+	Network.spawn_item.connect(_spawn_item)
 	Network.authorized.connect(_peer_authorized)
 	Network.attack_player.connect(_attack_player)
+
+func _despawn_item(path: NodePath):
+	if has_node(path):
+		get_node(path).queue_free()
+	else:
+		push_warning("[Server Debug] Tried to free item that could not be found: %s" % path)
+
+func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location, name_) -> void:
+	var node = load(scene).instantiate()
+	node.unique_id = unique_id
+	node.icon_path = icon_path
+	node.stackable = stackable
+	node.item_count = item_count
+	node.scene = scene
+	node.name = name_
+	
+	$Items.add_child(node)
+	node.global_position = location
+	node.freeze = true
 
 func _attack_player(target_id: int, damage: int):
 	var peer = multiplayer.get_remote_sender_id()
@@ -101,6 +122,26 @@ func _peer_connected(target_id: int):
 	await get_tree().create_timer(1).timeout
 	
 	Network.rpc_id(target_id, "_add_players", peers.keys())
+	
+	for item in $Items.get_children():
+		Network.rpc_id(
+			target_id,
+			"_spawn_item", 
+			item.scene, item.unique_id, 
+			item.icon_path, item.stackable, 
+			item.item_count, item.global_position,
+			item.name
+		)
+	
+	for node in $World.get_children():
+		Network.rpc_id(
+			target_id,
+			"_spawn_scene",
+			$World.get_path(),
+			node.scene_file_path,
+			node.global_position,
+			node.name
+		)
 
 func _peer_disconnected(target_id: int):
 	log_event("Peer disconnected: %s" % target_id)

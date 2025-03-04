@@ -4,15 +4,15 @@ var normal_speed: float = 5.0
 var speed: float = normal_speed
 const JUMP_VELOCITY: float = 4.5
 
-var health: int = 100
+@export var health: int = 100
 
-var max_stamina: int = 100
-var stamina: float = max_stamina
+@export var max_stamina: int = 100
+@export var stamina: float = max_stamina
 var sprinting: bool = false
 
 var current_hotbar_slot: int = 1
-var hotbar_items: Array[BaseItem] = []
-var inventory_items: Array[BaseItem] = []
+@export var hotbar_items: Array[BaseItem] = []
+@export var inventory_items: Array[BaseItem] = []
 
 func _ready() -> void:
 	if is_multiplayer_authority():
@@ -229,12 +229,33 @@ func _physics_process(delta: float) -> void:
 					if item.unique_id == material and item.item_count >= recipe.requires[material]:
 						reqs_met += 1
 						break
+				
+				for inv_item in inventory_items:
+					if inv_item.unique_id == material and inv_item.item_count >= recipe.requires[material]:
+						reqs_met += 1
+						break
 			
 			if reqs_met == len(recipe.requires):
 				var node = $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer/1".duplicate()
 				node.get_node("TextureBtn").texture_normal = load(recipe.icon)
 				node.get_node("TextureBtn").pressed.connect((func ():
 					add_item_to_inv(load(recipe.scene).instantiate())
+					
+					for material in recipe.requires:
+						for item in hotbar_items:
+							if item.unique_id == material and item.item_count >= recipe.requires[material]:
+								item.item_count -= recipe.requires[material]
+								
+								if item.item_count == 0:
+									hotbar_items.erase(item)
+						
+						for item in inventory_items:
+							for inv_item in hotbar_items:
+								if inv_item.unique_id == material and inv_item.item_count >= recipe.requires[material]:
+									inv_item.item_count -= recipe.requires[material]
+									
+									if inv_item.item_count == 0:
+										hotbar_items.erase(inv_item)
 				))
 				node.get_node("ItemCount").text = str(recipe.amount)
 				node.name = val
@@ -284,5 +305,6 @@ func _physics_process(delta: float) -> void:
 				"_spawn_item", 
 				scene.scene, scene.unique_id, 
 				scene.icon_path, scene.stackable, 
-				scene.item_count, scene.global_position
+				scene.item_count, scene.global_position,
+				scene.name
 			)

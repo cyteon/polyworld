@@ -3,22 +3,31 @@ extends Node3D
 func _ready() -> void:
 	push_warning("[Client] Entered world") # for time refrence in debuggers
 	
+	Network.spawn_scene.connect(_spawn_scene)
 	Network.spawn_item.connect(_spawn_item)
 	Network.despawn_item.connect(_despawn_item)
 	Network.add_players.connect(_add_players)
 	Network.remove_player.connect(_remove_player)
 
+func _spawn_scene(node: NodePath, scene: String, position_: Vector3, name_: String):
+	var new = load(scene).instantiate()
+	new.name = name_
+	
+	get_node(node).add_child(new)
+	new.global_position = position_
+
 func _despawn_item(path: NodePath) -> void:
 	if has_node(path):
 		get_node(path).queue_free()
 
-func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location) -> void:
+func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location, name_) -> void:
 	var node = load(scene).instantiate()
 	node.unique_id = unique_id
 	node.icon_path = icon_path
 	node.stackable = stackable
 	node.item_count = item_count
 	node.scene = scene
+	node.name = name_
 	
 	$Items.add_child(node)
 	node.global_position = location

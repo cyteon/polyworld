@@ -1,11 +1,23 @@
 extends Node
 
+# -- Hybrid -- #
+# aka: Server/Client -> Server/Client
+
+signal despawn_item(path: NodePath)
+signal spawn_item(scene, unique_id, icon_path, stackable, item_count, location, name_) 
+
+@rpc("any_peer", "call_local")
+func _despawn_item(path: NodePath):
+	despawn_item.emit(path)
+
+@rpc("any_peer", "call_remote")
+func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location, name_):
+	spawn_item.emit(scene, unique_id, icon_path, stackable, item_count, location, name_)
+
 # -- Client -> Client -- #
 signal play_item_anim(peer: int)
 signal set_holding(peer: int, scene: String) 
 signal ready_to_send_to(id: int)
-signal despawn_item(path: NodePath)
-signal spawn_item(scene, unique_id, icon_path, stackable, item_count, location) 
 
 @rpc("any_peer", "call_remote")
 func _play_item_anim(peer: int):
@@ -19,19 +31,12 @@ func _set_holding(peer: int, scene: String):
 func _ready_to_send_to(id: int):
 	ready_to_send_to.emit(id)
 
-@rpc("any_peer", "call_local")
-func _despawn_item(path: NodePath):
-	despawn_item.emit(path)
-
-@rpc("any_peer", "call_remote")
-func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location):
-	spawn_item.emit(scene, unique_id, icon_path, stackable, item_count, location)
-
 # -- Server -> Client -- #
 signal disconnected(reason: String)
 signal add_players(ids)
 signal remove_player(id: int)
 signal take_damage(damage: int)
+signal spawn_scene(node: NodePath, scene: String, position: Vector3, name_: String)
 
 @rpc("authority")
 func _disconnect(reason: String):
@@ -49,6 +54,10 @@ func _remove_player(id):
 @rpc("authority")
 func _take_damage(damage: int):
 	take_damage.emit(damage)
+
+@rpc("authority")
+func _spawn_scene(node: NodePath, scene: String, position: Vector3, name_: String):
+	spawn_scene.emit(node, scene, position, name_)
 
 # -- Client -> Server -- #
 signal authorized(unique_id: String, peer_id: int)

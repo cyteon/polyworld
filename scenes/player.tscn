@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cuxg835ieti4n"]
+[gd_scene load_steps=10 format=3 uid="uid://cuxg835ieti4n"]
 
 [ext_resource type="Script" uid="uid://tr66h8uhdbnd" path="res://scripts/player.gd" id="1_p0vlq"]
 
@@ -51,6 +51,34 @@ func _ready() -> void:
 [sub_resource type="BoxMesh" id="BoxMesh_3vyb7"]
 size = Vector3(0.4, 0.2, 0.5)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g2els"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:max_stamina")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:stamina")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:hotbar_items")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:inventory_items")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+
+[sub_resource type="GDScript" id="GDScript_qhqgy"]
+script/source = "extends MultiplayerSynchronizer
+# This synces data we dont want other clients to know, but that server has to know to save state
+
+func filter(id: int) -> bool:
+	return id == 1
+
+func _ready() -> void:
+	add_visibility_filter(filter)
+"
+
 [node name="Player" type="CharacterBody3D" groups=["Player"]]
 script = ExtResource("1_p0vlq")
 
@@ -81,3 +109,7 @@ mesh = SubResource("BoxMesh_3vyb7")
 
 [node name="Hold" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.490938, 0.223552, -0.505612)
+
+[node name="ServerOnlySync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_g2els")
+script = SubResource("GDScript_qhqgy")

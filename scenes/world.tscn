@@ -1,13 +1,8 @@
-[gd_scene load_steps=20 format=3 uid="uid://glr6s5xa8vim"]
+[gd_scene load_steps=15 format=3 uid="uid://glr6s5xa8vim"]
 
 [ext_resource type="Texture2D" uid="uid://jrumoe5ieo40" path="res://assets/world/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="1_nnsk1"]
 [ext_resource type="Script" uid="uid://c7rwssxcxjshr" path="res://scripts/world.gd" id="1_rwgxs"]
-[ext_resource type="PackedScene" uid="uid://inw6nhr5dhto" path="res://scenes/items/stone.tscn" id="3_4wyf3"]
 [ext_resource type="Texture2D" uid="uid://ciio7y3l3eyl1" path="res://assets/placeholders/placeholder_64.png" id="3_qfnet"]
-[ext_resource type="PackedScene" uid="uid://dh256q8bjdnkl" path="res://scenes/items/wood_pickaxe.tscn" id="4_i7141"]
-[ext_resource type="PackedScene" uid="uid://gep3rmqomnfw" path="res://scenes/items/wood_axe.tscn" id="4_k0juu"]
-[ext_resource type="PackedScene" uid="uid://dkshbuml6fjiu" path="res://scenes/world/harvestables/tree.tscn" id="5_71j4m"]
-[ext_resource type="PackedScene" uid="uid://bkvbke6rqyilk" path="res://scenes/world/harvestables/rock.tscn" id="8_4mrxx"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_e5uuo"]
 size = Vector3(50, 1, 50)
@@ -1698,55 +1693,7 @@ text = "Loading..."
 
 [node name="Items" type="Node" parent="."]
 
-[node name="Stone" parent="Items" instance=ExtResource("3_4wyf3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 3.26324, 0.813621)
-
-[node name="Stone2" parent="Items" instance=ExtResource("3_4wyf3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 3.26324, -0.150696)
-
-[node name="Stone3" parent="Items" instance=ExtResource("3_4wyf3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 2.38655, -0.353889)
-
-[node name="Stone4" parent="Items" instance=ExtResource("3_4wyf3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 2.38655, 1.07694)
-
-[node name="Stone5" parent="Items" instance=ExtResource("3_4wyf3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.45289, 1.84042, 0.845974)
-
-[node name="Stone6" parent="Items" instance=ExtResource("3_4wyf3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.04466, 1.84042, -0.146701)
-
-[node name="WoodAxe" parent="Items" instance=ExtResource("4_k0juu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.39157, 1.06837, -1.15226)
-
-[node name="WoodPickaxe" parent="Items" instance=ExtResource("4_i7141")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.32611, 0.9, 0.201487)
-
 [node name="World" type="Node" parent="."]
-
-[node name="Tree" parent="World" instance=ExtResource("5_71j4m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.992844, 0.7, 9.53041)
-
-[node name="Tree2" parent="World" instance=ExtResource("5_71j4m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.992844, 0.7, 11.0539)
-
-[node name="Tree3" parent="World" instance=ExtResource("5_71j4m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.10787, 0.7, 11.0539)
-
-[node name="Tree4" parent="World" instance=ExtResource("5_71j4m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.10787, 0.7, 9.58883)
-
-[node name="Rock" parent="World" instance=ExtResource("8_4mrxx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.36683, 1, 8.79826)
-
-[node name="Rock2" parent="World" instance=ExtResource("8_4mrxx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.36683, 1, 10.2528)
-
-[node name="Rock3" parent="World" instance=ExtResource("8_4mrxx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89578, 1, 10.2528)
-
-[node name="Rock4" parent="World" instance=ExtResource("8_4mrxx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89578, 1, 8.72699)
 
 [connection signal="pressed" from="CanvasLayer/Control/PauseMenu/VBoxContainer/Disconnect" to="." method="_on_disconnect_pressed"]
 [connection signal="pressed" from="CanvasLayer/Control/PauseMenu/VBoxContainer/ExitToDesktop" to="." method="_on_exit_to_desktop_pressed"]

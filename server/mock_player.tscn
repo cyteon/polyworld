@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://dg5kii47n3kt0"]
+[gd_scene load_steps=4 format=3 uid="uid://dg5kii47n3kt0"]
+
+[ext_resource type="Script" uid="uid://d2ubfv8nj7jrx" path="res://server/mock_player.gd" id="1_k31lb"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xrfv4"]
 properties/0/path = NodePath(".:position")
@@ -8,7 +10,28 @@ properties/1/path = NodePath(".:rotation:y")
 properties/1/spawn = false
 properties/1/replication_mode = 1
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_k31lb"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:max_stamina")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:stamina")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:hotbar_items")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath(".:inventory_items")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+
 [node name="Player" type="Node3D"]
+script = ExtResource("1_k31lb")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_xrfv4")
+
+[node name="ServerOnlySync" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_k31lb")
