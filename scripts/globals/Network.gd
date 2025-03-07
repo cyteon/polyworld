@@ -23,6 +23,7 @@ signal ready_to_send_to(id: int)
 func _play_item_anim(peer: int):
 	play_item_anim.emit(peer)
 
+# server will also recieve this and store it for syncing reasons
 @rpc("any_peer", "call_remote")
 func _set_holding(peer: int, scene: String):
 	set_holding.emit(peer, scene)

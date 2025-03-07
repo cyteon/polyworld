@@ -5,7 +5,7 @@ var max_players: int = 3
 var port: int = 4040
 
 var network = ENetMultiplayerPeer.new()
-# { string: { unique_id: String | null } }
+# { String: { unique_id: String | null, holing: String } }
 var peers: Dictionary = {}
 
 var thread: Thread
@@ -58,6 +58,13 @@ func start_server():
 	Network.spawn_item.connect(_spawn_item)
 	Network.authorized.connect(_peer_authorized)
 	Network.attack_player.connect(_attack_player)
+	Network.set_holding.connect(_set_holding)
+
+func _set_holding(peer: int, scene: String):
+	prints(peers, peer, scene)
+	
+	if peer in peers:
+		peers[peer].holding = scene
 
 func _despawn_item(path: NodePath):
 	if has_node(path):
@@ -122,6 +129,10 @@ func _peer_connected(target_id: int):
 	await get_tree().create_timer(1).timeout
 	
 	Network.rpc_id(target_id, "_add_players", peers.keys())
+	
+	for id in peers.keys():
+		if id != target_id:
+			Network.rpc_id(target_id, "_set_holding", id, peers[id].holding if peers[id].has("holding") else "")
 	
 	for item in $Items.get_children():
 		Network.rpc_id(

@@ -65,6 +65,9 @@ func _play_item_anim(peer: int) -> void:
 			$Hold/Item/AnimationPlayer.play("use")
 
 func _set_holding(peer: int, scene: String) -> void:
+	if peer != multiplayer.get_remote_sender_id() and peer != 1:
+		print("[Client] Denied 'set_holding' packet due to mismatch in peer ID")
+		
 	if is_multiplayer_authority() or peer != name.to_int(): 
 		# is_multiplayer_authority() should be same as: if peer == multiplayer.get_unique_id()
 		return
@@ -77,6 +80,7 @@ func _set_holding(peer: int, scene: String) -> void:
 	
 	var node = load(scene).instantiate()
 	node.name = "Item"
+	node.freeze = true
 	
 	$Hold.add_child(node)
 
@@ -226,7 +230,7 @@ func _physics_process(delta: float) -> void:
 						node.harvesting_reduces_dur_by = item.harvesting_reduces_dur_by
 						$Hold.add_child(node)
 						
-						Network.rpc("_set_holding", multiplayer.get_unique_id(), item.scene)
+						Network.rpc("_set_holding", multiplayer.get_unique_id() ,item.scene)
 			else:
 				hotbar_slot.get_node("Durability").hide()
 		else:
@@ -235,10 +239,11 @@ func _physics_process(delta: float) -> void:
 			hotbar_slot.get_node("Durability").hide()
 	
 	if not item_to_hold:
+		if $Hold.get_child_count() != 0:
+			Network.rpc("_set_holding", multiplayer.get_unique_id(), "")
+		
 		for child in $Hold.get_children():
 			child.queue_free()
-		
-		Network.rpc("_set_holding", multiplayer.get_unique_id(), "")
 	
 	if $"../CanvasLayer/Control/InventoryBG".visible:
 		for inventory_slot in $"../CanvasLayer/Control/InventoryBG/Inventory/GridContainer".get_children():
