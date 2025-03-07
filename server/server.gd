@@ -61,8 +61,6 @@ func start_server():
 	Network.set_holding.connect(_set_holding)
 
 func _set_holding(peer: int, scene: String):
-	prints(peers, peer, scene)
-	
 	if peer in peers:
 		peers[peer].holding = scene
 
@@ -125,7 +123,7 @@ func _peer_connected(target_id: int):
 	for id in peers.keys():
 		if id != target_id:
 			Network.rpc_id(id, "_add_players", [target_id])
-			
+	
 	await get_tree().create_timer(1).timeout
 	
 	Network.rpc_id(target_id, "_add_players", peers.keys())
