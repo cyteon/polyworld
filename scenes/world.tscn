@@ -74,6 +74,7 @@ camera_attributes = SubResource("CameraAttributesPractical_qo5hu")
 
 [node name="Sun" type="DirectionalLight3D" parent="WorldEnvironment"]
 transform = Transform3D(1, 0, 0, 0, 0.605197, 0.796076, 0, -0.796076, 0.605197, 0, 22, 0)
+visible = false
 shadow_enabled = true
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="WorldEnvironment"]
