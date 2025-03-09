@@ -12,11 +12,14 @@ func _on_refresh_button_pressed() -> void:
 	$HTTPRequest.request("%s/api/servers" % Network.backend_url)
 
 func _request_completed(
-	_result: int, 
+	result: int, 
 	_response_code: int, 
 	_headers: PackedStringArray, 
 	body: PackedByteArray
 ) -> void:
+	if result != OK:
+		return
+	
 	var json = JSON.parse_string(body.get_string_from_utf8())
 	
 	for server in json:
