@@ -1,11 +1,17 @@
 extends Control
 
-var max_players: int = 3
+var unique_id = OS.get_unique_id()
 
+var max_players: int = 4
 var port: int = 4040
 
+# port sent to api, this is port people should connect to
+var advertise_port: int = 4040
+var advertise_host: String = "127.0.0.1"
+var server_name: String = "An Server"
+
 var network = ENetMultiplayerPeer.new()
-# { String: { unique_id: String | null, holing: String } }
+# { String: { unique_id: String | null, holding: String } }
 var peers: Dictionary = {}
 
 var thread: Thread
@@ -59,6 +65,8 @@ func start_server():
 	Network.authorized.connect(_peer_authorized)
 	Network.attack_player.connect(_attack_player)
 	Network.set_holding.connect(_set_holding)
+	
+	send_server_info()
 
 func _set_holding(peer: int, scene: String):
 	if peer in peers:
@@ -115,6 +123,8 @@ func _peer_connected(target_id: int):
 	peers.set(target_id, { })
 	$Info/Players.text = "Players: %s" % len(peers)
 	
+	send_server_info()
+	
 	var player = preload("res://server/mock_player.tscn").instantiate()
 	player.set_multiplayer_authority(target_id)
 	player.name = str(target_id)
@@ -158,6 +168,7 @@ func _peer_disconnected(target_id: int):
 	$Info/Players.text = "Players: %s" % len(peers)
 	
 	Network.rpc("_remove_player", target_id)
+	send_server_info()
 
 func _peer_authorized(unique_id: String, peer_id: int):
 	var data = peers.get(peer_id, null)
@@ -185,3 +196,20 @@ func log_event(str: String, error = false):
 	
 	if $Events.get_child_count() > 5:
 		$Events.get_child(0).queue_free()
+
+
+func send_server_info() -> void:
+	var json = JSON.stringify({
+		"unique_id": unique_id,
+		"port": advertise_port,
+		"host": advertise_host,
+		"max_players": max_players,
+		"players": len(peers),
+		"name": server_name,
+		"version": ProjectSettings.get_setting("application/config/version"),
+		"compatability_ver": Network.compatability_ver
+	})
+	
+	var headers = ["Content-Type: Application/JSON"]
+	
+	$HTTPRequest.request("%s/api/servers" % Network.backend_url, headers, HTTPClient.METHOD_POST, json)

@@ -1,5 +1,9 @@
 extends Node
 
+# will be used to see if server compatable with client
+const compatability_ver: int = 1
+const backend_url: String = "http://localhost:5173"
+
 # -- Hybrid -- #
 # aka: Server/Client -> Server/Client
 
