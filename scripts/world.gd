@@ -38,9 +38,9 @@ func _add_players(ids) -> void:
 		player.set_multiplayer_authority(id)
 		player.name = str(id)
 		add_child(player)
+		player.global_position = $SpawnLoc.global_position
 		
 		if id == multiplayer.get_unique_id():
-			player.position.y += 5
 			player.get_node("Camera3D").current = true
 			$CanvasLayer/Control/Loading.hide()
 
@@ -56,3 +56,7 @@ func _on_disconnect_pressed() -> void:
 func _on_exit_to_desktop_pressed() -> void:
 	multiplayer.multiplayer_peer.close()
 	get_tree().quit()
+
+
+func _on_resume_pressed() -> void:
+	$CanvasLayer/Control/PauseMenu.hide()

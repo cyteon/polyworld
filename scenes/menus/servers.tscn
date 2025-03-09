@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://d24i8n8sg6g47"]
+
+[ext_resource type="Script" uid="uid://cxftxgmofjmhg" path="res://scripts/menus/servers.gd" id="1_o8mf1"]
+
+[node name="Servers" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_o8mf1")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 90.0
+offset_bottom = 61.0
+theme_override_font_sizes/font_size = 32
+text = "Back"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

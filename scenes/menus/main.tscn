@@ -45,6 +45,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Connect"
 
+[node name="ServersButton" type="Button" parent="Buttons"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Servers"
+
 [node name="QuitButton" type="Button" parent="Buttons"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
@@ -117,6 +122,7 @@ grow_vertical = 0
 text = "Credits"
 
 [connection signal="pressed" from="Buttons/ConnectButton" to="." method="_on_connect_button_pressed"]
+[connection signal="pressed" from="Buttons/ServersButton" to="." method="_on_servers_button_pressed"]
 [connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="text_changed" from="PopupPanel/VBoxContainer/IPEdit" to="." method="_on_ip_edit_text_changed"]
 [connection signal="value_changed" from="PopupPanel/VBoxContainer/PortEdit" to="." method="_on_port_edit_value_changed"]

@@ -84,59 +84,59 @@ alignment = 2
 [node name="Items" type="Node" parent="."]
 
 [node name="Stone" parent="Items" instance=ExtResource("2_8jcgd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 3.26324, 0.813621)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -217.732, 5.26324, 40.8136)
 freeze = true
 
 [node name="Stone2" parent="Items" instance=ExtResource("2_8jcgd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 3.26324, -0.150696)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -217.732, 5.26324, 39.8493)
 freeze = true
 
 [node name="Stone3" parent="Items" instance=ExtResource("2_8jcgd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 2.38655, -0.353889)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -217.732, 4.38655, 39.6461)
 freeze = true
 
 [node name="Stone4" parent="Items" instance=ExtResource("2_8jcgd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.26845, 2.38655, 1.07694)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -217.732, 4.38655, 41.0769)
 freeze = true
 
 [node name="Stone5" parent="Items" instance=ExtResource("2_8jcgd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.45289, 1.84042, 0.845974)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -217.547, 3.84042, 40.846)
 freeze = true
 
 [node name="Stone6" parent="Items" instance=ExtResource("2_8jcgd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.04466, 1.84042, -0.146701)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -217.955, 3.84042, 39.8533)
 freeze = true
 
 [node name="WoodAxe" parent="Items" instance=ExtResource("3_tk6kl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.39157, 1.06837, -1.15226)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -214.608, 4.06837, 38.8477)
 freeze = true
 
 [node name="WoodPickaxe" parent="Items" instance=ExtResource("4_tydnw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.32611, 0.9, 0.201487)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -214.674, 3.9, 40.2015)
 freeze = true
 
 [node name="World" type="Node" parent="."]
 
 [node name="Tree" parent="World" instance=ExtResource("5_tydnw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.992844, 0.7, 9.53041)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -231.993, 2.7, 41.5304)
 
 [node name="Tree2" parent="World" instance=ExtResource("5_tydnw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.992844, 0.7, 11.0539)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -231.993, 2.7, 43.0539)
 
 [node name="Tree3" parent="World" instance=ExtResource("5_tydnw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.10787, 0.7, 11.0539)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -233.108, 2.7, 43.0539)
 
 [node name="Tree4" parent="World" instance=ExtResource("5_tydnw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.10787, 0.7, 9.58883)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -233.108, 2.7, 41.5888)
 
 [node name="Rock" parent="World" instance=ExtResource("6_255f4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.36683, 1, 8.79826)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -227.633, 3, 40.7983)
 
 [node name="Rock2" parent="World" instance=ExtResource("6_255f4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.36683, 1, 10.2528)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -227.633, 3, 42.2528)
 
 [node name="Rock3" parent="World" instance=ExtResource("6_255f4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89578, 1, 10.2528)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -226.104, 3, 42.2528)
 
 [node name="Rock4" parent="World" instance=ExtResource("6_255f4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.89578, 1, 8.72699)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -226.104, 3, 40.727)
