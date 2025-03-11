@@ -1,8 +1,8 @@
 extends Control
 
-var unique_id = OS.get_unique_id()
+var unique_id: String = OS.get_unique_id()
 
-var max_players: int = 4	
+var max_players: int = 4
 var port: int = 4040
 
 # port sent to api, this is port people should connect to
@@ -10,7 +10,7 @@ var advertise_port: int = 4040
 var advertise_host: String = "localhost"
 var server_name: String = "An Server"
 
-var network = ENetMultiplayerPeer.new()
+var network: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 # { String: { unique_id: String | null, holding: String } }
 var peers: Dictionary = {}
 
@@ -43,9 +43,7 @@ func _input_loop() -> void:
 			_:
 				print("[CMD] Unknown command: %s" % input)
 
-func start_server():
-	var arguments = {}
-	
+func start_server():	
 	for arg in OS.get_cmdline_args():
 		if arg.find("=") > -1:
 			var key = arg.split("=")[0].lstrip("--")
@@ -258,5 +256,14 @@ func send_server_info() -> void:
 	})
 	
 	var headers = ["Content-Type: Application/JSON"]
+	
+	var waits = 0
+	
+	while $HTTPRequest.get_http_client_status() != 0:
+		await get_tree().create_timer(1).timeout
+		waits += 1
+		
+		if waits >= 120:
+			print("[Server] HTTP Client Busy for 2 minutes, aborting")
 	
 	$HTTPRequest.request("%s/api/servers" % Network.backend_url, headers, HTTPClient.METHOD_POST, json)
