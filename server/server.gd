@@ -2,12 +2,12 @@ extends Control
 
 var unique_id = OS.get_unique_id()
 
-var max_players: int = 4
+var max_players: int = 4	
 var port: int = 4040
 
 # port sent to api, this is port people should connect to
 var advertise_port: int = 4040
-var advertise_host: String = "127.0.0.1"
+var advertise_host: String = "localhost"
 var server_name: String = "An Server"
 
 var network = ENetMultiplayerPeer.new()
@@ -44,6 +44,42 @@ func _input_loop() -> void:
 				print("[CMD] Unknown command: %s" % input)
 
 func start_server():
+	var arguments = {}
+	
+	for arg in OS.get_cmdline_args():
+		if arg.find("=") > -1:
+			var key = arg.split("=")[0].lstrip("--")
+			var value = arg.split("=")[1].lstrip("\"").rstrip("\"")
+			
+			match key:
+				"port":# --headless --advertise_port=4040 --advertise_host=127.0.01 --server_name="dev server"
+					if value.is_valid_int():
+						port = value.to_int()
+					else:
+						print("[Server] %s (port) is not a valid integer" % value)
+				"advertise_host":
+					advertise_host = value
+					print("[Server] Advertising host %s" % value)
+				"advertise_port":
+					if value.is_valid_int():
+						advertise_port = value.to_int()
+						print("[Server] Advertising port %s" % value)
+					else:
+						print("[Server] %s (advertise_port) is not a valid integer" % value)
+				"server_name":
+					server_name = value
+					print("[Server] Set server name to '%s'" % value)
+					
+					if value.find(" ") <= -1:
+						print("[Hint] Use '%20' for space if the above only has 1 word/is missing spaces")
+				"max_players":
+					if value.is_valid_int():
+						max_players = value.to_int()
+						print("[Server] Setting max players to %s" % value)
+					else:
+						print("[Server] %s (max_players) is not a valid integer" % value)
+				
+	
 	var error: int = network.create_server(port)
 	
 	match error:
@@ -199,6 +235,17 @@ func log_event(str: String, error = false):
 
 
 func send_server_info() -> void:
+	# Check if its local only
+	if (
+		advertise_host.begins_with("10.") 
+		or advertise_host.begins_with("172.16.") 
+		or advertise_host.begins_with("192.168.") 
+		or advertise_host == "127.0.0.1"
+		or advertise_host == "0.0.0.0"
+		or advertise_host == "localhost"
+	):
+		return
+	
 	var json = JSON.stringify({
 		"unique_id": unique_id,
 		"port": advertise_port,

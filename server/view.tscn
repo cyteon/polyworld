@@ -147,4 +147,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -226.104, 3, 42.2528)
 [node name="Rock4" parent="World" instance=ExtResource("6_255f4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -226.104, 3, 40.727)
 
-[connection signal="timeout" from="SendServerInfo" to="." method="_on_send_server_info_timeout"]
+[connection signal="timeout" from="SendServerInfo" to="." method="send_server_info"]
