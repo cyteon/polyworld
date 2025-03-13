@@ -13,6 +13,8 @@ var current_hotbar_slot: int = 1
 @export var hotbar_items: Array[BaseItem] = []
 @export var inventory_items: Array[BaseItem] = []
 
+@export var target_pos: Vector3 = Vector3.ZERO
+
 func _ready() -> void:
 	if is_multiplayer_authority():
 		Network.take_damage.connect(_take_damage)
@@ -20,6 +22,8 @@ func _ready() -> void:
 		Network.rpc_id(name.to_int(), "_ready_to_send_to", multiplayer.get_unique_id())
 		Network.set_holding.connect(_set_holding)
 		Network.play_item_anim.connect(_play_item_anim)
+	
+	target_pos = global_position
 
 func _take_damage(damage: int) -> void:
 	health -= damage
@@ -124,7 +128,14 @@ func add_item_to_inv(item: BaseItem) -> bool:
 
 func _physics_process(delta: float) -> void:
 	if not is_multiplayer_authority():
+		if target_pos != Vector3.ZERO:
+			position = position.lerp(target_pos, delta * 10)
+		
+		# to prevent large delay
+		if target_pos.distance_to(position) > 2:
+			position = target_pos
 		return
+		
 	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -180,6 +191,7 @@ func _physics_process(delta: float) -> void:
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 	move_and_slide()
+	target_pos = global_position
 	
 	$"../CanvasLayer/Control/StaminaBar".max_value = max_stamina
 	$"../CanvasLayer/Control/StaminaBar".value = stamina

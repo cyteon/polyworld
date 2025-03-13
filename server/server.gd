@@ -235,7 +235,7 @@ func log_event(str: String, error = false):
 func send_server_info() -> void:
 	# Check if its local only
 	if (
-		advertise_host.begins_with("10.") 
+		advertise_host.begins_with("10.")
 		or advertise_host.begins_with("172.16.") 
 		or advertise_host.begins_with("192.168.") 
 		or advertise_host == "127.0.0.1"
