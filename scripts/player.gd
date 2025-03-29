@@ -298,13 +298,12 @@ func _physics_process(delta: float) -> void:
 								if item.item_count == 0:
 									hotbar_items.erase(item)
 						
-						for item in inventory_items:
-							for inv_item in hotbar_items:
-								if inv_item.unique_id == material and inv_item.item_count >= recipe.requires[material]:
-									inv_item.item_count -= recipe.requires[material]
-									
-									if inv_item.item_count == 0:
-										hotbar_items.erase(inv_item)
+						for inv_item in inventory_items:
+							if inv_item.unique_id == material and inv_item.item_count >= recipe.requires[material]:
+								inv_item.item_count -= recipe.requires[material]
+								
+								if inv_item.item_count == 0:
+									inventory_items.erase(inv_item)
 				))
 				node.get_node("ItemCount").text = str(recipe.amount)
 				node.name = val

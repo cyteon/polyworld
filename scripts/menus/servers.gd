@@ -32,6 +32,10 @@ func _request_completed(
 		
 		node.get_node("Name").text = server.name
 		node.get_node("Players").text = "%s/%s Players" % [int(server.players), int(server.max_players)]
+		
+		if int(server.players) >= int(server.max_players):
+			node.get_node("Button").disabled = true
+		
 		node.get_node("Button").pressed.connect(func():
 			print("[Client] Connecting to server")
 

@@ -2,7 +2,7 @@ extends Node
 
 # will be used to see if server compatable with client
 const compatability_ver: int = 1
-const backend_url: String = "https://polyworld.cyteon.dev"
+const backend_url: String = "https://polyworld.xyz"
 
 # -- Hybrid -- #
 # aka: Server/Client -> Server/Client
