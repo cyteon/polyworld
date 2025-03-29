@@ -275,36 +275,54 @@ func _physics_process(delta: float) -> void:
 			
 			for material in recipe.requires:
 				for item in hotbar_items:
-					if item.unique_id == material and item.item_count >= recipe.requires[material]:
+					if item.unique_id == material and item.item_count >= recipe.requires[material].amount:
 						reqs_met += 1
 						break
 				
 				for inv_item in inventory_items:
-					if inv_item.unique_id == material and inv_item.item_count >= recipe.requires[material]:
+					if inv_item.unique_id == material and inv_item.item_count >= recipe.requires[material].amount:
 						reqs_met += 1
 						break
 			
 			if reqs_met == len(recipe.requires):
 				var node = $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer/1".duplicate()
 				node.get_node("TextureBtn").texture_normal = load(recipe.icon)
+				
 				node.get_node("TextureBtn").pressed.connect((func ():
 					add_item_to_inv(load(recipe.scene).instantiate())
 					
 					for material in recipe.requires:
 						for item in hotbar_items:
-							if item.unique_id == material and item.item_count >= recipe.requires[material]:
-								item.item_count -= recipe.requires[material]
+							if item.unique_id == material and item.item_count >= recipe.requires[material].amount:
+								item.item_count -= recipe.requires[material].amount
 								
 								if item.item_count == 0:
 									hotbar_items.erase(item)
 						
 						for inv_item in inventory_items:
-							if inv_item.unique_id == material and inv_item.item_count >= recipe.requires[material]:
-								inv_item.item_count -= recipe.requires[material]
+							if inv_item.unique_id == material and inv_item.item_count >= recipe.requires[material].amount:
+								inv_item.item_count -= recipe.requires[material].amount
 								
 								if inv_item.item_count == 0:
 									inventory_items.erase(inv_item)
 				))
+				
+				node.get_node("TextureBtn").mouse_entered.connect(func():
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail".show()
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail/VBoxContainer/Label".text = "Recipe: %s" % recipe.name
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail/VBoxContainer/Gives".text = "%s * %s\n" % [recipe.gives, recipe.amount]
+					
+					var list = ""
+					
+					for material in recipe.requires:
+						list += "- %s * %s" % [recipe.requires[material].label, recipe.requires[material].amount]
+					
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail/VBoxContainer/Requires".text = "Requires:\n%s" % list
+				)
+				
+				node.get_node("TextureBtn").mouse_exited.connect(func():
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail".hide()
+				)
 				
 				node.get_node("ItemCount").text = str(recipe.amount)
 				node.name = val
