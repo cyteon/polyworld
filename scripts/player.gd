@@ -305,6 +305,7 @@ func _physics_process(delta: float) -> void:
 								if inv_item.item_count == 0:
 									inventory_items.erase(inv_item)
 				))
+				
 				node.get_node("ItemCount").text = str(recipe.amount)
 				node.name = val
 				
