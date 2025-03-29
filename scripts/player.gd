@@ -214,7 +214,7 @@ func _physics_process(delta: float) -> void:
 		if len(hotbar_items) >= hotbar_slot.name.to_int():
 			var item = hotbar_items[hotbar_slot.name.to_int() - 1]
 			
-			hotbar_slot.get_node("TextureRect").texture = item.icon
+			hotbar_slot.get_node("TextureRect").texture = load(item.icon_path)
 			
 			hotbar_slot.get_node("ItemCount").text = str(
 				item.item_count
@@ -260,7 +260,7 @@ func _physics_process(delta: float) -> void:
 	if $"../CanvasLayer/Control/InventoryBG".visible:
 		for inventory_slot in $"../CanvasLayer/Control/InventoryBG/Inventory/GridContainer".get_children():
 			if len(inventory_items) >= inventory_slot.name.to_int():
-				inventory_slot.get_node("TextureRect").texture = inventory_items[inventory_slot.name.to_int() - 1].icon
+				inventory_slot.get_node("TextureRect").texture = load(inventory_items[inventory_slot.name.to_int() - 1].icon_path)
 				
 				inventory_slot.get_node("ItemCount").text = str(
 					inventory_items[inventory_slot.name.to_int() - 1].item_count
@@ -268,10 +268,11 @@ func _physics_process(delta: float) -> void:
 			else:
 				inventory_slot.get_node("ItemCount").text = ""
 		
+		var remove_that_are_not = ["1"]
+		
 		for val in Recipes.recipes:
 			var recipe = Recipes.recipes[val]
 			var reqs_met: int = 0
-			var remove_that_are_not = ["1"]
 			
 			for material in recipe.requires:
 				for item in hotbar_items:
@@ -285,6 +286,10 @@ func _physics_process(delta: float) -> void:
 						break
 			
 			if reqs_met == len(recipe.requires):
+				if $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".has_node(val):
+					if $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_node("%s/CantCraft" % val).visible == true:
+						$"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_node(val).free()
+				
 				var node = $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer/1".duplicate()
 				node.get_node("TextureBtn").texture_normal = load(recipe.icon)
 				
@@ -331,10 +336,25 @@ func _physics_process(delta: float) -> void:
 				
 				$"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".add_child(node)
 				node.show()
+			elif $"../CanvasLayer/Control/InventoryBG/Crafting/CheckBox".button_pressed:
+				if $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".has_node(val):
+					if $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_node("%s/CantCraft" % val).visible == false:
+						$"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_node(val).free()
+				
+				var node = $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer/1".duplicate()
+				node.get_node("TextureBtn").texture_normal = load(recipe.icon)
+				node.get_node("TextureBtn").disabled = true
+				node.get_node("CantCraft").show()
+				node.name = val
+				
+				remove_that_are_not.append(val)
+				
+				$"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".add_child(node)
+				node.show()
 			
-			for child in $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_children():
-				if child.name not in remove_that_are_not:
-					child.queue_free()
+		for child in $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_children():
+			if child.name not in remove_that_are_not:
+				child.queue_free()
 	
 	if Input.is_action_just_pressed("drop"):
 		if len(hotbar_items) >= current_hotbar_slot:
@@ -360,7 +380,7 @@ func _physics_process(delta: float) -> void:
 			scene.unique_id = item.unique_id
 			scene.icon_path = item.icon_path
 			scene.stackable = item.stackable
-			scene.item_count = item.item_count
+			scene.item_count = 1
 			scene.scene = item.scene
 			
 			get_parent().get_node("Items").add_child(scene)

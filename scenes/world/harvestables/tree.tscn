@@ -19,6 +19,7 @@ yields = NodePath("Wood")
 
 [node name="Wood" parent="." instance=ExtResource("2_1jn02")]
 visible = false
+freeze = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

@@ -3,14 +3,14 @@
 [ext_resource type="Script" uid="uid://bestq367x6owr" path="res://scripts/classes/item/ToolItem.gd" id="1_k3vay"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7iuhr"]
-albedo_color = Color(0.580392, 0.294118, 0, 1)
+albedo_color = Color(0.505882, 0.290196, 0.172549, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_i672m"]
 material = SubResource("StandardMaterial3D_7iuhr")
 size = Vector3(0.1, 0.8, 0.1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0ttmh"]
-albedo_color = Color(0.52, 0.52, 0.52, 1)
+albedo_color = Color(0.392157, 0.239216, 0.168627, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_n8nbq"]
 material = SubResource("StandardMaterial3D_0ttmh")
@@ -60,11 +60,13 @@ _data = {
 }
 
 [node name="WoodPickaxe" type="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("1_k3vay")
 damage = 4
 unique_id = "wood_pickaxe"
+icon_path = "res://assets/images/items/wooden_pickaxe.png"
 stackable = false
 scene = "res://scenes/items/wood_pickaxe.tscn"
 
@@ -77,9 +79,11 @@ mesh = SubResource("BoxMesh_n8nbq")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+visible = false
 shape = SubResource("BoxShape3D_k3vay")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+visible = false
 shape = SubResource("BoxShape3D_7iuhr")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

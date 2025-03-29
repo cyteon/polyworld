@@ -14,6 +14,7 @@ size = Vector3(0.4, 0.4, 0.4)
 
 [node name="Stone" type="RigidBody3D"]
 script = ExtResource("1_i672m")
+icon_path = "res://assets/images/items/stone.png"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_i672m")

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b5flad33836qg" path="res://scripts/classes/item/BaseItem.gd" id="1_46edr"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_46edr"]
-albedo_color = Color(0.5, 0.191667, 0, 1)
+albedo_color = Color(0.639216, 0.309804, 0.203922, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_kvx2t"]
 material = SubResource("StandardMaterial3D_46edr")
@@ -15,6 +15,7 @@ size = Vector3(0.4, 0.4, 0.4)
 [node name="Wood" type="RigidBody3D"]
 script = ExtResource("1_46edr")
 unique_id = "wood"
+icon_path = "res://assets/images/items/wood.png"
 scene = "res://scenes/items/wood.tscn"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

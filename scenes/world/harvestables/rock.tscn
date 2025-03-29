@@ -25,3 +25,4 @@ shape = SubResource("BoxShape3D_u16gu")
 
 [node name="Stone" parent="." instance=ExtResource("2_u16gu")]
 visible = false
+freeze = true
