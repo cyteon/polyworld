@@ -429,9 +429,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -536.0
+offset_left = -552.0
 offset_top = -212.0
-offset_right = -40.0
+offset_right = -32.0
 offset_bottom = 212.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -1597,9 +1597,9 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 256.0
+offset_left = 272.0
 offset_top = -212.0
-offset_right = 536.0
+offset_right = 552.0
 offset_bottom = 212.0
 grow_vertical = 2
 color = Color(0.23, 0.23, 0.23, 1)
@@ -1729,18 +1729,20 @@ size_flags_vertical = 6
 text = "You can't craft anything"
 
 [node name="Detail" type="ColorRect" parent="CanvasLayer/Control/InventoryBG/Crafting"]
-visible = false
 layout_mode = 1
-offset_left = -216.0
+offset_left = -240.0
 offset_right = -8.0
 offset_bottom = 208.0
 color = Color(0.23, 0.23, 0.23, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/InventoryBG/Crafting/Detail"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
 offset_left = 8.0
-offset_right = 200.0
+offset_right = -8.0
 offset_bottom = 144.0
+grow_horizontal = 2
 
 [node name="Label" type="Label" parent="CanvasLayer/Control/InventoryBG/Crafting/Detail/VBoxContainer"]
 layout_mode = 2
@@ -1761,7 +1763,6 @@ text = "Requires:
 - Wood * 1"
 
 [node name="Loading" type="ColorRect" parent="CanvasLayer/Control"]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
