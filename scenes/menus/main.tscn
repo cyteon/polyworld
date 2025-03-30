@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://chywp86wwop7n"]
+[gd_scene load_steps=4 format=3 uid="uid://chywp86wwop7n"]
 
 [ext_resource type="Script" uid="uid://doj5vqni5828n" path="res://scripts/menus/main.gd" id="1_hnw6f"]
+[ext_resource type="PackedScene" uid="uid://d022mqen8qv4k" path="res://scenes/other/discord_rpc.tscn" id="2_wjjpd"]
 
 [sub_resource type="Theme" id="Theme_hnw6f"]
 default_font_size = 32
@@ -120,6 +121,8 @@ offset_bottom = -9.0
 grow_horizontal = 0
 grow_vertical = 0
 text = "Credits"
+
+[node name="Discord RPC" parent="." instance=ExtResource("2_wjjpd")]
 
 [connection signal="pressed" from="Buttons/ConnectButton" to="." method="_on_connect_button_pressed"]
 [connection signal="pressed" from="Buttons/ServersButton" to="." method="_on_servers_button_pressed"]

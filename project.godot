@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 
 Network="*res://scripts/globals/Network.gd"
 Recipes="*res://scripts/globals/Recipes.gd"
+DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 
 [display]
 
@@ -28,7 +29,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/discord-rpc-gd/plugin.cfg")
 
 [filesystem]
 

@@ -6,8 +6,14 @@ func _ready() -> void:
 	var license = FileAccess.open("res://LICENSE", FileAccess.READ).get_as_text()
 	
 	label.text += license
-	label.text += "\n\n# -- This game was CREATED using the Godot Game Engine -- #\n"
-	label.text += "# -- Below is a copy of the godot license -- #\n\n"
+	
+	
+	label.text += "\n\n# -- This game was CREATED using the Godot Game Engine and community addons -- #\n\n"
+	
+	label.text += "# -- Community addons -- #\n"
+	label.text += "Discord RPC © vaporvee, MIT License\n"
+	
+	label.text += "\n# -- Below is a copy of the godot license -- #\n\n"
 	
 	var godot_license = FileAccess.open("res://GODOT_COPYRIGHT.txt", FileAccess.READ).get_as_text()
 	label.text += godot_license

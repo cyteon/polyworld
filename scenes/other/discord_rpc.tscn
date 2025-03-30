@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://d022mqen8qv4k"]
+
+[ext_resource type="Script" uid="uid://cwcguelhklwlw" path="res://scripts/other/discord_rpc.gd" id="1_ywflm"]
+
+[node name="Discord RPC" type="Node"]
+script = ExtResource("1_ywflm")
+large_image = "icon"
+large_image_text = "PolyWorld"
