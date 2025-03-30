@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://cwqylnjol6jt0"]
+[gd_scene load_steps=8 format=3 uid="uid://cwqylnjol6jt0"]
 
 [ext_resource type="Script" uid="uid://eksna10s7kwx" path="res://server/server.gd" id="1_avf6q"]
 [ext_resource type="PackedScene" uid="uid://inw6nhr5dhto" path="res://scenes/items/stone.tscn" id="2_8jcgd"]
 [ext_resource type="PackedScene" uid="uid://gep3rmqomnfw" path="res://scenes/items/wood_axe.tscn" id="3_tk6kl"]
 [ext_resource type="PackedScene" uid="uid://dh256q8bjdnkl" path="res://scenes/items/wood_pickaxe.tscn" id="4_tydnw"]
+[ext_resource type="PackedScene" uid="uid://dx6sw83w48niy" path="res://scenes/items/wood_sword.tscn" id="5_255f4"]
 [ext_resource type="PackedScene" uid="uid://dkshbuml6fjiu" path="res://scenes/world/harvestables/tree.tscn" id="5_tydnw"]
 [ext_resource type="PackedScene" uid="uid://bkvbke6rqyilk" path="res://scenes/world/harvestables/rock.tscn" id="6_255f4"]
 
@@ -119,6 +120,10 @@ freeze = true
 
 [node name="WoodPickaxe" parent="Items" instance=ExtResource("4_tydnw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -214.674, 3.9, 40.2015)
+freeze = true
+
+[node name="WoodSword" parent="Items" instance=ExtResource("5_255f4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -214.674, 4.9, 42.201)
 freeze = true
 
 [node name="World" type="Node" parent="."]

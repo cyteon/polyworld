@@ -1,26 +1,26 @@
-[gd_scene load_steps=11 format=3 uid="uid://dh256q8bjdnkl"]
+[gd_scene load_steps=11 format=3 uid="uid://dx6sw83w48niy"]
 
-[ext_resource type="Script" uid="uid://bestq367x6owr" path="res://scripts/classes/item/ToolItem.gd" id="1_k3vay"]
+[ext_resource type="Script" uid="uid://bestq367x6owr" path="res://scripts/classes/item/ToolItem.gd" id="1_ogres"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7iuhr"]
 albedo_color = Color(0.505882, 0.290196, 0.172549, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_i672m"]
 material = SubResource("StandardMaterial3D_7iuhr")
-size = Vector3(0.1, 0.8, 0.1)
+size = Vector3(0.1, 1, 0.1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0ttmh"]
 albedo_color = Color(0.392157, 0.239216, 0.168627, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_n8nbq"]
 material = SubResource("StandardMaterial3D_0ttmh")
-size = Vector3(0.1, 0.1, 0.6)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_k3vay"]
-size = Vector3(0.1, 0.1, 0.6)
+size = Vector3(0.1, 0.1, 0.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7iuhr"]
-size = Vector3(0.1, 0.8, 0.1)
+size = Vector3(0.1, 1, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cn6sw"]
+size = Vector3(0.1, 0.1, 0.4)
 
 [sub_resource type="Animation" id="Animation_cn6sw"]
 length = 0.001
@@ -59,33 +59,34 @@ _data = {
 &"use": SubResource("Animation_7iuhr")
 }
 
-[node name="WoodPickaxe" type="RigidBody3D"]
+[node name="WoodSword" type="RigidBody3D"]
 collision_layer = 2
 collision_mask = 2
-script = ExtResource("1_k3vay")
-damage = 4
-harvestable_damage = 5
-harvesting_reduces_dur_by = 8
-unique_id = "wood_pickaxe"
-icon_path = "res://assets/images/items/wooden_pickaxe.png"
+script = ExtResource("1_ogres")
+damage = 7
+attacking_reduces_dur_by = 6
+type = 2
+harvestable_damage = 0
+unique_id = "wood_sword"
+icon_path = "res://assets/images/items/wooden_sword.png"
 stackable = false
-scene = "res://scenes/items/wood_pickaxe.tscn"
+scene = "res://scenes/items/wood_sword.tscn"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_i672m")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
 mesh = SubResource("BoxMesh_n8nbq")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-visible = false
-shape = SubResource("BoxShape3D_k3vay")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 visible = false
 shape = SubResource("BoxShape3D_7iuhr")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+visible = false
+shape = SubResource("BoxShape3D_cn6sw")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

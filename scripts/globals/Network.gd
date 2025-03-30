@@ -8,7 +8,15 @@ const backend_url: String = "https://polyworld.xyz"
 # aka: Server/Client -> Server/Client
 
 signal despawn_item(path: NodePath)
-signal spawn_item(scene, unique_id, icon_path, stackable, item_count, location, name_) 
+signal spawn_item(
+	scene, 
+	unique_id, 
+	icon_path, 
+	stackable, 
+	item_count, 
+	location, 
+	name_
+) 
 
 @rpc("any_peer", "call_local")
 func _despawn_item(path: NodePath):

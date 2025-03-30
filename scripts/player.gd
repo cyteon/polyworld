@@ -61,7 +61,7 @@ func _take_damage(damage: int) -> void:
 		stamina = max_stamina
 		speed = normal_speed
 		
-		global_position = Vector3(0, 10, 0)
+		global_position = $"../SpawnLoc".global_position
 
 func _play_item_anim(peer: int) -> void:
 	if peer == name.to_int():
@@ -346,6 +346,24 @@ func _physics_process(delta: float) -> void:
 				node.get_node("TextureBtn").disabled = true
 				node.get_node("CantCraft").show()
 				node.name = val
+				
+				node.get_node("CantCraft").mouse_entered.connect(func():
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail".show()
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail/VBoxContainer/Label".text = "Recipe: %s" % recipe.name
+
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail/VBoxContainer/Gives".text = "%s * %s\n" % [recipe.gives, recipe.amount]
+					
+					var list = ""
+					
+					for material in recipe.requires:
+						list += "- %s * %s" % [recipe.requires[material].label, recipe.requires[material].amount]
+					
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail/VBoxContainer/Requires".text = "Requires:\n%s" % list
+				)
+				
+				node.get_node("CantCraft").mouse_exited.connect(func():
+					$"../CanvasLayer/Control/InventoryBG/Crafting/Detail".hide()
+				)
 				
 				remove_that_are_not.append(val)
 				

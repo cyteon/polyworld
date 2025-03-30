@@ -17,7 +17,7 @@ const recipes = {
 	},
 	"wood_pickaxe": {
 		"name": "Wooden Pickaxe",
-		"gives": "Wood Pickaxe",
+		"gives": "Wooden Pickaxe",
 		"scene": "res://scenes/items/wood_pickaxe.tscn",
 		"amount": 1,
 		"icon": "res://assets/images/items/wooden_pickaxe.png",
