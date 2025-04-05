@@ -1,6 +1,8 @@
 [gd_scene load_steps=11 format=3 uid="uid://dx6sw83w48niy"]
 
-[ext_resource type="Script" uid="uid://bestq367x6owr" path="res://scripts/classes/item/ToolItem.gd" id="1_ogres"]
+[sub_resource type="GDScript" id="GDScript_jr8yv"]
+script/source = "extends ToolItem
+"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7iuhr"]
 albedo_color = Color(0.505882, 0.290196, 0.172549, 1)
@@ -62,14 +64,13 @@ _data = {
 [node name="WoodSword" type="RigidBody3D"]
 collision_layer = 2
 collision_mask = 2
-script = ExtResource("1_ogres")
+script = SubResource("GDScript_jr8yv")
 damage = 7
-attacking_reduces_dur_by = 6
+attacking_reduces_dur_by = 8
 type = 2
 harvestable_damage = 0
 unique_id = "wood_sword"
 icon_path = "res://assets/images/items/wooden_sword.png"
-stackable = false
 scene = "res://scenes/items/wood_sword.tscn"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

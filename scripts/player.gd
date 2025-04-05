@@ -4,20 +4,26 @@ var normal_speed: float = 5.0
 var speed: float = normal_speed
 const JUMP_VELOCITY: float = 4.5
 
+# the ones with @export is to expose to synchronizers
 @export var health: int = 100
 
-@export var max_stamina: int = 100
+var max_stamina: int = 100
 @export var stamina: float = max_stamina
 
+var hunger: float = 100
+var standard_hunger_reduction: float = .4
+var fast_hunger_reduction: float = .6
+
 var current_hotbar_slot: int = 1
-@export var hotbar_items: Array[BaseItem] = []
-@export var inventory_items: Array[BaseItem] = []
+var hotbar_items: Array[BaseItem] = []
+var inventory_items: Array[BaseItem] = []
 
 @export var target_pos: Vector3 = Vector3.ZERO
 
 func _ready() -> void:
 	if is_multiplayer_authority():
 		Network.take_damage.connect(_take_damage)
+		Network.set_state.connect(_set_state)
 	else:
 		Network.rpc_id(name.to_int(), "_ready_to_send_to", multiplayer.get_unique_id())
 		Network.set_holding.connect(_set_holding)
@@ -25,6 +31,27 @@ func _ready() -> void:
 	
 	target_pos = global_position
 
+func _set_state(pos: Vector3, health_: int, stamina_: float, hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
+	global_position = pos if pos != Vector3(0, 0, 0) else $"../SpawnLoc".global_position
+	health = health_
+	stamina = stamina_
+	
+	hotbar_items = []
+	inventory_items = []
+	
+	var h = bytes_to_var_with_objects(hotbar)
+	var v = bytes_to_var_with_objects(inventory)
+	
+	if h:
+		for h_item in h:
+			var item = h_item.instantiate()
+			hotbar_items.append(item)
+	
+	if v:
+		for i_item in v:
+			var item = i_item.instantiate()
+			inventory_items.append(item)
+	
 func _take_damage(damage: int) -> void:
 	health -= damage
 	# TODO: maybe smth to indicate like sound effect or sum
@@ -48,11 +75,12 @@ func _take_damage(damage: int) -> void:
 			scene.global_position.y += 0.5
 			scene.global_position += -global_transform.basis.z.normalized()
 			
+			
+			Util.set_owner_recursive(scene, scene)
+			
 			Network.rpc(
 				"_spawn_item", 
-				scene.scene, scene.unique_id, 
-				scene.icon_path, scene.stackable, 
-				scene.item_count, scene.global_position,
+				var_to_bytes_with_objects(scene),
 				scene.name
 			)
 		
@@ -134,8 +162,8 @@ func _physics_process(delta: float) -> void:
 		# to prevent large delay
 		if target_pos.distance_to(position) > 2:
 			position = target_pos
-		return
 		
+		return
 	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
@@ -144,6 +172,9 @@ func _physics_process(delta: float) -> void:
 	# so u still get stamina even if in pause menu cause it dosent actually pause
 	if stamina < 100 and not Input.is_action_pressed("sprint"):
 		stamina += 5 * delta
+		hunger -= delta * fast_hunger_reduction
+	else:
+		hunger -= delta * standard_hunger_reduction
 	
 	if Input.is_action_just_pressed("pause"):
 		if $"../CanvasLayer/Control/InventoryBG".visible:
@@ -193,9 +224,10 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	target_pos = global_position
 	
-	$"../CanvasLayer/Control/StaminaBar".max_value = max_stamina
+	#$"../CanvasLayer/Control/StaminaBar".max_value = max_stamina
 	$"../CanvasLayer/Control/StaminaBar".value = stamina
 	$"../CanvasLayer/Control/HealthBar".value = health
+	$"../CanvasLayer/Control/HungerBar".value = hunger
 	
 	var item_to_hold: bool = false
 	
@@ -394,22 +426,52 @@ func _physics_process(delta: float) -> void:
 				slot.get_node("TextureRect").texture = null
 				slot.get_node("ItemCount").text = ""
 			
-			var scene = load(item.scene).instantiate()
-			scene.unique_id = item.unique_id
-			scene.icon_path = item.icon_path
-			scene.stackable = item.stackable
-			scene.item_count = 1
-			scene.scene = item.scene
+			var i = item.duplicate()
+			i.item_count = 1
 			
-			get_parent().get_node("Items").add_child(scene)
-			scene.global_position = global_position
-			scene.global_position.y += 0.5
-			scene.global_position += -global_transform.basis.z.normalized()
+			get_parent().get_node("Items").add_child(i)
+			i.global_position = global_position
+			i.global_position.y += 0.5
+			i.global_position += -global_transform.basis.z.normalized()
+					
+			for c in i.get_children():
+				c.owner = i
+			
+			var p = PackedScene.new()
+			p.pack(i)
 			
 			Network.rpc(
 				"_spawn_item", 
-				scene.scene, scene.unique_id, 
-				scene.icon_path, scene.stackable, 
-				scene.item_count, scene.global_position,
-				scene.name
+				var_to_bytes_with_objects(p),
+				i.name
 			)
+
+
+func _on_send_data_to_save_timeout() -> void:
+	var encoded_hotbar = []
+	var encoded_inv = []
+	
+	for h_item in hotbar_items:
+		var item = h_item.duplicate()
+		for c in item.get_children():
+			c.owner = item
+		
+		var new = PackedScene.new()
+		new.pack(item)
+		encoded_hotbar.append(new)
+	
+	for i_item in inventory_items:
+		var item = i_item.duplicate()
+		for c in item.get_children():
+			c.owner = item
+		
+		var new = PackedScene.new()
+		new.pack(item)
+		encoded_inv.append(new)
+	
+	Network.rpc_id(
+		1,
+		"_inv_data",
+		var_to_bytes_with_objects(encoded_hotbar),
+		var_to_bytes_with_objects(encoded_inv)
+	)

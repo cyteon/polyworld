@@ -123,6 +123,8 @@ grow_vertical = 0
 text = "Credits"
 
 [node name="Discord RPC" parent="." instance=ExtResource("2_wjjpd")]
+state = ""
+large_image_text = ""
 
 [connection signal="pressed" from="Buttons/ConnectButton" to="." method="_on_connect_button_pressed"]
 [connection signal="pressed" from="Buttons/ServersButton" to="." method="_on_servers_button_pressed"]

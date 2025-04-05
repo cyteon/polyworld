@@ -111,5 +111,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.490938, 0.223552, -0.505612
 replication_interval = 0.033
 delta_interval = 0.033
 replication_config = SubResource("SceneReplicationConfig_g2els")
-public_visibility = false
 script = SubResource("GDScript_qhqgy")
+
+[node name="SendDataToSave" type="Timer" parent="."]
+wait_time = 15.0
+autostart = true
+
+[connection signal="timeout" from="SendDataToSave" to="." method="_on_send_data_to_save_timeout"]

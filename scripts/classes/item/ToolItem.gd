@@ -55,6 +55,8 @@ func _process(_delta: float) -> void:
 						child.free()
 					
 					item.item_count = collider.yields_per_damage * harvestable_damage
+					item.show()
+					item.freeze = false
 					
 					get_parent().get_parent().add_item_to_inv(item)
 				elif damage > 0:

@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 Network="*res://scripts/globals/Network.gd"
 Recipes="*res://scripts/globals/Recipes.gd"
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
+Util="*res://scripts/globals/Util.gd"
 
 [display]
 

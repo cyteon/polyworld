@@ -8,23 +8,15 @@ const backend_url: String = "https://polyworld.xyz"
 # aka: Server/Client -> Server/Client
 
 signal despawn_item(path: NodePath)
-signal spawn_item(
-	scene, 
-	unique_id, 
-	icon_path, 
-	stackable, 
-	item_count, 
-	location, 
-	name_
-) 
+signal spawn_item(bytes: PackedByteArray, name_: String) 
 
 @rpc("any_peer", "call_local")
 func _despawn_item(path: NodePath):
 	despawn_item.emit(path)
 
 @rpc("any_peer", "call_remote")
-func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location, name_):
-	spawn_item.emit(scene, unique_id, icon_path, stackable, item_count, location, name_)
+func _spawn_item(bytes: PackedByteArray, name_: String):
+	spawn_item.emit(bytes, name_)
 
 # -- Client -> Client -- #
 signal play_item_anim(peer: int)
@@ -50,6 +42,7 @@ signal add_players(ids)
 signal remove_player(id: int)
 signal take_damage(damage: int)
 signal spawn_scene(node: NodePath, scene: String, position: Vector3, name_: String)
+signal set_state(position: Vector3, health: int, stamina: float, hotbar: PackedByteArray, inventory: PackedByteArray)
 
 @rpc("authority")
 func _disconnect(reason: String):
@@ -72,9 +65,14 @@ func _take_damage(damage: int):
 func _spawn_scene(node: NodePath, scene: String, position: Vector3, name_: String):
 	spawn_scene.emit(node, scene, position, name_)
 
+@rpc("authority")
+func _set_state(position: Vector3, health: int, stamina: float, hotbar: PackedByteArray, inventory: PackedByteArray):
+	set_state.emit(position, health, stamina, hotbar, inventory)
+
 # -- Client -> Server -- #
 signal authorized(unique_id: String, peer_id: int)
 signal attack_player(target_id: int, damage: int)
+signal inv_data(hotbar: PackedByteArray, inventory: PackedByteArray)
 
 @rpc("any_peer", "call_remote")
 func _authorize(unique_id: String):
@@ -84,3 +82,7 @@ func _authorize(unique_id: String):
 @rpc("any_peer", "call_remote")
 func _attack_player(target_id: int, damage: int):
 	attack_player.emit(target_id, damage)
+
+@rpc("any_peer", "call_remote")
+func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray):
+	inv_data.emit(hotbar, inventory)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://glr6s5xa8vim"]
+[gd_scene load_steps=18 format=3 uid="uid://glr6s5xa8vim"]
 
 [ext_resource type="Texture2D" uid="uid://jrumoe5ieo40" path="res://assets/world/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="1_nnsk1"]
 [ext_resource type="Script" uid="uid://c7rwssxcxjshr" path="res://scripts/world.gd" id="1_rwgxs"]
@@ -35,8 +35,11 @@ bg_color = Color(0, 0, 0, 0.290196)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k0juu"]
 bg_color = Color(0.24, 0.632667, 1, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4wyf3"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_71j4m"]
 bg_color = Color(1, 0.24, 0.24, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4mrxx"]
+bg_color = Color(1, 0.595, 0.19, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qfnet"]
 bg_color = Color(1, 0.29, 0.29, 1)
@@ -100,7 +103,18 @@ offset_right = 256.0
 offset_bottom = 53.0
 theme_override_font_sizes/font_size = 32
 theme_override_styles/background = SubResource("StyleBoxFlat_rwgxs")
-theme_override_styles/fill = SubResource("StyleBoxFlat_4wyf3")
+theme_override_styles/fill = SubResource("StyleBoxFlat_71j4m")
+value = 50.0
+
+[node name="HungerBar" type="ProgressBar" parent="CanvasLayer/Control"]
+layout_mode = 1
+offset_left = 8.0
+offset_top = 56.0
+offset_right = 256.0
+offset_bottom = 101.0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/background = SubResource("StyleBoxFlat_rwgxs")
+theme_override_styles/fill = SubResource("StyleBoxFlat_4mrxx")
 value = 50.0
 
 [node name="Hotbar" type="HBoxContainer" parent="CanvasLayer/Control"]
@@ -1764,6 +1778,7 @@ text = "Requires:
 - Wood * 1"
 
 [node name="Loading" type="ColorRect" parent="CanvasLayer/Control"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

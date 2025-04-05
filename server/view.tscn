@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://cwqylnjol6jt0"]
+[gd_scene load_steps=9 format=3 uid="uid://cwqylnjol6jt0"]
 
 [ext_resource type="Script" uid="uid://eksna10s7kwx" path="res://server/server.gd" id="1_avf6q"]
 [ext_resource type="PackedScene" uid="uid://inw6nhr5dhto" path="res://scenes/items/stone.tscn" id="2_8jcgd"]
 [ext_resource type="PackedScene" uid="uid://gep3rmqomnfw" path="res://scenes/items/wood_axe.tscn" id="3_tk6kl"]
 [ext_resource type="PackedScene" uid="uid://dh256q8bjdnkl" path="res://scenes/items/wood_pickaxe.tscn" id="4_tydnw"]
+[ext_resource type="PackedScene" uid="uid://ygo60grsig57" path="res://scenes/items/wood.tscn" id="5_2caxn"]
 [ext_resource type="PackedScene" uid="uid://dx6sw83w48niy" path="res://scenes/items/wood_sword.tscn" id="5_255f4"]
 [ext_resource type="PackedScene" uid="uid://dkshbuml6fjiu" path="res://scenes/world/harvestables/tree.tscn" id="5_tydnw"]
 [ext_resource type="PackedScene" uid="uid://bkvbke6rqyilk" path="res://scenes/world/harvestables/rock.tscn" id="6_255f4"]
@@ -19,6 +20,10 @@ script = ExtResource("1_avf6q")
 
 [node name="SendServerInfo" type="Timer" parent="."]
 wait_time = 300.0
+autostart = true
+
+[node name="Save" type="Timer" parent="."]
+wait_time = 30.0
 autostart = true
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
@@ -90,6 +95,10 @@ alignment = 2
 
 [node name="Items" type="Node" parent="."]
 
+[node name="Wood" parent="Items" instance=ExtResource("5_2caxn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -218, 5, 42)
+freeze = true
+
 [node name="Stone" parent="Items" instance=ExtResource("2_8jcgd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -217.732, 5.26324, 40.8136)
 freeze = true
@@ -114,12 +123,12 @@ freeze = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -217.955, 3.84042, 39.8533)
 freeze = true
 
-[node name="WoodAxe" parent="Items" instance=ExtResource("3_tk6kl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -214.608, 4.06837, 38.8477)
-freeze = true
-
 [node name="WoodPickaxe" parent="Items" instance=ExtResource("4_tydnw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -214.674, 3.9, 40.2015)
+freeze = true
+
+[node name="WoodAxe" parent="Items" instance=ExtResource("3_tk6kl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -214.608, 4.06837, 38.8477)
 freeze = true
 
 [node name="WoodSword" parent="Items" instance=ExtResource("5_255f4")]
@@ -153,3 +162,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -226.104, 3, 42.2528)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -226.104, 3, 40.727)
 
 [connection signal="timeout" from="SendServerInfo" to="." method="send_server_info"]
+[connection signal="timeout" from="Save" to="." method="_on_save_timeout"]

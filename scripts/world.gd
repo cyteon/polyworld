@@ -20,17 +20,12 @@ func _despawn_item(path: NodePath) -> void:
 	if has_node(path):
 		get_node(path).queue_free()
 
-func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location, name_) -> void:
-	var node = load(scene).instantiate()
-	node.unique_id = unique_id
-	node.icon_path = icon_path
-	node.stackable = stackable
-	node.item_count = item_count
-	node.scene = scene
-	node.name = name_
+func _spawn_item(bytes, name_) -> void:
+	var node = bytes_to_var_with_objects(bytes).instantiate()
 	
 	$Items.add_child(node)
-	node.global_position = location
+	node.name = name_
+	node.freeze = false
 
 func _add_players(ids) -> void:
 	for id in ids:
@@ -49,6 +44,10 @@ func _remove_player(id) -> void:
 		get_node(str(id)).queue_free()
 
 func _on_disconnect_pressed() -> void:
+	get_node(str(multiplayer.get_unique_id()))._on_send_data_to_save_timeout()
+	
+	await get_tree().create_timer(0.5).timeout
+	
 	multiplayer.multiplayer_peer.close()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	get_tree().change_scene_to_file("res://scenes/menus/main.tscn")

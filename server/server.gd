@@ -1,5 +1,9 @@
 extends Control
 
+var save_file_loc: String = "user://server_save.json"
+# so smth dosent write while being read and stuff
+var save_file_busy: bool = false
+
 var unique_id: String = OS.get_unique_id()
 
 var max_players: int = 4
@@ -11,7 +15,7 @@ var advertise_host: String = "localhost"
 var server_name: String = "An Server"
 
 var network: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-# { String: { unique_id: String | null, holding: String } }
+# { String: { unique_id: String | null, holding: String, hotbar: array | null, inventory: array | null } }
 var peers: Dictionary = {}
 
 var thread: Thread
@@ -43,7 +47,28 @@ func _input_loop() -> void:
 			_:
 				print("[CMD] Unknown command: %s" % input)
 
-func start_server():	
+func start_server():
+	if FileAccess.file_exists(save_file_loc):
+		var save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
+		
+		for child in $Items.get_children():
+			child.queue_free()
+		
+		for child in $World.get_children():
+			child.queue_free()
+		
+		for item in save_obj["items"]:
+			var p = bytes_to_var_with_objects(str_to_var(item))
+			var node = p.instantiate()
+			$Items.add_child(node)
+		
+		for foliage in save_obj["foliage"]:
+			var scene = load(foliage["scene"]).instantiate()
+			scene.name = foliage["name"]
+			
+			$World.add_child(scene)
+			scene.global_position = str_to_var("Vector3" + foliage["position"])
+	
 	for arg in OS.get_cmdline_args():
 		if arg.find("=") > -1:
 			var key = arg.split("=")[0].lstrip("--")
@@ -99,8 +124,16 @@ func start_server():
 	Network.authorized.connect(_peer_authorized)
 	Network.attack_player.connect(_attack_player)
 	Network.set_holding.connect(_set_holding)
+	Network.inv_data.connect(_inv_data)
 	
 	send_server_info()
+
+func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray):
+	var peer = multiplayer.get_remote_sender_id()
+	
+	if peer in peers:
+		peers[peer].hotbar = hotbar
+		peers[peer].inventory = hotbar
 
 func _set_holding(peer: int, scene: String):
 	if peer in peers:
@@ -112,17 +145,11 @@ func _despawn_item(path: NodePath):
 	else:
 		push_warning("[Server Debug] Tried to free item that could not be found: %s" % path)
 
-func _spawn_item(scene, unique_id, icon_path, stackable, item_count, location, name_) -> void:
-	var node = load(scene).instantiate()
-	node.unique_id = unique_id
-	node.icon_path = icon_path
-	node.stackable = stackable
-	node.item_count = item_count
-	node.scene = scene
-	node.name = name_
+func _spawn_item(bytes, name_) -> void:
+	var node = bytes_to_var_with_objects(bytes).instantiate()
 	
 	$Items.add_child(node)
-	node.global_position = location
+	node.name = name_
 	node.freeze = true
 
 func _attack_player(target_id: int, damage: int):
@@ -155,6 +182,7 @@ func _peer_connected(target_id: int):
 	
 	log_event("New peer connected: %s" % target_id)
 	peers.set(target_id, { })
+	
 	$Info/Players.text = "Players: %s" % len(peers)
 	
 	send_server_info()
@@ -177,13 +205,18 @@ func _peer_connected(target_id: int):
 			Network.rpc_id(target_id, "_set_holding", id, peers[id].holding if peers[id].has("holding") else "")
 	
 	for item in $Items.get_children():
+		var i = item.duplicate()
+		
+		Util.set_owner_recursive(i, i)
+		
+		var p = PackedScene.new()
+		p.pack(i)
+		
 		Network.rpc_id(
 			target_id,
 			"_spawn_item", 
-			item.scene, item.unique_id, 
-			item.icon_path, item.stackable, 
-			item.item_count, item.global_position,
-			item.name
+			var_to_bytes_with_objects(p),
+			i.name
 		)
 	
 	for node in $World.get_children():
@@ -197,12 +230,46 @@ func _peer_connected(target_id: int):
 		)
 
 func _peer_disconnected(target_id: int):
+	var data = peers.get(target_id)
+	
 	log_event("Peer disconnected: %s" % target_id)
 	peers.erase(target_id)
+
 	$Info/Players.text = "Players: %s" % len(peers)
+	
+	var health = get_node(str(target_id)).health
+	var stamina = get_node(str(target_id)).stamina
+	var position = get_node(str(target_id)).global_position
 	
 	Network.rpc("_remove_player", target_id)
 	send_server_info()
+	
+	while save_file_busy:
+		await get_tree().create_timer(0.5).timeout
+	
+	save_file_busy = true
+	
+	var save_obj = {
+		"players": {},
+		"items": [],
+		"foliage": [],
+	}
+	
+	if FileAccess.file_exists(save_file_loc):
+		save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
+	
+	save_obj["players"][data.unique_id] = {
+			"hotbar": data.hotbar if "hotbar" in data else [],
+			"inventory": data.inventory if "inventory" in data else [],
+			"health": health,
+			"stamina": stamina,
+			"position": position
+		}
+		
+	var text = JSON.stringify(save_obj, "\t")
+	FileAccess.open(save_file_loc, FileAccess.WRITE).store_string(text)
+	
+	save_file_busy = false
 
 func _peer_authorized(unique_id: String, peer_id: int):
 	var data = peers.get(peer_id, null)
@@ -213,7 +280,29 @@ func _peer_authorized(unique_id: String, peer_id: int):
 	
 	data.unique_id = unique_id
 	
-	peers.set(peer_id, data)
+	if FileAccess.file_exists(save_file_loc):
+		save_file_busy = true
+		
+		var save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
+		
+		save_file_busy = false
+		
+		if unique_id in save_obj["players"]:
+			data.hotbar = save_obj["players"][unique_id].hotbar
+			data.inventory = save_obj["players"][unique_id].inventory
+			
+			peers.set(peer_id, data)
+			
+			await get_tree().create_timer(1).timeout
+			
+			Network.rpc_id(
+				peer_id, "_set_state",
+				str_to_var("Vector3" + save_obj["players"][unique_id].position),
+				save_obj["players"][unique_id].health,
+				save_obj["players"][unique_id].stamina,
+				str_to_var(save_obj["players"][unique_id].hotbar),
+				str_to_var(save_obj["players"][unique_id].inventory)
+			)
 
 func log_event(str: String, error = false):
 	print("[Server] %s" % str)
@@ -263,7 +352,61 @@ func send_server_info() -> void:
 		await get_tree().create_timer(1).timeout
 		waits += 1
 		
-		if waits >= 120:
-			print("[Server] HTTP Client Busy for 2 minutes, aborting")
+		if waits >= 60:
+			print("[Server] HTTP Client Busy for 1 minutes, aborting")
 	
 	$HTTPRequest.request("%s/api/servers" % Network.backend_url, headers, HTTPClient.METHOD_POST, json)
+
+func _on_save_timeout() -> void:
+	# TODO: put this next to binaries
+	var save_obj = {}
+	
+	while save_file_busy:
+		await get_tree().create_timer(0.5).timeout
+	
+	save_file_busy = true
+	
+	if FileAccess.file_exists(save_file_loc):
+		save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
+	else:
+		save_obj = {
+			"players": {},
+			"items": [],
+			"foliage": [],
+		}
+	
+	for peer in peers.keys():
+		if not peers.has(peer):
+			continue
+		
+		var data = peers[peer]
+		
+		save_obj["players"][data.unique_id] = {
+			"hotbar": data.hotbar if "hotbar" in data else [],
+			"inventory": data.inventory if "inventory" in data else [],
+			"health": get_node(str(peer)).health,
+			"stamina": get_node(str(peer)).stamina,
+			"position": get_node(str(peer)).global_position
+		}
+	
+	save_obj["items"] = []
+	for item in $Items.get_children():
+		Util.set_owner_recursive(item, item)
+		
+		var p = PackedScene.new()
+		p.pack(item)
+		
+		save_obj["items"].append(var_to_bytes_with_objects(p))
+	
+	save_obj["foliage"] = []
+	for foliage in $World.get_children():
+		save_obj["foliage"].append({
+			"scene": foliage.scene_file_path,
+			"position": foliage.global_position,
+			"name": foliage.name
+		})
+	
+	var text = JSON.stringify(save_obj, "\t")
+	FileAccess.open(save_file_loc, FileAccess.WRITE).store_string(text)
+	
+	save_file_busy = false

@@ -1,6 +1,8 @@
 [gd_scene load_steps=11 format=3 uid="uid://gep3rmqomnfw"]
 
-[ext_resource type="Script" uid="uid://bestq367x6owr" path="res://scripts/classes/item/ToolItem.gd" id="1_cn6sw"]
+[sub_resource type="GDScript" id="GDScript_xn1gy"]
+script/source = "extends ToolItem
+"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7iuhr"]
 albedo_color = Color(0.505882, 0.290196, 0.172549, 1)
@@ -62,7 +64,7 @@ _data = {
 [node name="WoodAxe" type="RigidBody3D"]
 collision_layer = 2
 collision_mask = 2
-script = ExtResource("1_cn6sw")
+script = SubResource("GDScript_xn1gy")
 type = 1
 harvestable_damage = 5
 harvesting_reduces_dur_by = 8

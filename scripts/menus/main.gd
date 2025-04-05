@@ -14,13 +14,14 @@ func _ready() -> void:
 			match key:
 				"join":
 					var host = value.split(":")[0]
-					var port = value.split(":")[1]
+					var portArg = value.split(":")[1]
 					
-					if port.is_valid_int():
+					if portArg.is_valid_int():
+						portArg
 						print("[Client] --join was passed, joining server...")
 	
 						var network = ENetMultiplayerPeer.new()
-						var err = network.create_client(host, port.to_int())
+						var err = network.create_client(host, portArg.to_int())
 						multiplayer.multiplayer_peer = network
 						
 						if err == OK:

@@ -1,6 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://inw6nhr5dhto"]
 
-[ext_resource type="Script" uid="uid://b5flad33836qg" path="res://scripts/classes/item/BaseItem.gd" id="1_i672m"]
+[sub_resource type="GDScript" id="GDScript_jc1u2"]
+script/source = "extends BaseItem
+"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i672m"]
 albedo_color = Color(0.136826, 0.136826, 0.136826, 1)
@@ -13,7 +15,7 @@ size = Vector3(0.4, 0.4, 0.4)
 size = Vector3(0.4, 0.4, 0.4)
 
 [node name="Stone" type="RigidBody3D"]
-script = ExtResource("1_i672m")
+script = SubResource("GDScript_jc1u2")
 icon_path = "res://assets/images/items/stone.png"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
