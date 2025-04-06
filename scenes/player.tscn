@@ -61,6 +61,9 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath(".:position")
 properties/2/spawn = true
 properties/2/replication_mode = 1
+properties/3/path = NodePath(".:hunger")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [sub_resource type="GDScript" id="GDScript_qhqgy"]
 script/source = "extends MultiplayerSynchronizer

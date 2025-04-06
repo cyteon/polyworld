@@ -1,8 +1,9 @@
 extends CharacterBody3D
 
+const JUMP_VELOCITY: float = 4.5
+
 var normal_speed: float = 5.0
 var speed: float = normal_speed
-const JUMP_VELOCITY: float = 4.5
 
 # the ones with @export is to expose to synchronizers
 @export var health: int = 100
@@ -10,7 +11,7 @@ const JUMP_VELOCITY: float = 4.5
 var max_stamina: int = 100
 @export var stamina: float = max_stamina
 
-var hunger: float = 100
+@export var hunger: float = 100
 var standard_hunger_reduction: float = .4
 var fast_hunger_reduction: float = .6
 
@@ -31,10 +32,11 @@ func _ready() -> void:
 	
 	target_pos = global_position
 
-func _set_state(pos: Vector3, health_: int, stamina_: float, hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
+func _set_state(pos: Vector3, health_: int, stamina_: float, hunger_: float, hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
 	global_position = pos if pos != Vector3(0, 0, 0) else $"../SpawnLoc".global_position
 	health = health_
 	stamina = stamina_
+	hunger = hunger_
 	
 	hotbar_items = []
 	inventory_items = []

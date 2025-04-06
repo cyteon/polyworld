@@ -239,7 +239,8 @@ func _peer_disconnected(target_id: int):
 	
 	var health = get_node(str(target_id)).health
 	var stamina = get_node(str(target_id)).stamina
-	var position = get_node(str(target_id)).global_position
+	var hunger = get_node(str(target_id)).hunger
+	var pos = get_node(str(target_id)).global_position
 	
 	Network.rpc("_remove_player", target_id)
 	send_server_info()
@@ -263,7 +264,8 @@ func _peer_disconnected(target_id: int):
 			"inventory": data.inventory if "inventory" in data else [],
 			"health": health,
 			"stamina": stamina,
-			"position": position
+			"hunger": hunger,
+			"position": pos
 		}
 		
 	var text = JSON.stringify(save_obj, "\t")
@@ -300,6 +302,7 @@ func _peer_authorized(unique_id: String, peer_id: int):
 				str_to_var("Vector3" + save_obj["players"][unique_id].position),
 				save_obj["players"][unique_id].health,
 				save_obj["players"][unique_id].stamina,
+				save_obj["players"][unique_id].hunger,
 				str_to_var(save_obj["players"][unique_id].hotbar),
 				str_to_var(save_obj["players"][unique_id].inventory)
 			)
@@ -386,6 +389,7 @@ func _on_save_timeout() -> void:
 			"inventory": data.inventory if "inventory" in data else [],
 			"health": get_node(str(peer)).health,
 			"stamina": get_node(str(peer)).stamina,
+			"hunger": get_node(str(peer)).hunger,
 			"position": get_node(str(peer)).global_position
 		}
 	

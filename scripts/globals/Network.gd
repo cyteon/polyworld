@@ -42,7 +42,7 @@ signal add_players(ids)
 signal remove_player(id: int)
 signal take_damage(damage: int)
 signal spawn_scene(node: NodePath, scene: String, position: Vector3, name_: String)
-signal set_state(position: Vector3, health: int, stamina: float, hotbar: PackedByteArray, inventory: PackedByteArray)
+signal set_state(position: Vector3, health: int, stamina: float, hunger: float, hotbar: PackedByteArray, inventory: PackedByteArray)
 
 @rpc("authority")
 func _disconnect(reason: String):
@@ -66,8 +66,8 @@ func _spawn_scene(node: NodePath, scene: String, position: Vector3, name_: Strin
 	spawn_scene.emit(node, scene, position, name_)
 
 @rpc("authority")
-func _set_state(position: Vector3, health: int, stamina: float, hotbar: PackedByteArray, inventory: PackedByteArray):
-	set_state.emit(position, health, stamina, hotbar, inventory)
+func _set_state(position: Vector3, health: int, stamina: float, hunger: float, hotbar: PackedByteArray, inventory: PackedByteArray):
+	set_state.emit(position, health, stamina, hunger, hotbar, inventory)
 
 # -- Client -> Server -- #
 signal authorized(unique_id: String, peer_id: int)
