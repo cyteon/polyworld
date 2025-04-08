@@ -1,0 +1,89 @@
+[gd_scene load_steps=9 format=3 uid="uid://cxedw0dkism64"]
+
+[ext_resource type="Script" uid="uid://4l3ayf22er74" path="res://scripts/entity.gd" id="1_n3exx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_3g3lm"]
+size = Vector3(2, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3g3lm"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y6s0v"]
+material = SubResource("StandardMaterial3D_3g3lm")
+size = Vector3(0.6, 0.6, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n3exx"]
+size = Vector3(0.2, 0.4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3g3lm"]
+size = Vector3(2.00043, 1.4, 1)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_pnpr1"]
+properties/0/path = NodePath(".:target_pos")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation:y")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[sub_resource type="GDScript" id="GDScript_pnpr1"]
+script/source = "extends MultiplayerSynchronizer
+
+@export var filter_enabled: bool = true
+
+var clients_send_to: Array[int] = []
+
+func filter(id: int) -> bool:
+	return (
+		not filter_enabled
+		or id in clients_send_to
+	)
+
+func _ready() -> void:
+	add_visibility_filter(filter)
+	
+	if get_parent().is_multiplayer_authority():
+		get_parent().get_parent().get_parent().network.peer_connected.connect(func (id: int):
+			await get_tree().create_timer(2).timeout
+			clients_send_to.append(id)
+		)
+"
+
+[node name="Sheep" type="CharacterBody3D" groups=["Entity"]]
+script = ExtResource("1_n3exx")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.00282736, 0, 0.999996, 0, 1, 0, -0.999996, 0, 0.00282736, -0.00240424, 0, 0.145239)
+mesh = SubResource("BoxMesh_3g3lm")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.00282736, 0, 0.999996, 0, 1, 0, -0.999996, 0, 0.00282736, 0.000470787, 0.518359, -0.871617)
+mesh = SubResource("BoxMesh_y6s0v")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.00282736, 0, 0.999996, 0, 1, 0, -0.999996, 0, 0.00282736, 0.39505, -0.7, 1.04637)
+mesh = SubResource("BoxMesh_n3exx")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.00282736, 0, 0.999996, 0, 1, 0, -0.999996, 0, 0.00282736, 0.400139, -0.7, -0.753627)
+mesh = SubResource("BoxMesh_n3exx")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.00282736, 0, 0.999996, 0, 1, 0, -0.999996, 0, 0.00282736, -0.399858, -0.7, -0.755889)
+mesh = SubResource("BoxMesh_n3exx")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.00282736, 0, 0.999996, 0, 1, 0, -0.999996, 0, 0.00282736, -0.404947, -0.7, 1.0441)
+mesh = SubResource("BoxMesh_n3exx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.00282736, 0, 0.999996, 0, 1, 0, -0.999996, 0, 0.00282736, -0.00240476, -0.197632, 0.145424)
+shape = SubResource("BoxShape3D_3g3lm")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.033
+delta_interval = 0.033
+replication_config = SubResource("SceneReplicationConfig_pnpr1")
+script = SubResource("GDScript_pnpr1")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]

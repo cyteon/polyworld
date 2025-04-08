@@ -7,6 +7,9 @@ var speed: float = normal_speed
 
 # the ones with @export is to expose to synchronizers
 @export var health: int = 100
+var standard_health_regen_rate: float = .4
+# when regenerating it will remove this in addition to standard
+var health_hunger_extra_reduction: float = .3
 
 var max_stamina: int = 100
 @export var stamina: float = max_stamina
@@ -276,7 +279,21 @@ func _physics_process(delta: float) -> void:
 						node.harvesting_reduces_dur_by = item.harvesting_reduces_dur_by
 						$Hold.add_child(node)
 						
-						Network.rpc("_set_holding", multiplayer.get_unique_id() ,item.scene)
+						Network.rpc("_set_holding", multiplayer.get_unique_id(), item.scene)
+			elif item is ConsumableItem:
+				if str(current_hotbar_slot) == hotbar_slot.name:
+					item_to_hold = true
+					
+					if $Hold.get_child_count() == 0 or ($Hold/Item and $Hold/Item.unique_id != item.unique_id):
+						var node = hotbar_items[current_hotbar_slot - 1].duplicate()
+						node.name = "Item"
+						
+						for child in $Hold.get_children():
+							child.free()
+						
+						$Hold.add_child(node)
+						
+						Network.rpc("_set_holding", multiplayer.get_unique_id(), item.scene)
 			else:
 				hotbar_slot.get_node("Durability").hide()
 		else:

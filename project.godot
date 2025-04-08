@@ -40,6 +40,7 @@ import/blender/enabled=false
 
 Harvestable="Harvestables to be destructed with harvesting (like axe for example) items"
 Mineable="Harvestables to be destructed with mining items"
+Entity=""
 
 [input]
 

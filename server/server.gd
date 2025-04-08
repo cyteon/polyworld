@@ -63,11 +63,12 @@ func start_server():
 			$Items.add_child(node)
 		
 		for foliage in save_obj["foliage"]:
-			var scene = load(foliage["scene"]).instantiate()
-			scene.name = foliage["name"]
-			
-			$World.add_child(scene)
-			scene.global_position = str_to_var("Vector3" + foliage["position"])
+			if FileAccess.file_exists(foliage["scene"]):
+				var scene = load(foliage["scene"]).instantiate()
+				scene.name = foliage["name"]
+				
+				$World.add_child(scene)
+				scene.global_position = str_to_var("Vector3" + foliage["position"])
 	
 	for arg in OS.get_cmdline_args():
 		if arg.find("=") > -1:

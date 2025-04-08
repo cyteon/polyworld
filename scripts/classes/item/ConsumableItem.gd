@@ -1,0 +1,24 @@
+extends BaseItem
+class_name ConsumableItem
+
+@onready var player = get_parent().get_parent()
+
+@export var increase_health: int = 0
+@export var increase_hunger: int = 0
+@export var increase_stamina: int = 0
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta: float) -> void:
+	if get_parent().name != "Hold": return
+	if not player.is_multiplayer_authority(): return
+	
+	if Input.is_action_just_pressed("use"):
+		# TODO: play eating sound or sum
+		player.health += increase_health
+		player.hunger += increase_hunger
+		player.stamina += increase_stamina
+		
+		player.hotbar_items[player.current_hotbar_slot - 1].item_count -= 1
+		
+		if player.hotbar_items[player.current_hotbar_slot - 1].item_count <= 0:
+			player.hotbar_items.remove_at(player.current_hotbar_slot - 1)
