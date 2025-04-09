@@ -124,6 +124,7 @@ func start_server():
 	Network.spawn_item.connect(_spawn_item)
 	Network.authorized.connect(_peer_authorized)
 	Network.attack_player.connect(_attack_player)
+	Network.attack_entity.connect(_attack_entity)
 	Network.set_holding.connect(_set_holding)
 	Network.inv_data.connect(_inv_data)
 	
@@ -152,6 +153,10 @@ func _spawn_item(bytes, name_) -> void:
 	$Items.add_child(node)
 	node.name = name_
 	node.freeze = true
+
+func _attack_entity(path: NodePath, damage: int):
+	if has_node(path):
+		get_node(path).damage(damage)
 
 func _attack_player(target_id: int, damage: int):
 	var peer = multiplayer.get_remote_sender_id()

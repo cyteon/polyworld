@@ -66,6 +66,12 @@ func _process(_delta: float) -> void:
 						].durability -= attacking_reduces_dur_by
 						
 						Network.rpc_id(1, "_attack_player", collider.name.to_int(), damage)
+					elif collider.is_in_group("Entity"):
+						get_parent().get_parent().hotbar_items[
+							get_parent().get_parent().current_hotbar_slot - 1
+						].durability -= attacking_reduces_dur_by
+						
+						Network.rpc_id(1, "_attack_entity", collider.get_path(), damage)
 					elif collider.is_in_group("Harvestable") or collider.is_in_group("Mineable"):
 						get_parent().get_parent().hotbar_items[
 							get_parent().get_parent().current_hotbar_slot - 1

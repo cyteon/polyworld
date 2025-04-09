@@ -72,16 +72,20 @@ func _set_state(position: Vector3, health: int, stamina: float, hunger: float, h
 # -- Client -> Server -- #
 signal authorized(unique_id: String, peer_id: int)
 signal attack_player(target_id: int, damage: int)
+signal attack_entity(entity: NodePath, damage: int)
 signal inv_data(hotbar: PackedByteArray, inventory: PackedByteArray)
 
 @rpc("any_peer", "call_remote")
 func _authorize(unique_id: String):
 	authorized.emit(unique_id, multiplayer.get_remote_sender_id())
 
-
 @rpc("any_peer", "call_remote")
 func _attack_player(target_id: int, damage: int):
 	attack_player.emit(target_id, damage)
+
+@rpc("any_peer", "call_remote")
+func _attack_entity(entity: NodePath, damage: int):
+	attack_entity.emit(entity, damage)
 
 @rpc("any_peer", "call_remote")
 func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray):

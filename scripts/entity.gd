@@ -6,6 +6,11 @@ extends CharacterBody3D
 @export var health: int = 50
 @export var target_pos: Vector3 = Vector3.ZERO
 
+@export var drops_scene: String = "res://scenes/items/raw_meat.tscn"
+
+@export var drops_min: int = 1
+@export var drops_max: int = 3
+
 @onready var nav_region: NavigationRegion3D = $"../../NavigationRegion3D"
 
 var navigation_started: bool = false
@@ -15,6 +20,33 @@ func _ready() -> void:
 	
 	if is_multiplayer_authority():
 		actor_setup.call_deferred()
+
+func damage(damage: int) -> void:
+	health -= damage
+	
+	if health <= 0:
+		for i in range(randi_range(drops_min, drops_max)):
+			var item: ConsumableItem = load(drops_scene).instantiate()
+			item.global_position = global_position
+			
+			get_parent().get_parent().get_node("Items").add_child(item)
+			Util.set_owner_recursive(item, item)
+			
+			var p = PackedScene.new()
+			p.pack(item)
+
+			Network.rpc(
+				"_spawn_item",
+				var_to_bytes_with_objects(p),
+				item.name
+			)
+
+		Network.rpc(
+			"_despawn_item",
+			get_path()
+		)
+
+		queue_free()
 
 func actor_setup() -> void:
 	await get_tree().physics_frame
@@ -47,7 +79,8 @@ func _physics_process(delta: float) -> void:
 			$NavigationAgent3D.get_next_path_position()
 		) * speed
 		
-		look_at($NavigationAgent3D.get_next_path_position())
+		if global_position != $NavigationAgent3D.get_next_path_position():
+			look_at($NavigationAgent3D.get_next_path_position())
 	elif navigation_started:
 		$NavigationAgent3D.target_position = NavigationServer3D.map_get_random_point(
 			nav_region.get_navigation_map(), 1, true
