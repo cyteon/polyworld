@@ -27,9 +27,9 @@ func damage(damage: int) -> void:
 	if health <= 0:
 		for i in range(randi_range(drops_min, drops_max)):
 			var item: ConsumableItem = load(drops_scene).instantiate()
-			item.global_position = global_position
 			
 			get_parent().get_parent().get_node("Items").add_child(item)
+			item.global_position = global_position
 			Util.set_owner_recursive(item, item)
 			
 			var p = PackedScene.new()
@@ -58,7 +58,7 @@ func actor_setup() -> void:
 	$NavigationAgent3D.target_desired_distance = 1.0
 	
 	$NavigationAgent3D.waypoint_reached.connect(func (details):
-		print(details)
+		pass # print(details) # for debugging
 	)
 	
 	navigation_started = true
