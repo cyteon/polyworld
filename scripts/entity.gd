@@ -21,8 +21,8 @@ func _ready() -> void:
 	if is_multiplayer_authority():
 		actor_setup.call_deferred()
 
-func damage(damage: int) -> void:
-	health -= damage
+func damage(damage_: int) -> void:
+	health -= damage_
 	
 	if health <= 0:
 		for i in range(randi_range(drops_min, drops_max)):
@@ -49,11 +49,13 @@ func damage(damage: int) -> void:
 		queue_free()
 
 func actor_setup() -> void:
-	await get_tree().physics_frame
+	await get_tree().create_timer(1).timeout
 	
 	$NavigationAgent3D.target_position = NavigationServer3D.map_get_random_point(
 		nav_region.get_navigation_map(), 1, true
 	)
+	
+	print($NavigationAgent3D.target_position)
 	
 	$NavigationAgent3D.target_desired_distance = 1.0
 	

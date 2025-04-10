@@ -71,6 +71,7 @@ type = 2
 harvestable_damage = 0
 unique_id = "wood_sword"
 icon_path = "res://assets/images/items/wooden_sword.png"
+stackable = false
 scene = "res://scenes/items/wood_sword.tscn"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

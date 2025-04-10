@@ -25,7 +25,7 @@ func _ready() -> void:
 		$Label.text = "Failed to connect to server: %s" % reason
 	)
 
-func _process(delta: float) -> void:	
+func _process(delta: float) -> void:
 	var status = ResourceLoader.load_threaded_get_status("res://scenes/world.tscn", progress)
 	
 	match status:
