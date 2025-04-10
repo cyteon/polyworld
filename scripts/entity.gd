@@ -59,9 +59,9 @@ func actor_setup() -> void:
 	
 	$NavigationAgent3D.target_desired_distance = 1.0
 	
-	$NavigationAgent3D.waypoint_reached.connect(func (details):
-		pass # print(details) # for debugging
-	)
+	#$NavigationAgent3D.waypoint_reached.connect(func (details):
+	#	print(details) # for debugging
+	#)
 	
 	navigation_started = true
 
