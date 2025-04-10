@@ -329,7 +329,11 @@ func update_today_time(wakatime_cli) -> void:
 	
 	# Convert it and combine different categories into
 	if exit_code == 0:
-		current_time = convert_time(output[0])
+		# Due to how hackatime v2 works, this is broken
+		#current_time = convert_time(output[0])
+		
+		# This works, but is "Xh Xm"
+		current_time = output[0]
 	else:
 		current_time = "Wakatime"
 	#print(current_time)
@@ -351,6 +355,7 @@ func convert_time(complex_time: String):
 	
 	# Split times into categories
 	var time_categories = complex_time.split(', ')
+
 	for category in time_categories:
 		# Split time into parts, get first and third part (hours and minutes)
 		var time_parts = category.split(' ')
