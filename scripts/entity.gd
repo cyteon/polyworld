@@ -82,7 +82,9 @@ func _physics_process(delta: float) -> void:
 		) * speed
 		
 		if global_position != $NavigationAgent3D.get_next_path_position():
+			# there is one axis we cant modify cause it breaks shitw
 			look_at($NavigationAgent3D.get_next_path_position())
+
 	elif navigation_started:
 		$NavigationAgent3D.target_position = NavigationServer3D.map_get_random_point(
 			nav_region.get_navigation_map(), 1, true

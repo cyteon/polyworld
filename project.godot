@@ -22,6 +22,11 @@ Network="*res://scripts/globals/Network.gd"
 Recipes="*res://scripts/globals/Recipes.gd"
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 Util="*res://scripts/globals/Util.gd"
+Steamworks="*res://scripts/globals/Steamworks.gd"
+
+[debug]
+
+file_logging/enable_file_logging=true
 
 [display]
 
