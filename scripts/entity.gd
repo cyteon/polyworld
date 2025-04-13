@@ -55,8 +55,6 @@ func actor_setup() -> void:
 		nav_region.get_navigation_map(), 1, true
 	)
 	
-	print($NavigationAgent3D.target_position)
-	
 	$NavigationAgent3D.target_desired_distance = 1.0
 	
 	#$NavigationAgent3D.waypoint_reached.connect(func (details):
