@@ -2,7 +2,7 @@ extends Control
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	_on_refresh_button_pressed()	
+	_on_refresh_button_pressed()
 
 func _on_refresh_button_pressed() -> void:
 	for child in $ScrollContainer/ServerList.get_children():

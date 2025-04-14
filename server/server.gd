@@ -13,6 +13,7 @@ var port: int = 4040
 var advertise_port: int = 4040
 var advertise_host: String = "localhost"
 var server_name: String = "An Server"
+var gslt: String = ""
 
 var network: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 # { String: { unique_id: String | null, holding: String, hotbar: array | null, inventory: array | null } }
@@ -30,6 +31,10 @@ func _ready() -> void:
 	
 	thread = Thread.new()
 	thread.start(_input_loop)
+
+func _process(delta: float) -> void:
+	SteamServer.run_callbacks()
+
 
 func _input_loop() -> void:
 	while true:
@@ -76,7 +81,10 @@ func start_server():
 			var value = arg.split("=")[1].lstrip("\"").rstrip("\"")
 			
 			match key:
-				"port":# --headless --advertise_port=4040 --advertise_host=127.0.01 --server_name="dev server"
+				# --headless --advertise_port=4040 --advertise_host=127.0.01 --server_name="dev server"
+				"gslt":
+					gslt = value
+				"port":
 					if value.is_valid_int():
 						port = value.to_int()
 					else:
@@ -104,18 +112,48 @@ func start_server():
 						print("[Server] %s (max_players) is not a valid integer" % value)
 				
 	
-	var error: int = network.create_server(port)
+	var res: Dictionary = SteamServer.serverInitEx(
+		"127.0.0.1",
+		port,
+		port + 1,
+		SteamServer.ServerMode.SERVER_MODE_AUTHENTICATION_AND_SECURE,
+		ProjectSettings.get_setting("application/config/version")
+	)
 	
-	match error:
-		OK:
-			multiplayer.multiplayer_peer = network
-			log_event("Started server on port %s" % port)
-		ERR_ALREADY_IN_USE:
-			log_event("Failed to bind to port %s" % port, true)
-			$Notice.text = "Failed to start server"
-		ERR_CANT_CREATE:
-			log_event("Unable to create server :(", true)
-			$Notice.text = "Failed to start server"
+	print("[Server] %s" % res.verbal)
+	
+	SteamServer.setServerName(server_name)
+	SteamServer.setDedicatedServer(true)
+	SteamServer.setMaxPlayerCount(max_players)
+	SteamServer.setProduct("3650810")
+	
+	SteamServer.server_connected.connect(func():
+		print("[Server] Connected to steam")
+	)
+	
+	SteamServer.server_connect_failure.connect(func(result: int, retrying: bool):
+		print("[Server] Failed to connect to steam, status code %s. Retrying = %s" % [result, retrying])
+	)
+	
+	SteamServer.server_disconnected.connect(func(result):
+		print("[Server] Lost connection to steam, status code %s" % result)
+	)
+	
+	if gslt == "":
+		SteamServer.logOnAnonymous()
+	else:
+		SteamServer.logOn(gslt)
+	
+	var error = SteamServer.createListenSocketIP("127.0.0.0:%s" % port, {
+		"NETWORKING_CONFIG_FAKE_PACKET_LAG_SEND": 0,
+		"NETWORKING_CONFIG_SEND_BUFFER_SIZE": 5000,
+		"NETWORKING_CONFIG_RECV_BUFFER_SIZE": 3000 
+	})
+	
+	if error == 0:
+		print("[Server] Created socket listener on 127.0.0.1:%s" % port)
+	else:
+		print("[Server] Failed to create socket listener, status code %s" % error)
 	
 	network.peer_connected.connect(_peer_connected)
 	network.peer_disconnected.connect(_peer_disconnected)
