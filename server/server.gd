@@ -80,13 +80,14 @@ func start_server():
 				$World.add_child(scene)
 				scene.global_position = str_to_var("Vector3" + foliage["position"])
 	
-	for arg in OS.get_cmdline_args():
+	for arg in OS.get_cmdline_user_args():
 		if arg.find("=") > -1:
 			var key = arg.split("=")[0].lstrip("--")
 			var value = arg.split("=")[1].lstrip("\"").rstrip("\"")
 			
 			match key:
-				# --headless --advertise_port=4040 --advertise_host=127.0.0.1 --server_name="dev server"
+				# Params example:
+				# --headless --advertise_port=4040 --advertise_host=127.0.0.1 --server_name="dev server" --secure --debug --gslt="123"
 				"gslt":
 					gslt = value
 				"port":
@@ -115,13 +116,19 @@ func start_server():
 						print("[Server] Setting max players to %s" % value)
 					else:
 						print("[Server] %s (max_players) is not a valid integer" % value)
-				
+	
+	var mode: SteamServer.ServerMode
+	
+	if OS.get_cmdline_user_args().has("--secure"):
+		mode = SteamServer.SERVER_MODE_AUTHENTICATION_AND_SECURE
+	else:
+		mode = SteamServer.SERVER_MODE_NO_AUTHENTICATION
 	
 	var res: Dictionary = SteamServer.serverInitEx(
 		"127.0.0.1",
 		port,
-		port + 1,
-		SteamServer.ServerMode.SERVER_MODE_AUTHENTICATION_AND_SECURE,
+		port + 1, # not used :bleh:
+		mode,
 		ProjectSettings.get_setting("application/config/version")
 	)
 	
@@ -151,6 +158,10 @@ func start_server():
 	
 	SteamServer.server_connect_failure.connect(func(result: int, retrying: bool):
 		print("[Server] Failed to connect to steam, status code %s. Retrying = %s" % [result, retrying])
+		
+		match result:
+			SteamServer.RESULT_INVALID_PARAM:
+				print("[Server] Status code 8 = \"Invalid Paramter\" (is your GSLT correct?)")
 	)
 	
 	SteamServer.server_disconnected.connect(func(result):
@@ -432,6 +443,8 @@ func _authenticate_peer(unique_id: Variant, auth_ticket: Dictionary):
 			await get_tree().create_timer(0.5).timeout
 			network.disconnect_peer(peer_id)
 			return
+	else:
+		Network.rpc_id(peer_id, "_authentication_ok")
 	
 	id_peer_map[unique_id] = peer_id
 	
