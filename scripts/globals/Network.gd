@@ -37,7 +37,8 @@ func _ready_to_send_to(id: int):
 	ready_to_send_to.emit(id)
 
 # -- Server -> Client -- #
-signal disconnected(reason: String)
+signal disconnected(reason: String, details: String)
+signal authentication_ok()
 signal add_players(ids)
 signal remove_player(id: int)
 signal take_damage(damage: int)
@@ -45,9 +46,13 @@ signal spawn_scene(node: NodePath, scene: String, position: Vector3, name_: Stri
 signal set_state(position: Vector3, health: int, stamina: float, hunger: float, hotbar: PackedByteArray, inventory: PackedByteArray)
 
 @rpc("authority")
-func _disconnect(reason: String):
-	print("Disconnected from server with reason: %s" % reason)
-	disconnected.emit(reason)
+func _disconnect(reason: String, details: String):
+	print("[Client] Disconnected from server with reason: %s" % reason)
+	disconnected.emit(reason, details)
+
+@rpc("authority")
+func _authentication_ok():
+	authentication_ok.emit()
 
 @rpc("authority")
 func _add_players(ids):
@@ -70,14 +75,20 @@ func _set_state(position: Vector3, health: int, stamina: float, hunger: float, h
 	set_state.emit(position, health, stamina, hunger, hotbar, inventory)
 
 # -- Client -> Server -- #
-signal authorized(unique_id: String, peer_id: int)
+
+signal world_loaded()
+signal authenticate(unique_id: Variant, auth_ticket: Dictionary)
 signal attack_player(target_id: int, damage: int)
 signal attack_entity(entity: NodePath, damage: int)
 signal inv_data(hotbar: PackedByteArray, inventory: PackedByteArray)
 
 @rpc("any_peer", "call_remote")
-func _authorize(unique_id: String):
-	authorized.emit(unique_id, multiplayer.get_remote_sender_id())
+func _world_loaded():
+	world_loaded.emit()
+
+@rpc("any_peer", "call_remote")
+func _authenticate(unique_id: Variant, auth_ticket: Dictionary):
+	authenticate.emit(unique_id, auth_ticket)
 
 @rpc("any_peer", "call_remote")
 func _attack_player(target_id: int, damage: int):

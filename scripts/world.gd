@@ -1,13 +1,15 @@
 extends Node3D
 
 func _ready() -> void:
-	push_warning("[Client] Entered world") # for time refrence in debuggers
+	push_warning("[Client] Entered world") # for time refrence in debugger
 	
 	Network.spawn_scene.connect(_spawn_scene)
 	Network.spawn_item.connect(_spawn_item)
 	Network.despawn_item.connect(_despawn_item)
 	Network.add_players.connect(_add_players)
 	Network.remove_player.connect(_remove_player)
+	
+	Network.rpc_id(get_multiplayer_authority(), "_world_loaded")
 
 func _spawn_scene(node: NodePath, scene: String, position_: Vector3, name_: String):
 	var new = load(scene).instantiate()
@@ -55,7 +57,6 @@ func _on_disconnect_pressed() -> void:
 func _on_exit_to_desktop_pressed() -> void:
 	multiplayer.multiplayer_peer.close()
 	get_tree().quit()
-
 
 func _on_resume_pressed() -> void:
 	$CanvasLayer/Control/PauseMenu.hide()
