@@ -57,6 +57,46 @@ func _input_loop() -> void:
 			_:
 				print("[CMD] Unknown command: %s" % input)
 
+func handle_cmdline_arg(arg) -> void:
+	if arg.find("=") > -1:
+		var key = arg.split("=")[0].lstrip("--")
+		var value = arg.split("=")[1].lstrip("\"").rstrip("\"")
+		
+		match key:
+			# Params example:
+			# --headless --advertise_port=4040 --advertise_host=127.0.0.1 
+			# --server_name="dev server" --unsecure --debug --gslt="abc123"
+			"gslt":
+				gslt = value
+				# We will use this to identify with the master server as it's better than hwid
+				server_id = gslt
+			"port":
+				if value.is_valid_int():
+					port = value.to_int()
+				else:
+					print("[Server] %s (port) is not a valid integer" % value)
+			"advertise_host":
+				advertise_host = value
+				print("[Server] Advertising host %s" % value)
+			"advertise_port":
+				if value.is_valid_int():
+					advertise_port = value.to_int()
+					print("[Server] Advertising port %s" % value)
+				else:
+					print("[Server] %s (advertise_port) is not a valid integer" % value)
+			"server_name":
+				server_name = value
+				print("[Server] Set server name to '%s'" % value)
+				
+				if value.find(" ") <= -1:
+					print("[Hint] Use '%20' for space if the above only has 1 word/is missing spaces")
+			"max_players":
+				if value.is_valid_int():
+					max_players = value.to_int()
+					print("[Server] Setting max players to %s" % value)
+				else:
+					print("[Server] %s (max_players) is not a valid integer" % value)
+
 func start_server():
 	if FileAccess.file_exists(save_file_loc):
 		var save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
@@ -81,44 +121,10 @@ func start_server():
 				scene.global_position = str_to_var("Vector3" + foliage["position"])
 	
 	for arg in OS.get_cmdline_user_args():
-		if arg.find("=") > -1:
-			var key = arg.split("=")[0].lstrip("--")
-			var value = arg.split("=")[1].lstrip("\"").rstrip("\"")
-			
-			match key:
-				# Params example:
-				# --headless --advertise_port=4040 --advertise_host=127.0.0.1 
-				# --server_name="dev server" --unsecure --debug --gslt="abc123"
-				"gslt":
-					gslt = value
-					# We will use this to identify with the master server as it's better than hwid
-					server_id = gslt
-				"port":
-					if value.is_valid_int():
-						port = value.to_int()
-					else:
-						print("[Server] %s (port) is not a valid integer" % value)
-				"advertise_host":
-					advertise_host = value
-					print("[Server] Advertising host %s" % value)
-				"advertise_port":
-					if value.is_valid_int():
-						advertise_port = value.to_int()
-						print("[Server] Advertising port %s" % value)
-					else:
-						print("[Server] %s (advertise_port) is not a valid integer" % value)
-				"server_name":
-					server_name = value
-					print("[Server] Set server name to '%s'" % value)
-					
-					if value.find(" ") <= -1:
-						print("[Hint] Use '%20' for space if the above only has 1 word/is missing spaces")
-				"max_players":
-					if value.is_valid_int():
-						max_players = value.to_int()
-						print("[Server] Setting max players to %s" % value)
-					else:
-						print("[Server] %s (max_players) is not a valid integer" % value)
+		handle_cmdline_arg(arg)
+	
+	for arg in OS.get_cmdline_args():
+		handle_cmdline_arg(arg)
 	
 	var mode: SteamServer.ServerMode
 	
@@ -299,15 +305,15 @@ func _peer_world_loaded():
 			node.name
 		)
 
-func _peer_disconnected(target_id: int):
-	var data = peers.get(target_id)
+func _peer_disconnected(peer_id: int):
+	var data = peers.get(peer_id)
 	
-	log_event("Peer disconnected: %s" % target_id)
-	peers.erase(target_id)
+	log_event("Peer disconnected: %s" % peer_id)
+	peers.erase(peer_id)
 
 	$Info/Players.text = "Players: %s" % len(peers)
 	
-	Network.rpc("_remove_player", target_id)
+	Network.rpc("_remove_player", peer_id)
 	send_server_info()
 	
 	if not data:
@@ -316,10 +322,10 @@ func _peer_disconnected(target_id: int):
 	if SteamServer.secure():
 		SteamServer.endAuthSession(int(data.unique_id))
 	
-	var health = get_node(str(target_id)).health
-	var stamina = get_node(str(target_id)).stamina
-	var hunger = get_node(str(target_id)).hunger
-	var pos = get_node(str(target_id)).global_position
+	var health = get_node(str(peer_id)).health
+	var stamina = get_node(str(peer_id)).stamina
+	var hunger = get_node(str(peer_id)).hunger
+	var pos = get_node(str(peer_id)).global_position
 	
 	while save_file_busy:
 		await get_tree().create_timer(0.5).timeout
@@ -381,6 +387,14 @@ func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
 				"Your account has an active game ban.\nYou can not connect to secure servers"
 			)
 		#AUTH_SESSION_RESPONSE_AUTH_TICKET_NETWORK_IDENTITY_FAILURE
+		_:
+			print("[Server] Auth failed SteamID %s (peer %s): Unknown Error" % [owner_id, id_peer_map[owner_id]])
+			
+			Network.rpc_id(
+				id_peer_map[owner_id], "_disconnect", 
+				"Authentication to secure server failed",
+				"Your client failed to authenticate due to an unknown error :(\nTry to reconnect or reboot your game"
+			)
 
 func _authenticate_peer(unique_id: Variant, auth_ticket: Dictionary):
 	var peer_id: int = multiplayer.get_remote_sender_id()
