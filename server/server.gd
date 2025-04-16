@@ -4,7 +4,7 @@ var save_file_loc: String = "user://server_save.json"
 # so smth dosent write while being read and stuff
 var save_file_busy: bool = false
 
-var unique_id: String = OS.get_unique_id()
+var server_id: String = OS.get_unique_id()
 
 var max_players: int = 4
 var port: int = 4040
@@ -38,7 +38,7 @@ func _ready() -> void:
 	thread = Thread.new()
 	thread.start(_input_loop)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	SteamServer.run_callbacks()
 
 func _input_loop() -> void:
@@ -87,11 +87,12 @@ func start_server():
 			
 			match key:
 				# Params example:
-				# --headless --advertise_port=4040 --advertise_host=127.0.0.1 --server_name="dev server" --secure --debug --gslt="abc123"
+				# --headless --advertise_port=4040 --advertise_host=127.0.0.1 
+				# --server_name="dev server" --unsecure --debug --gslt="abc123"
 				"gslt":
 					gslt = value
 					# We will use this to identify with the master server as it's better than hwid
-					unique_id = gslt
+					server_id = gslt
 				"port":
 					if value.is_valid_int():
 						port = value.to_int()
@@ -121,10 +122,10 @@ func start_server():
 	
 	var mode: SteamServer.ServerMode
 	
-	if OS.get_cmdline_user_args().has("--secure"):
-		mode = SteamServer.SERVER_MODE_AUTHENTICATION_AND_SECURE
-	else:
+	if OS.get_cmdline_user_args().has("--unsecure"):
 		mode = SteamServer.SERVER_MODE_NO_AUTHENTICATION
+	else:
+		mode = SteamServer.SERVER_MODE_AUTHENTICATION_AND_SECURE
 	
 	var res: Dictionary = SteamServer.serverInitEx(
 		"127.0.0.1",
@@ -134,7 +135,7 @@ func start_server():
 		ProjectSettings.get_setting("application/config/version")
 	)
 	
-	print("[Server] %s" % res.verbal)
+	print("[Server] %s, status code %s" % [res.verbal, res.status])
 	
 	SteamServer.setServerName(server_name)
 	SteamServer.setMaxPlayerCount(max_players)
@@ -348,7 +349,7 @@ func _peer_disconnected(target_id: int):
 	
 	save_file_busy = false
 
-func _auth_ticket_response(auth_id: int, response: int, owner_id: int):
+func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
 	if not SteamServer.secure():
 		Network.rpc_id(
 			id_peer_map[owner_id],
@@ -509,14 +510,15 @@ func send_server_info() -> void:
 		return
 	
 	var json = JSON.stringify({
-		"unique_id": unique_id,
+		"unique_id": server_id, # GSLT unless not provided
 		"port": advertise_port,
 		"host": advertise_host,
 		"max_players": max_players,
 		"players": len(peers),
 		"name": server_name,
 		"version": ProjectSettings.get_setting("application/config/version"),
-		"compatability_ver": Network.compatability_ver
+		"compatability_ver": Network.compatability_ver,
+		"secure": SteamServer.secure()
 	})
 	
 	var headers = ["Content-Type: Application/JSON"]

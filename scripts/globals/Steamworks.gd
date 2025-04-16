@@ -9,10 +9,12 @@ var is_owned: bool = false
 var steam_api
 
 func _ready() -> void:
+	OS.set_environment("SteamAppId", "3650810")
+	OS.set_environment("SteamGameId", "3650810")
+	
 	if Engine.has_singleton("Steam"):
 		steam_api = Engine.get_singleton("Steam")
 		var initialize_response: Dictionary = steam_api.steamInitEx()
-		print("Did Steam initialize?: %s " % initialize_response)
 		
 		if initialize_response.status == 0:
 			print("[Client] Steam initialized")
@@ -32,6 +34,6 @@ func _ready() -> void:
 				steam_id
 			])
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if steam_started:
 		steam_api.run_callbacks()
