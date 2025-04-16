@@ -61,15 +61,22 @@ transparent_bg = false
 mode = 2
 initial_position = 2
 size = Vector2i(500, 300)
+visible = true
 borderless = false
 always_on_top = true
 transparent = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 496.0
-offset_bottom = 296.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
 alignment = 1
 
 [node name="Label" type="Label" parent="PopupPanel/VBoxContainer"]
@@ -101,11 +108,61 @@ max_value = 65565.0
 value = 4040.0
 rounded = true
 
-[node name="ConnectButtonFinal" type="Button" parent="PopupPanel/VBoxContainer"]
+[node name="Buttons" type="HBoxContainer" parent="PopupPanel/VBoxContainer"]
 layout_mode = 2
+
+[node name="ActualConnectButton" type="Button" parent="PopupPanel/VBoxContainer/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
 text = "Connect
 "
+
+[node name="PingServerButton" type="Button" parent="PopupPanel/VBoxContainer/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 32
+text = "Ping Server"
+
+[node name="PingError" type="Label" parent="PopupPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Server did not respond to the ping"
+horizontal_alignment = 1
+
+[node name="ServerDetailsRow1" type="HBoxContainer" parent="PopupPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ServerName" type="Label" parent="PopupPanel/VBoxContainer/ServerDetailsRow1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Name: an server aaaa"
+text_overrun_behavior = 3
+
+[node name="Ping" type="Label" parent="PopupPanel/VBoxContainer/ServerDetailsRow1"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Ping: 50ms"
+
+[node name="ServerDetailsRow2" type="HBoxContainer" parent="PopupPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Secure" type="Label" parent="PopupPanel/VBoxContainer/ServerDetailsRow2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Secure? Yes"
+
+[node name="MaxPlayers" type="Label" parent="PopupPanel/VBoxContainer/ServerDetailsRow2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
+text = "Max Players: 50"
 
 [node name="CreditsButton" type="Button" parent="."]
 layout_mode = 1
@@ -131,5 +188,6 @@ large_image_text = ""
 [connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="text_changed" from="PopupPanel/VBoxContainer/IPEdit" to="." method="_on_ip_edit_text_changed"]
 [connection signal="value_changed" from="PopupPanel/VBoxContainer/PortEdit" to="." method="_on_port_edit_value_changed"]
-[connection signal="pressed" from="PopupPanel/VBoxContainer/ConnectButtonFinal" to="." method="_on_connect_button_final_pressed"]
+[connection signal="pressed" from="PopupPanel/VBoxContainer/Buttons/ActualConnectButton" to="." method="_on_actual_connect_button_pressed"]
+[connection signal="pressed" from="PopupPanel/VBoxContainer/Buttons/PingServerButton" to="." method="_on_ping_server_button_pressed"]
 [connection signal="pressed" from="CreditsButton" to="." method="_on_credits_button_pressed"]

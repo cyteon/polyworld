@@ -87,9 +87,11 @@ func start_server():
 			
 			match key:
 				# Params example:
-				# --headless --advertise_port=4040 --advertise_host=127.0.0.1 --server_name="dev server" --secure --debug --gslt="123"
+				# --headless --advertise_port=4040 --advertise_host=127.0.0.1 --server_name="dev server" --secure --debug --gslt="abc123"
 				"gslt":
 					gslt = value
+					# We will use this to identify with the master server as it's better than hwid
+					unique_id = gslt
 				"port":
 					if value.is_valid_int():
 						port = value.to_int()
@@ -135,9 +137,10 @@ func start_server():
 	print("[Server] %s" % res.verbal)
 	
 	SteamServer.setServerName(server_name)
-	SteamServer.setDedicatedServer(true)
 	SteamServer.setMaxPlayerCount(max_players)
 	SteamServer.setProduct("3650810")
+	SteamServer.setDedicatedServer(true)
+	SteamServer.setAdvertiseServerActive(true)
 	
 	SteamServer.server_connected.connect(func():
 		print("[Server] Connected to steam")
