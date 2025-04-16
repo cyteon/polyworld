@@ -3,7 +3,8 @@ extends Node
 const recipes = {
 	"wood_axe": {
 		"name": "Wooden Axe",
-# incase we have recipes that gives diffrent stuff like name: Plastic (oil), gives plastic but diffrent recipe
+		# incase we have recipes that gives diffrent stuff like name: 
+		# Plastic (oil), gives plastic but diffrent recipe that uses oil
 		"gives": "Wooden Axe",
 		"scene": "res://scenes/items/wood_axe.tscn",
 		"amount": 1,
