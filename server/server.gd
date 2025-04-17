@@ -65,7 +65,7 @@ func handle_cmdline_arg(arg) -> void:
 		match key:
 			# Params example:
 			# --headless --advertise_port=4040 --advertise_host=127.0.0.1 --max_players=2
-			# --server_name="dev server" --unsecure --debug --gslt="abc123"
+			# --server_name="dev server" --insecure --debug --gslt="abc123"
 			"gslt":
 				gslt = value
 				# We will use this to identify with the master server as it's better than hwid
@@ -128,7 +128,7 @@ func start_server():
 	
 	var mode: SteamServer.ServerMode
 	
-	if OS.get_cmdline_user_args().has("--unsecure"):
+	if OS.get_cmdline_user_args().has("--insecure"):
 		mode = SteamServer.SERVER_MODE_NO_AUTHENTICATION
 	else:
 		mode = SteamServer.SERVER_MODE_AUTHENTICATION_AND_SECURE
@@ -136,7 +136,7 @@ func start_server():
 	var res: Dictionary = SteamServer.serverInitEx(
 		"127.0.0.1",
 		port,
-		port + 1, # not used :bleh:
+		port + 1,
 		mode,
 		ProjectSettings.get_setting("application/config/version")
 	)
@@ -532,7 +532,7 @@ func send_server_info() -> void:
 		"name": server_name,
 		"version": ProjectSettings.get_setting("application/config/version"),
 		"compatability_ver": Network.compatability_ver,
-		"secure": SteamServer.isServerSecure()
+		"secure": SteamServer.secure()
 	})
 	
 	var headers = ["Content-Type: Application/JSON"]

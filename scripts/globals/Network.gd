@@ -195,7 +195,7 @@ func ping_server(host: String, port: int) -> Dictionary:
 
 func _read_str(buffer: StreamPeerBuffer) -> String:
 	var result := ""
-	
+
 	while buffer.get_position() < buffer.data_array.size():
 		var byte := buffer.get_u8()
 		
@@ -203,5 +203,5 @@ func _read_str(buffer: StreamPeerBuffer) -> String:
 			break
 			
 		result += char(byte)
-	
+
 	return result
