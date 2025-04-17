@@ -104,6 +104,7 @@ func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray):
 
 # -- Other -- #
 
+# I did this shit cause Steam.pingServer(ip, port) only supports IP, not domains
 func ping_server(host: String, port: int) -> Dictionary:
 	var udp: PacketPeerUDP = PacketPeerUDP.new()
 	var timeout: float = 2.0
