@@ -31,7 +31,8 @@ func _request_completed(
 		node.show()
 		
 		node.get_node("Name").text = server.name
-		node.get_node("Players").text = "%s/%s Players" % [int(server.players), int(server.max_players)]
+		node.get_node("Players").text = "%s/%s players" % [int(server.players), int(server.max_players)]
+		node.get_node("Secure").text = "Secure" if server.secure else "Unsecure"
 		
 		if int(server.players) >= int(server.max_players) or server.compatability_ver != Network.compatability_ver:
 			node.get_node("Button").disabled = true

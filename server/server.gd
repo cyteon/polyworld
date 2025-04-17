@@ -64,7 +64,7 @@ func handle_cmdline_arg(arg) -> void:
 		
 		match key:
 			# Params example:
-			# --headless --advertise_port=4040 --advertise_host=127.0.0.1 
+			# --headless --advertise_port=4040 --advertise_host=127.0.0.1 --max_players=2
 			# --server_name="dev server" --unsecure --debug --gslt="abc123"
 			"gslt":
 				gslt = value

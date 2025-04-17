@@ -34,6 +34,6 @@ func _ready() -> void:
 				steam_id
 			])
 
-func _process(_delta: float) -> void:
+func _process(_delta: float) -> void:	
 	if steam_started:
 		steam_api.run_callbacks()

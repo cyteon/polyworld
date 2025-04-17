@@ -1,8 +1,5 @@
 extends Control
 
-var ip: String = "127.0.0.1"
-var port: int = 4040
-
 func _ready() -> void:
 	$Version.text = ProjectSettings.get_setting("application/config/version")
 	
@@ -45,6 +42,8 @@ func _ping_server_responded(details: Dictionary) -> void:
 	$PopupPanel/VBoxContainer/ServerDetailsRow1.show()
 	$PopupPanel/VBoxContainer/ServerDetailsRow2.show()
 	$PopupPanel/VBoxContainer/PingError.hide()
+	
+	print(details)
 
 func _on_ping_server_button_pressed() -> void:
 	$PopupPanel/VBoxContainer/PingError.hide()
@@ -52,7 +51,15 @@ func _on_ping_server_button_pressed() -> void:
 	$PopupPanel/VBoxContainer/ServerDetailsRow2.hide()
 	$PopupPanel.size.y = 300
 	
-	Steam.pingServer(ip, port + 1)
+	Steam.pingServer(
+		$PopupPanel/VBoxContainer/IPEdit.text,
+		$PopupPanel/VBoxContainer/PortEdit.value + 1
+	)
+	
+	Network.ping_server(
+		$PopupPanel/VBoxContainer/IPEdit.text,
+		$PopupPanel/VBoxContainer/PortEdit.value + 1
+	)
 
 func _on_connect_button_pressed() -> void:
 	$PopupPanel.show()
@@ -61,7 +68,12 @@ func _on_actual_connect_button_pressed() -> void:
 	print("[Client] Connecting to server")
 	
 	var network = ENetMultiplayerPeer.new()
-	var err = network.create_client(ip, port)
+	
+	var err = network.create_client(
+		$PopupPanel/VBoxContainer/IPEdit.text, 
+		$PopupPanel/VBoxContainer/PortEdit.value
+	)
+	
 	multiplayer.multiplayer_peer = network
 	
 	if err == OK:
@@ -70,18 +82,11 @@ func _on_actual_connect_button_pressed() -> void:
 	else:
 		print("[Client] Could not create network client")
 
-func _on_port_edit_value_changed(value: float) -> void:
-	port = value
-
-func _on_ip_edit_text_changed(new_text: String) -> void:
-	ip = new_text
-
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
 
 func _on_credits_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/menus/credits.tscn")
-
 
 func _on_servers_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/menus/servers.tscn")
