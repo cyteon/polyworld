@@ -128,7 +128,6 @@ func ping_server(host: String, port: int) -> Dictionary:
 				
 				start_time = Time.get_ticks_msec()
 			elif packet[4] == 0x49:
-				print(packet.hex_encode())
 				var buffer: StreamPeerBuffer = StreamPeerBuffer.new()
 				buffer.data_array = packet
 				buffer.seek(4)
