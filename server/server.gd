@@ -128,7 +128,11 @@ func start_server():
 	
 	var mode: SteamServer.ServerMode
 	
-	if OS.get_cmdline_user_args().has("--insecure"):
+	# Some diffrent ways to make the server not secure
+	if (OS.get_cmdline_user_args().has("--insecure") 
+		or OS.get_cmdline_args().has("--insecure")
+		or OS.get_cmdline_user_args().has("--unsecure")
+		or OS.get_cmdline_args().has("--unsecure")):
 		mode = SteamServer.SERVER_MODE_NO_AUTHENTICATION
 	else:
 		mode = SteamServer.SERVER_MODE_AUTHENTICATION_AND_SECURE
