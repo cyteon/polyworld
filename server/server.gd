@@ -532,7 +532,7 @@ func send_server_info() -> void:
 		"name": server_name,
 		"version": ProjectSettings.get_setting("application/config/version"),
 		"compatability_ver": Network.compatability_ver,
-		"secure": SteamServer.secure()
+		"secure": SteamServer.isServerSecure()
 	})
 	
 	var headers = ["Content-Type: Application/JSON"]
