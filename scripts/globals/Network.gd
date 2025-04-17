@@ -35,8 +35,8 @@ func ping_server(host: String, port: int) -> Dictionary:
 				buffer.data_array = packet
 				buffer.seek(4)
 				
-				var protocol = buffer.get_u8()
 				var header = buffer.get_u8()
+				var protocol = buffer.get_u8()
 				var name_ = _read_str(buffer)
 				var map = _read_str(buffer)
 				var folder = _read_str(buffer)
@@ -47,8 +47,8 @@ func ping_server(host: String, port: int) -> Dictionary:
 				var bots = buffer.get_u8()
 				var server_type = char(buffer.get_u8())
 				var os = _read_str(buffer)
-				var password = buffer.get_u8()
 				var vac = buffer.get_u8()
+				#var password = buffer.get_u8()
 				var version = _read_str(buffer)
 				var edf = buffer.get_u8()
 				
@@ -81,7 +81,7 @@ func ping_server(host: String, port: int) -> Dictionary:
 				print("bots: %s" % bots)
 				print("server_type: %s" % server_type)
 				print("os: %s" % os)
-				print("password: %s" % password)
+				#print("password: %s" % password)
 				print("vac: %s" % vac)
 				print("version: %s" % version)
 				print("edf: %s" % edf)
