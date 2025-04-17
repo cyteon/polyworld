@@ -56,29 +56,28 @@ layout_mode = 2
 
 [node name="Button" type="Button" parent="ScrollContainer/ServerList/Template"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 20
 text = " Join "
 
 [node name="Name" type="Label" parent="ScrollContainer/ServerList/Template"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 28
-text = "Server Name - Very Cool Serveraaaaaaaa"
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+text = "Server Name - Very Cool Seeeeeeeeeeeeee"
+text_overrun_behavior = 3
 
 [node name="Players" type="Label" parent="ScrollContainer/ServerList/Template"]
+custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
-size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 28
-text = "4/100"
+theme_override_font_sizes/font_size = 24
+text = "4/100 players"
 horizontal_alignment = 1
 
-[node name="Ping" type="Label" parent="ScrollContainer/ServerList/Template"]
-visible = false
+[node name="Secure" type="Label" parent="ScrollContainer/ServerList/Template"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 28
-text = "..."
+theme_override_font_sizes/font_size = 24
+text = "Unsecure Server"
 horizontal_alignment = 1
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]

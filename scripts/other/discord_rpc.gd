@@ -20,6 +20,4 @@ func _ready() -> void:
 
 	DiscordRPC.refresh()
 	
-	print("Discord User: %s" % DiscordRPC.get_current_user())
-	print("Discord Working: %s" % DiscordRPC.get_is_discord_working())
-	print("Discord Result: %s" % DiscordRPC.get_result_int())
+	print("[Client] Is Discord RPC working? %s" % DiscordRPC.get_is_discord_working())

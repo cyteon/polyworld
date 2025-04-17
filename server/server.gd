@@ -4,24 +4,31 @@ var save_file_loc: String = "user://server_save.json"
 # so smth dosent write while being read and stuff
 var save_file_busy: bool = false
 
-var unique_id: String = OS.get_unique_id()
+var server_id: String = OS.get_unique_id()
 
 var max_players: int = 4
 var port: int = 4040
+var gslt: String = ""
 
 # port sent to api, this is port people should connect to
 var advertise_port: int = 4040
 var advertise_host: String = "localhost"
 var server_name: String = "An Server"
 
+var debug: bool = false
+
 var network: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
 # { String: { unique_id: String | null, holding: String, hotbar: array | null, inventory: array | null } }
 var peers: Dictionary = {}
+var id_peer_map: Dictionary = {}
 
 var thread: Thread
 
 func _ready() -> void:
 	log_event("Server is starting")
+	
+	if OS.get_cmdline_user_args().has("--debug"):
+		debug = true
 	
 	$Info/MaxPlayers.text = "Max Players: %s" % max_players
 	$Info/Port.text = "Port: %s" % port
@@ -30,6 +37,9 @@ func _ready() -> void:
 	
 	thread = Thread.new()
 	thread.start(_input_loop)
+
+func _process(_delta: float) -> void:
+	SteamServer.run_callbacks()
 
 func _input_loop() -> void:
 	while true:
@@ -46,6 +56,46 @@ func _input_loop() -> void:
 				pass
 			_:
 				print("[CMD] Unknown command: %s" % input)
+
+func handle_cmdline_arg(arg) -> void:
+	if arg.find("=") > -1:
+		var key = arg.split("=")[0].lstrip("--")
+		var value = arg.split("=")[1].lstrip("\"").rstrip("\"")
+		
+		match key:
+			# Params example:
+			# --headless --advertise_port=4040 --advertise_host=127.0.0.1 --max_players=2
+			# --server_name="dev server" --unsecure --debug --gslt="abc123"
+			"gslt":
+				gslt = value
+				# We will use this to identify with the master server as it's better than hwid
+				server_id = gslt
+			"port":
+				if value.is_valid_int():
+					port = value.to_int()
+				else:
+					print("[Server] %s (port) is not a valid integer" % value)
+			"advertise_host":
+				advertise_host = value
+				print("[Server] Advertising host %s" % value)
+			"advertise_port":
+				if value.is_valid_int():
+					advertise_port = value.to_int()
+					print("[Server] Advertising port %s" % value)
+				else:
+					print("[Server] %s (advertise_port) is not a valid integer" % value)
+			"server_name":
+				server_name = value
+				print("[Server] Set server name to '%s'" % value)
+				
+				if value.find(" ") <= -1:
+					print("[Hint] Use '%20' for space if the above only has 1 word/is missing spaces")
+			"max_players":
+				if value.is_valid_int():
+					max_players = value.to_int()
+					print("[Server] Setting max players to %s" % value)
+				else:
+					print("[Server] %s (max_players) is not a valid integer" % value)
 
 func start_server():
 	if FileAccess.file_exists(save_file_loc):
@@ -70,59 +120,78 @@ func start_server():
 				$World.add_child(scene)
 				scene.global_position = str_to_var("Vector3" + foliage["position"])
 	
+	for arg in OS.get_cmdline_user_args():
+		handle_cmdline_arg(arg)
+	
 	for arg in OS.get_cmdline_args():
-		if arg.find("=") > -1:
-			var key = arg.split("=")[0].lstrip("--")
-			var value = arg.split("=")[1].lstrip("\"").rstrip("\"")
-			
-			match key:
-				"port":# --headless --advertise_port=4040 --advertise_host=127.0.01 --server_name="dev server"
-					if value.is_valid_int():
-						port = value.to_int()
-					else:
-						print("[Server] %s (port) is not a valid integer" % value)
-				"advertise_host":
-					advertise_host = value
-					print("[Server] Advertising host %s" % value)
-				"advertise_port":
-					if value.is_valid_int():
-						advertise_port = value.to_int()
-						print("[Server] Advertising port %s" % value)
-					else:
-						print("[Server] %s (advertise_port) is not a valid integer" % value)
-				"server_name":
-					server_name = value
-					print("[Server] Set server name to '%s'" % value)
-					
-					if value.find(" ") <= -1:
-						print("[Hint] Use '%20' for space if the above only has 1 word/is missing spaces")
-				"max_players":
-					if value.is_valid_int():
-						max_players = value.to_int()
-						print("[Server] Setting max players to %s" % value)
-					else:
-						print("[Server] %s (max_players) is not a valid integer" % value)
-				
+		handle_cmdline_arg(arg)
 	
-	var error: int = network.create_server(port)
+	var mode: SteamServer.ServerMode
 	
-	match error:
-		OK:
-			multiplayer.multiplayer_peer = network
-			log_event("Started server on port %s" % port)
-		ERR_ALREADY_IN_USE:
-			log_event("Failed to bind to port %s" % port, true)
-			$Notice.text = "Failed to start server"
-		ERR_CANT_CREATE:
-			log_event("Unable to create server :(", true)
-			$Notice.text = "Failed to start server"
+	if OS.get_cmdline_user_args().has("--unsecure"):
+		mode = SteamServer.SERVER_MODE_NO_AUTHENTICATION
+	else:
+		mode = SteamServer.SERVER_MODE_AUTHENTICATION_AND_SECURE
+	
+	var res: Dictionary = SteamServer.serverInitEx(
+		"127.0.0.1",
+		port,
+		port + 1, # not used :bleh:
+		mode,
+		ProjectSettings.get_setting("application/config/version")
+	)
+	
+	print("[Server] %s, status code %s" % [res.verbal, res.status])
+	
+	SteamServer.setServerName(server_name)
+	SteamServer.setMaxPlayerCount(max_players)
+	SteamServer.setProduct("3650810")
+	SteamServer.setDedicatedServer(true)
+	SteamServer.setAdvertiseServerActive(true)
+	
+	SteamServer.server_connected.connect(func():
+		print("[Server] Connected to steam")
+		
+		var error: int = network.create_server(port)
+		
+		match error:
+			OK:
+				multiplayer.multiplayer_peer = network
+				log_event("Started server on port %s" % port)
+			ERR_ALREADY_IN_USE:
+				log_event("Failed to bind to port %s" % port, true)
+				$Notice.text = "Failed to start server"
+			ERR_CANT_CREATE:
+				log_event("Unable to create server :(", true)
+				$Notice.text = "Failed to start server"
+	)
+	
+	SteamServer.server_connect_failure.connect(func(result: int, retrying: bool):
+		print("[Server] Failed to connect to steam, status code %s. Retrying = %s" % [result, retrying])
+		
+		match result:
+			SteamServer.RESULT_INVALID_PARAM:
+				print("[Server] Status code 8 = \"Invalid Paramter\" (is your GSLT correct?)")
+	)
+	
+	SteamServer.server_disconnected.connect(func(result):
+		print("[Server] Lost connection to steam, status code %s" % result)
+	)
+	
+	SteamServer.validate_auth_ticket_response.connect(_auth_ticket_response)
+	
+	if gslt == "":
+		SteamServer.logOnAnonymous()
+	else:
+		SteamServer.logOn(gslt)
 	
 	network.peer_connected.connect(_peer_connected)
 	network.peer_disconnected.connect(_peer_disconnected)
 	
+	Network.world_loaded.connect(_peer_world_loaded)
 	Network.despawn_item.connect(_despawn_item)
 	Network.spawn_item.connect(_spawn_item)
-	Network.authorized.connect(_peer_authorized)
+	Network.authenticate.connect(_authenticate_peer)
 	Network.attack_player.connect(_attack_player)
 	Network.attack_entity.connect(_attack_entity)
 	Network.set_holding.connect(_set_holding)
@@ -175,40 +244,41 @@ func _attack_player(target_id: int, damage: int):
 		return
 	
 	Network.rpc_id(target_id, "_take_damage", damage)
-	
-func _peer_connected(target_id: int):
+
+func _peer_connected(peer_id: int):
 	if len(peers) == max_players:
-		Network.rpc_id(target_id, "_disconnect", "Server is full")
-		log_event("Peer %s tried to connect but server is full" % target_id)
+		Network.rpc_id(peer_id, "_disconnect", "Server is full", "")
+		log_event("Peer %s tried to connect but server is full" % peer_id)
 		
 		await get_tree().create_timer(1).timeout
 		
-		network.disconnect_peer(target_id)
+		network.disconnect_peer(peer_id)
 		return
 	
-	log_event("New peer connected: %s" % target_id)
-	peers.set(target_id, { })
+	log_event("New peer connected: %s" % peer_id)
+	peers.set(peer_id, { })
 	
 	$Info/Players.text = "Players: %s" % len(peers)
 	
 	send_server_info()
 	
 	var player = preload("res://server/mock_player.tscn").instantiate()
-	player.set_multiplayer_authority(target_id)
-	player.name = str(target_id)
+	player.set_multiplayer_authority(peer_id)
+	player.name = str(peer_id)
 	add_child(player)
 	
 	for id in peers.keys():
-		if id != target_id:
-			Network.rpc_id(id, "_add_players", [target_id])
+		if id != peer_id:
+			Network.rpc_id(id, "_add_players", [peer_id])
+
+func _peer_world_loaded():
+	var peer_id = multiplayer.get_remote_sender_id()
 	
-	await get_tree().create_timer(1).timeout
-	
-	Network.rpc_id(target_id, "_add_players", peers.keys())
+	Network.rpc_id(peer_id, "_add_players", peers.keys())
 	
 	for id in peers.keys():
-		if id != target_id:
-			Network.rpc_id(target_id, "_set_holding", id, peers[id].holding if peers[id].has("holding") else "")
+		if id != peer_id:
+			Network.rpc_id(peer_id, "_set_holding", id, peers[id].holding if peers[id].has("holding") else "")
 	
 	for item in $Items.get_children():
 		var i = item.duplicate()
@@ -219,7 +289,7 @@ func _peer_connected(target_id: int):
 		p.pack(i)
 		
 		Network.rpc_id(
-			target_id,
+			peer_id,
 			"_spawn_item", 
 			var_to_bytes_with_objects(p),
 			i.name
@@ -227,7 +297,7 @@ func _peer_connected(target_id: int):
 	
 	for node in $World.get_children():
 		Network.rpc_id(
-			target_id,
+			peer_id,
 			"_spawn_scene",
 			$World.get_path(),
 			node.scene_file_path,
@@ -235,21 +305,27 @@ func _peer_connected(target_id: int):
 			node.name
 		)
 
-func _peer_disconnected(target_id: int):
-	var data = peers.get(target_id)
+func _peer_disconnected(peer_id: int):
+	var data = peers.get(peer_id)
 	
-	log_event("Peer disconnected: %s" % target_id)
-	peers.erase(target_id)
+	log_event("Peer disconnected: %s" % peer_id)
+	peers.erase(peer_id)
 
 	$Info/Players.text = "Players: %s" % len(peers)
 	
-	var health = get_node(str(target_id)).health
-	var stamina = get_node(str(target_id)).stamina
-	var hunger = get_node(str(target_id)).hunger
-	var pos = get_node(str(target_id)).global_position
-	
-	Network.rpc("_remove_player", target_id)
+	Network.rpc("_remove_player", peer_id)
 	send_server_info()
+	
+	if not data:
+		return
+	
+	if SteamServer.secure():
+		SteamServer.endAuthSession(int(data.unique_id))
+	
+	var health = get_node(str(peer_id)).health
+	var stamina = get_node(str(peer_id)).stamina
+	var hunger = get_node(str(peer_id)).hunger
+	var pos = get_node(str(peer_id)).global_position
 	
 	while save_file_busy:
 		await get_tree().create_timer(0.5).timeout
@@ -279,13 +355,118 @@ func _peer_disconnected(target_id: int):
 	
 	save_file_busy = false
 
-func _peer_authorized(unique_id: String, peer_id: int):
+func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
+	if not SteamServer.secure():
+		Network.rpc_id(
+			id_peer_map[owner_id],
+			"_authentication_ok"
+		)
+		
+		return
+	
+	match response:
+		SteamServer.AUTH_SESSION_RESPONSE_OK:
+			Network.rpc_id(
+				id_peer_map[owner_id],
+				"_authentication_ok"
+			)
+		#AUTH_SESSION_RESPONSE_USER_NOT_CONNECTED_TO_STEAM
+		#AUTH_SESSION_RESPONSE_NO_LICENSE_OR_EXPIRED
+		#AUTH_SESSION_RESPONSE_VAC_BANNED
+		#AUTH_SESSION_RESPONSE_LOGGED_IN_ELSEWHERE
+		#AUTH_SESSION_RESPONSE_VAC_CHECK_TIMED_OUT
+		#AUTH_SESSION_RESPONSE_AUTH_TICKET_CANCELED
+		#AUTH_SESSION_RESPONSE_AUTH_TICKET_INVALID_ALREADY_USED
+		#AUTH_SESSION_RESPONSE_AUTH_TICKET_INVALID
+		SteamServer.AUTH_SESSION_RESPONSE_PUBLISHER_ISSUED_BAN:
+			print("[Server] Auth failed SteamID %s (peer %s): User is banned from secure servers" % [owner_id, id_peer_map[owner_id]])
+			
+			Network.rpc_id(
+				id_peer_map[owner_id], "_disconnect", 
+				"Authentication to secure server failed",
+				"Your account has an active game ban.\nYou can not connect to secure servers"
+			)
+		#AUTH_SESSION_RESPONSE_AUTH_TICKET_NETWORK_IDENTITY_FAILURE
+		_:
+			print("[Server] Auth failed SteamID %s (peer %s): Unknown Error" % [owner_id, id_peer_map[owner_id]])
+			
+			Network.rpc_id(
+				id_peer_map[owner_id], "_disconnect", 
+				"Authentication to secure server failed",
+				"Your client failed to authenticate due to an unknown error :(\nTry to reconnect or reboot your game"
+			)
+
+func _authenticate_peer(unique_id: Variant, auth_ticket: Dictionary):
+	var peer_id: int = multiplayer.get_remote_sender_id()
 	var data = peers.get(peer_id, null)
 	
 	if data == null:
 		print("[Server] Peer tried to authorize but has disconnected")
 		return
 	
+	if SteamServer.secure():
+		if unique_id is not int:
+			print("[Server] Disconnecting peer %s, ID (%s) was not an int, could not proceed with authentication and server is secure" % [peer_id, unique_id])
+			Network.rpc_id(peer_id, "_disconnect", "Authentication to secure server failed")
+			
+			await get_tree().create_timer(0.5).timeout
+			
+			network.disconnect_peer(peer_id)
+			return
+		
+		var result: int = SteamServer.beginAuthSession(
+			auth_ticket.buffer,
+			auth_ticket.size,
+			unique_id
+		)
+		
+		if result != 0:
+			match result:
+				SteamServer.BEGIN_AUTH_SESSION_RESULT_INVALID_TICKET:
+					print("[Server] Auth failed for SteamID %s (peer %s): invalid auth ticket" % [unique_id, peer_id])
+					Network.rpc_id(
+						peer_id, "_disconnect", 
+						"Authentication to secure server failed",
+						"Your client provided the server an invalid auth ticket.\nTry to reconnect, or restart your game if that does not work"
+					)
+				SteamServer.BEGIN_AUTH_SESSION_RESULT_DUPLICATE_REQUEST:
+					print("[Server] Auth failed for SteamID %s (peer %s): duplicate auth request" % [unique_id, peer_id])
+					Network.rpc_id(
+						peer_id, "_disconnect", 
+						"Authentication to secure server failed",
+						"The server has recieved a duplicate authentication attempt.\nTry to reconnect or restart your game."
+					)
+				SteamServer.BEGIN_AUTH_SESSION_RESULT_INVALID_VERSION:
+					print("[Server] Auth failed for SteamID %s (peer %s): outdated steamworks interface (contact polyworld dev)" % [unique_id, peer_id])
+					Network.rpc_id(
+						peer_id, "_disconnect", 
+						"Authentication to secure server failed",
+						"Your client appears to be using an outdated steamworks interface.\nMake sure your game is updated to the latest version"
+					)
+				SteamServer.BEGIN_AUTH_SESSION_RESULT_GAME_MISMATCH:
+					print("[Server] Auth failed for SteamID %s (peer %s): wrong appID (contact polyworld dev)" % [unique_id, peer_id])
+					Network.rpc_id(
+						peer_id, "_disconnect", 
+						"Authentication to secure server failed",
+						"Your client appears to have tried to authenticate with an auth ticket that dosent match the server appID\nTry to restart your game"
+					)
+				SteamServer.BEGIN_AUTH_SESSION_RESULT_EXPIRED_TICKET:
+					print("[Server] Auth failed for SteamID %s (Peer %s): auth ticket timeout" % [unique_id, peer_id])
+					Network.rpc_id(
+						peer_id, "_disconnect", 
+						"Authentication to secure server timeouted",
+						"Authentication has failed due to an expired auth ticket, try to reconnect"
+					)
+			
+			await get_tree().create_timer(0.5).timeout
+			network.disconnect_peer(peer_id)
+			return
+	else:
+		Network.rpc_id(peer_id, "_authentication_ok")
+	
+	id_peer_map[unique_id] = peer_id
+	
+	unique_id = str(unique_id)
 	data.unique_id = unique_id
 	
 	if FileAccess.file_exists(save_file_loc):
@@ -343,14 +524,15 @@ func send_server_info() -> void:
 		return
 	
 	var json = JSON.stringify({
-		"unique_id": unique_id,
+		"unique_id": server_id, # GSLT unless not provided
 		"port": advertise_port,
 		"host": advertise_host,
 		"max_players": max_players,
 		"players": len(peers),
 		"name": server_name,
 		"version": ProjectSettings.get_setting("application/config/version"),
-		"compatability_ver": Network.compatability_ver
+		"compatability_ver": Network.compatability_ver,
+		"secure": SteamServer.isServerSecure()
 	})
 	
 	var headers = ["Content-Type: Application/JSON"]
