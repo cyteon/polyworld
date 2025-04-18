@@ -23,6 +23,8 @@ Recipes="*res://scripts/globals/Recipes.gd"
 DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 Util="*res://scripts/globals/Util.gd"
 Steamworks="*res://scripts/globals/Steamworks.gd"
+Settings="*res://scripts/globals/Settings.gd"
+Discord="*res://scripts/globals/Discord.gd"
 
 [debug]
 

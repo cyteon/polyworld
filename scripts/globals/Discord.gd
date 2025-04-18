@@ -1,4 +1,5 @@
 extends Node
 
 func _process(delta: float) -> void:
-	DiscordRPC.run_callbacks()
+	if not OS.has_feature("server"):
+		DiscordRPC.run_callbacks()

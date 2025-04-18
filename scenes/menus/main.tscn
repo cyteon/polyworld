@@ -182,6 +182,76 @@ text = "Credits"
 state = ""
 large_image_text = ""
 
+[node name="ContentWarning" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.105882)
+
+[node name="Content" type="ColorRect" parent="ContentWarning"]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.180392, 0.180392, 0.180392, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ContentWarning/Content"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 7.0
+offset_right = -10.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="ContentWarning/Content/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Multiplayer Chat Warning"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="Message" type="Label" parent="ContentWarning/Content/VBoxContainer"]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "By using the chat feature on multiplayer servers, you acknowledge that all messages may be logged for moderation purposes to ensure a safe and enjoyable experience. We strive to provide a safe environment but are not responsible for the content of any chat messages. Please refrain from using offensive language or engaging in inappropriate behavior."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ContentWarning/Content/VBoxContainer"]
+custom_minimum_size = Vector2(460, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="EnableChat" type="Button" parent="ContentWarning/Content/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Enable Chat"
+
+[node name="DisableChat" type="Button" parent="ContentWarning/Content/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
+text = "Disable Chat"
+
 [connection signal="pressed" from="Buttons/ConnectButton" to="." method="_on_connect_button_pressed"]
 [connection signal="pressed" from="Buttons/ServersButton" to="." method="_on_servers_button_pressed"]
 [connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_quit_button_pressed"]
@@ -190,3 +260,5 @@ large_image_text = ""
 [connection signal="pressed" from="PopupPanel/VBoxContainer/Buttons/ActualConnectButton" to="." method="_on_actual_connect_button_pressed"]
 [connection signal="pressed" from="PopupPanel/VBoxContainer/Buttons/PingServerButton" to="." method="_on_ping_server_button_pressed"]
 [connection signal="pressed" from="CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="ContentWarning/Content/VBoxContainer/HBoxContainer/EnableChat" to="." method="_on_enable_chat_pressed"]
+[connection signal="pressed" from="ContentWarning/Content/VBoxContainer/HBoxContainer/DisableChat" to="." method="_on_disable_chat_pressed"]

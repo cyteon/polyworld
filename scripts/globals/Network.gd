@@ -115,7 +115,7 @@ func ping_server(host: String, port: int) -> Dictionary:
 		PackedByteArray([0xFF, 0xFF, 0xFF, 0xFF, 0x54]) 
 		+ "Source Engine Query".to_utf8_buffer() 
 		+ PackedByteArray([0x00]))
-	
+	 
 	udp.put_packet(payload)
 	
 	var start_time = Time.get_ticks_msec()

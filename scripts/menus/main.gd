@@ -3,6 +3,9 @@ extends Control
 func _ready() -> void:
 	$Version.text = ProjectSettings.get_setting("application/config/version")
 	
+	if not Settings.settings.get_value("multiplayer", "chat_notice_viewed", false):
+		$ContentWarning.show()
+	
 	for arg in OS.get_cmdline_args():
 		if arg.find("=") > -1:
 			var key = arg.split("=")[0].lstrip("--")
@@ -79,3 +82,15 @@ func _on_credits_button_pressed() -> void:
 
 func _on_servers_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/menus/servers.tscn")
+
+func _on_enable_chat_pressed() -> void:
+	Settings.settings.set_value("multiplayer", "chat_notice_viewed", true)
+	Settings.settings.set_value("multiplayer", "disable_chat", false)
+	Settings.settings.save(Settings.SETTINGS_PATH)
+	$ContentWarning.hide()
+	
+func _on_disable_chat_pressed() -> void:
+	Settings.settings.set_value("multiplayer", "chat_notice_viewed", true)
+	Settings.settings.set_value("multiplayer", "disable_chat", true)
+	Settings.settings.save(Settings.SETTINGS_PATH)
+	$ContentWarning.hide()
