@@ -37,6 +37,7 @@ func _ready_to_send_to(id: int):
 	ready_to_send_to.emit(id)
 
 # -- Server -> Client -- #
+
 signal disconnected(reason: String, details: String)
 signal authentication_ok()
 signal add_players(ids)
@@ -44,6 +45,7 @@ signal remove_player(id: int)
 signal take_damage(damage: int)
 signal spawn_scene(node: NodePath, scene: String, position: Vector3, name_: String)
 signal set_state(position: Vector3, health: int, stamina: float, hunger: float, hotbar: PackedByteArray, inventory: PackedByteArray)
+signal chatmsg(content: String, username: String, id: String)
 
 @rpc("authority")
 func _disconnect(reason: String, details: String):
@@ -74,21 +76,26 @@ func _spawn_scene(node: NodePath, scene: String, position: Vector3, name_: Strin
 func _set_state(position: Vector3, health: int, stamina: float, hunger: float, hotbar: PackedByteArray, inventory: PackedByteArray):
 	set_state.emit(position, health, stamina, hunger, hotbar, inventory)
 
+@rpc("authority")
+func _chatmsg(content: String, username: String, id: String):
+	chatmsg.emit(content, username, id)
+
 # -- Client -> Server -- #
 
 signal world_loaded()
-signal authenticate(unique_id: Variant, auth_ticket: Dictionary)
+signal authenticate(unique_id: Variant, username: String, auth_ticket: Dictionary)
 signal attack_player(target_id: int, damage: int)
 signal attack_entity(entity: NodePath, damage: int)
 signal inv_data(hotbar: PackedByteArray, inventory: PackedByteArray)
+signal chatmsg_server(content: String)
 
 @rpc("any_peer", "call_remote")
 func _world_loaded():
 	world_loaded.emit()
 
 @rpc("any_peer", "call_remote")
-func _authenticate(unique_id: Variant, auth_ticket: Dictionary):
-	authenticate.emit(unique_id, auth_ticket)
+func _authenticate(unique_id: Variant, username: String, auth_ticket: Dictionary):
+	authenticate.emit(unique_id, username, auth_ticket)
 
 @rpc("any_peer", "call_remote")
 func _attack_player(target_id: int, damage: int):
@@ -101,6 +108,10 @@ func _attack_entity(entity: NodePath, damage: int):
 @rpc("any_peer", "call_remote")
 func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray):
 	inv_data.emit(hotbar, inventory)
+
+@rpc("any_peer", "call_remote")
+func _chatmsg_server(content: String):
+	chatmsg_server.emit(content)
 
 # -- Other -- #
 

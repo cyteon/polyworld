@@ -18,7 +18,9 @@ var server_name: String = "An Server"
 var debug: bool = false
 
 var network: ENetMultiplayerPeer = ENetMultiplayerPeer.new()
-# { String: { unique_id: String | null, holding: String, hotbar: array | null, inventory: array | null } }
+
+# Any may be null
+# { String: { unique_id: String, username: String, chat_mute: bool, holding: String, hotbar: array, inventory: array } }
 var peers: Dictionary = {}
 var id_peer_map: Dictionary = {}
 
@@ -200,21 +202,39 @@ func start_server():
 	Network.attack_entity.connect(_attack_entity)
 	Network.set_holding.connect(_set_holding)
 	Network.inv_data.connect(_inv_data)
+	Network.chatmsg_server.connect(_chatmsg)
 	
 	send_server_info()
 
-func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray):
+func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
 	var peer = multiplayer.get_remote_sender_id()
 	
 	if peer in peers:
 		peers[peer].hotbar = hotbar
 		peers[peer].inventory = hotbar
 
-func _set_holding(peer: int, scene: String):
+func _chatmsg(content: String) -> void:
+	var peer = multiplayer.get_remote_sender_id()
+	var data = peers.get(peer)
+	
+	var id = "%s_%s" % [data.unique_id, ResourceUID.create_id()]
+	
+	# TODO: chat filtering
+	
+	Network.rpc(
+		"_chatmsg",
+		content,
+		data.username,
+		id
+	)
+	
+	# TODO: chat logging
+
+func _set_holding(peer: int, scene: String) -> void:
 	if peer in peers:
 		peers[peer].holding = scene
 
-func _despawn_item(path: NodePath):
+func _despawn_item(path: NodePath) -> void:
 	if has_node(path):
 		get_node(path).queue_free()
 	else:
@@ -227,11 +247,11 @@ func _spawn_item(bytes, name_) -> void:
 	node.name = name_
 	node.freeze = true
 
-func _attack_entity(path: NodePath, damage: int):
+func _attack_entity(path: NodePath, damage: int) -> void:
 	if has_node(path):
 		get_node(path).damage(damage)
 
-func _attack_player(target_id: int, damage: int):
+func _attack_player(target_id: int, damage: int) -> void:
 	var peer = multiplayer.get_remote_sender_id()
 	
 	if not has_node(str(target_id)):
@@ -400,7 +420,7 @@ func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
 				"Your client failed to authenticate due to an unknown error :(\nTry to reconnect or reboot your game"
 			)
 
-func _authenticate_peer(unique_id: Variant, auth_ticket: Dictionary):
+func _authenticate_peer(unique_id: Variant, username: String, auth_ticket: Dictionary):
 	var peer_id: int = multiplayer.get_remote_sender_id()
 	var data = peers.get(peer_id, null)
 	
@@ -472,6 +492,7 @@ func _authenticate_peer(unique_id: Variant, auth_ticket: Dictionary):
 	
 	unique_id = str(unique_id)
 	data.unique_id = unique_id
+	data.username = username
 	
 	if FileAccess.file_exists(save_file_loc):
 		save_file_busy = true

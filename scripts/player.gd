@@ -24,6 +24,8 @@ var inventory_items: Array[BaseItem] = []
 
 @export var target_pos: Vector3 = Vector3.ZERO
 
+var enable_chat: bool = not Settings.settings.get_value("multiplayer", "disable_chat", false)
+
 func _ready() -> void:
 	if is_multiplayer_authority():
 		Network.take_damage.connect(_take_damage)
@@ -125,12 +127,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
 	
-	if (
-		event is InputEventMouseButton
-		and not $"../CanvasLayer/Control/InventoryBG".visible
-	):
+	if event is InputEventMouseButton and not $"../CanvasLayer/Control/InventoryBG".visible:
 		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	if event.is_action_pressed("chat") and enable_chat and not $"../CanvasLayer/Control/InventoryBG".visible:
+		$"../CanvasLayer/Control/Chatbox/Input/LineEdit".grab_focus()
 	
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * .1))
@@ -464,7 +466,6 @@ func _physics_process(delta: float) -> void:
 				var_to_bytes_with_objects(p),
 				i.name
 			)
-
 
 func _on_send_data_to_save_timeout() -> void:
 	var encoded_hotbar = []

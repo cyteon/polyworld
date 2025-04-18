@@ -11,9 +11,10 @@ func _ready() -> void:
 		print("[Client] Connection established")
 		
 		Network.rpc_id(
-			get_multiplayer_authority(), 
+			get_multiplayer_authority(),
 			"_authenticate", 
-			Steamworks.steam_id, 
+			Steamworks.steam_id,
+			Steamworks.steam_username,
 			Steam.getAuthSessionTicket()
 		)
 		

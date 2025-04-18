@@ -3,11 +3,15 @@ extends Node3D
 func _ready() -> void:
 	push_warning("[Client] Entered world") # for time refrence in debugger
 	
+	if Settings.settings.get_value("multiplayer", "disable_chat", false):
+		$CanvasLayer/Control/Chatbox.hide()
+	
 	Network.spawn_scene.connect(_spawn_scene)
 	Network.spawn_item.connect(_spawn_item)
 	Network.despawn_item.connect(_despawn_item)
 	Network.add_players.connect(_add_players)
 	Network.remove_player.connect(_remove_player)
+	Network.chatmsg.connect(_chatmsg)
 	
 	Network.rpc_id(get_multiplayer_authority(), "_world_loaded")
 
@@ -60,3 +64,24 @@ func _on_exit_to_desktop_pressed() -> void:
 
 func _on_resume_pressed() -> void:
 	$CanvasLayer/Control/PauseMenu.hide()
+
+func _chatmsg(content: String, username: String, id: String) -> void:
+	var label = $CanvasLayer/Control/Chatbox/ScrollContainer/Template.duplicate()
+	label.name = id
+	label.text = "[%s] %s" % [username, content]
+	
+	
+	$CanvasLayer/Control/Chatbox/ScrollContainer/Messages.add_child(label)
+	label.show()
+	
+	await get_tree().process_frame
+	$CanvasLayer/Control/Chatbox/ScrollContainer.scroll_vertical = $CanvasLayer/Control/Chatbox/ScrollContainer.get_v_scroll_bar().max_value
+
+func _on_line_edit_text_submitted(new_text: String) -> void:
+	Network.rpc_id(
+		1, "_chatmsg_server",
+		new_text
+	)
+	
+	$CanvasLayer/Control/Chatbox/Input/LineEdit.release_focus()
+	$CanvasLayer/Control/Chatbox/Input/LineEdit.text = ""
