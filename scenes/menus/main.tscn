@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://chywp86wwop7n"]
+[gd_scene load_steps=5 format=3 uid="uid://chywp86wwop7n"]
 
 [ext_resource type="Script" uid="uid://doj5vqni5828n" path="res://scripts/menus/main.gd" id="1_hnw6f"]
 [ext_resource type="PackedScene" uid="uid://d022mqen8qv4k" path="res://scenes/other/discord_rpc.tscn" id="2_wjjpd"]
@@ -6,6 +6,12 @@
 [sub_resource type="Theme" id="Theme_hnw6f"]
 default_font_size = 32
 LineEdit/font_sizes/font_size = 32
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wjjpd"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -201,22 +207,24 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -250.0
-offset_top = -150.0
+offset_top = -191.0
 offset_right = 250.0
-offset_bottom = 150.0
+offset_bottom = 236.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.180392, 0.180392, 0.180392, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ContentWarning/Content"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = 7.0
-offset_right = -10.0
-offset_bottom = -9.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -204.5
+offset_right = 240.0
+offset_bottom = 204.5
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -231,9 +239,29 @@ uppercase = true
 custom_minimum_size = Vector2(480, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "By using the chat feature on multiplayer servers, you acknowledge that all messages may be logged for moderation purposes to ensure a safe and enjoyable experience. We strive to provide a safe environment but are not responsible for the content of any chat messages. Please refrain from using offensive language or engaging in inappropriate behavior."
-horizontal_alignment = 1
+text = "By using chat, you agree that:
+- Messages may be logged, monitored, and stored for 30 days to address abuse, cheating, or legal requests.
+- You are 13+ and will not engage in hate speech, harassment, threats, or sharing personal info.
+- Violations may result in bans or legal action.
+- We are not liable for player conduct—report issues via in-game tools.
+To delete your data or report underage users, contact privacy@cyteon.dev"
 autowrap_mode = 2
+
+[node name="CheckBox" type="CheckBox" parent="ContentWarning/Content/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_styles/focus = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_wjjpd")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_wjjpd")
+text = "I agree to the above terms"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ContentWarning/Content/VBoxContainer"]
 custom_minimum_size = Vector2(460, 0)
@@ -244,6 +272,7 @@ size_flags_horizontal = 4
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
+disabled = true
 text = "Enable Chat"
 
 [node name="DisableChat" type="Button" parent="ContentWarning/Content/VBoxContainer/HBoxContainer"]
@@ -260,5 +289,6 @@ text = "Disable Chat"
 [connection signal="pressed" from="PopupPanel/VBoxContainer/Buttons/ActualConnectButton" to="." method="_on_actual_connect_button_pressed"]
 [connection signal="pressed" from="PopupPanel/VBoxContainer/Buttons/PingServerButton" to="." method="_on_ping_server_button_pressed"]
 [connection signal="pressed" from="CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="toggled" from="ContentWarning/Content/VBoxContainer/CheckBox" to="." method="_on_check_box_toggled"]
 [connection signal="pressed" from="ContentWarning/Content/VBoxContainer/HBoxContainer/EnableChat" to="." method="_on_enable_chat_pressed"]
 [connection signal="pressed" from="ContentWarning/Content/VBoxContainer/HBoxContainer/DisableChat" to="." method="_on_disable_chat_pressed"]

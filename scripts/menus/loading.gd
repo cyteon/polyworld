@@ -41,7 +41,9 @@ func _ready() -> void:
 		$ProgressBar.hide()
 	)
 	
-	Network.authentication_ok.connect(func():
+	Network.authentication_ok.connect(func(secure: bool):
+		Network.server_is_sccure = secure
+		
 		connected = true
 		print("[Client] Authentication finished, loading...")
 	)

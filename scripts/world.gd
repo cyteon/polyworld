@@ -3,7 +3,7 @@ extends Node3D
 func _ready() -> void:
 	push_warning("[Client] Entered world") # for time refrence in debugger
 	
-	if Settings.settings.get_value("multiplayer", "disable_chat", false):
+	if Settings.settings.get_value("multiplayer", "disable_chat", false) or not Network.server_is_sccure:
 		$CanvasLayer/Control/Chatbox.hide()
 	
 	Network.spawn_scene.connect(_spawn_scene)

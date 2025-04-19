@@ -214,10 +214,23 @@ func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
 		peers[peer].inventory = hotbar
 
 func _chatmsg(content: String) -> void:
-	var peer = multiplayer.get_remote_sender_id()
-	var data = peers.get(peer)
+	var peer: int = multiplayer.get_remote_sender_id()
 	
-	var id = "%s_%s" % [data.unique_id, ResourceUID.create_id()]
+	if not SteamServer.secure():
+		Network.rpc_id(
+			peer,
+			"_chatmsg",
+			content,
+			"server",
+			# 1 is server peer ID
+			"1_%s" % ResourceUID.create_id()
+		)
+		
+		return
+	
+	var data: Dictionary = peers.get(peer)
+	
+	var id: String = "%s_%s" % [data.unique_id, ResourceUID.create_id()]
 	
 	# TODO: chat filtering
 	
@@ -228,7 +241,28 @@ func _chatmsg(content: String) -> void:
 		id
 	)
 	
-	# TODO: chat logging
+	var body: Dictionary = {
+		"id": id,
+		"server_id": server_id,
+		"author": data.unique_id,
+		"content": content,
+	}
+	
+	var waits: float = 0.0
+	
+	while $MessagesHTTP.get_http_client_status() != 0:
+		await get_tree().create_timer(0.5).timeout
+		waits += 0.5
+		
+		if waits >= 60.0:
+			print("[Server] HTTP Client Busy for 1 minute, aborting")
+	
+	$MessagesHTTP.request(
+		"%s/api/messages" % Network.backend_url,
+		["Content-Type: application/json"],
+		HTTPClient.METHOD_POST,
+		JSON.stringify(body)
+	)
 
 func _set_holding(peer: int, scene: String) -> void:
 	if peer in peers:
@@ -383,7 +417,8 @@ func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
 	if not SteamServer.secure():
 		Network.rpc_id(
 			id_peer_map[owner_id],
-			"_authentication_ok"
+			"_authentication_ok",
+			false
 		)
 		
 		return
@@ -392,7 +427,8 @@ func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
 		SteamServer.AUTH_SESSION_RESPONSE_OK:
 			Network.rpc_id(
 				id_peer_map[owner_id],
-				"_authentication_ok"
+				"_authentication_ok",
+				true
 			)
 		#AUTH_SESSION_RESPONSE_USER_NOT_CONNECTED_TO_STEAM
 		#AUTH_SESSION_RESPONSE_NO_LICENSE_OR_EXPIRED
@@ -486,7 +522,7 @@ func _authenticate_peer(unique_id: Variant, username: String, auth_ticket: Dicti
 			network.disconnect_peer(peer_id)
 			return
 	else:
-		Network.rpc_id(peer_id, "_authentication_ok")
+		Network.rpc_id(peer_id, "_authentication_ok", false)
 	
 	id_peer_map[unique_id] = peer_id
 	
@@ -559,19 +595,23 @@ func send_server_info() -> void:
 		"compatability_ver": Network.compatability_ver,
 		"secure": SteamServer.secure()
 	})
+
 	
-	var headers = ["Content-Type: Application/JSON"]
+	var waits: float = 0.0
 	
-	var waits = 0
-	
-	while $HTTPRequest.get_http_client_status() != 0:
-		await get_tree().create_timer(1).timeout
-		waits += 1
+	while $ServerInfoHTTP.get_http_client_status() != 0:
+		await get_tree().create_timer(0.5).timeout
+		waits += 0.5
 		
-		if waits >= 60:
-			print("[Server] HTTP Client Busy for 1 minutes, aborting")
+		if waits >= 60.0:
+			print("[Server] HTTP Client Busy for 1 minute, aborting")
 	
-	$HTTPRequest.request("%s/api/servers" % Network.backend_url, headers, HTTPClient.METHOD_POST, json)
+	$ServerInfoHTTP.request(
+		"%s/api/servers" % Network.backend_url, 
+		["Content-Type: application/json"], 
+		HTTPClient.METHOD_POST, 
+		json
+	)
 
 func _on_save_timeout() -> void:
 	# TODO: put this next to binaries

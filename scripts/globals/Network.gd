@@ -2,7 +2,10 @@ extends Node
 
 # will be used to see if server compatable with client
 const compatability_ver: int = 1
-const backend_url: String = "https://polyworld.xyz"
+const backend_url: String = "https://polyworld.xyz" # localhost:5173
+
+# for client to know if server secure
+var server_is_sccure: bool = false
 
 # -- Hybrid -- #
 # aka: Server/Client -> Server/Client
@@ -39,7 +42,7 @@ func _ready_to_send_to(id: int):
 # -- Server -> Client -- #
 
 signal disconnected(reason: String, details: String)
-signal authentication_ok()
+signal authentication_ok(secure: bool)
 signal add_players(ids)
 signal remove_player(id: int)
 signal take_damage(damage: int)
@@ -53,8 +56,8 @@ func _disconnect(reason: String, details: String):
 	disconnected.emit(reason, details)
 
 @rpc("authority")
-func _authentication_ok():
-	authentication_ok.emit()
+func _authentication_ok(secure: bool):
+	authentication_ok.emit(secure)
 
 @rpc("authority")
 func _add_players(ids):
