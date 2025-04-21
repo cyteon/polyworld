@@ -18,7 +18,7 @@ func _ready() -> void:
 			Steam.getAuthSessionTicket()
 		)
 		
-		$Label.text = "Connected to server :D... Loading"
+		$Label.text = "Connected to server :D... Authenticating"
 	)
 	
 	multiplayer.connection_failed.connect(func(): 
@@ -73,3 +73,17 @@ func _process(delta: float) -> void:
 
 func _on_main_menu_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/menus/main.tscn")
+
+
+func _on_timeout_warning_timeout() -> void:
+	$Label.text = "Something is taking long... Stand by"
+
+
+func _on_timeout_confirmed_timeout() -> void:
+	connected = false
+		
+	$Label.text = "Server connection timed out"
+	multiplayer.multiplayer_peer.close()
+	
+	$Details.show()
+	$ProgressBar.hide()

@@ -70,4 +70,16 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_72pgf")
 max_value = 1.0
 step = 0.001
 
+[node name="TimeoutWarning" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+autostart = true
+
+[node name="TimeoutConfirmed" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+autostart = true
+
 [connection signal="pressed" from="Details/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
+[connection signal="timeout" from="TimeoutWarning" to="." method="_on_timeout_warning_timeout"]
+[connection signal="timeout" from="TimeoutConfirmed" to="." method="_on_timeout_confirmed_timeout"]
