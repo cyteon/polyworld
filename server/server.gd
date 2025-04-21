@@ -1,8 +1,6 @@
 extends Control
 
 var save_file_loc: String = "user://server_save.json"
-# so smth dosent write while being read and stuff
-var save_file_busy: bool = false
 
 var server_id: String = OS.get_unique_id()
 
@@ -385,11 +383,6 @@ func _peer_disconnected(peer_id: int):
 	var hunger = get_node(str(peer_id)).hunger
 	var pos = get_node(str(peer_id)).global_position
 	
-	while save_file_busy:
-		await get_tree().create_timer(0.5).timeout
-	
-	save_file_busy = true
-	
 	var save_obj = {
 		"players": {},
 		"items": [],
@@ -411,7 +404,6 @@ func _peer_disconnected(peer_id: int):
 	var text = JSON.stringify(save_obj, "\t")
 	FileAccess.open(save_file_loc, FileAccess.WRITE).store_string(text)
 	
-	save_file_busy = false
 
 func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
 	if not SteamServer.secure():
@@ -531,11 +523,8 @@ func _authenticate_peer(unique_id: Variant, username: String, auth_ticket: Dicti
 	data.username = username
 	
 	if FileAccess.file_exists(save_file_loc):
-		save_file_busy = true
 		
 		var save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
-		
-		save_file_busy = false
 		
 		if unique_id in save_obj["players"]:
 			data.hotbar = save_obj["players"][unique_id].hotbar
@@ -617,11 +606,6 @@ func _on_save_timeout() -> void:
 	# TODO: put this next to binaries
 	var save_obj = {}
 	
-	while save_file_busy:
-		await get_tree().create_timer(0.5).timeout
-	
-	save_file_busy = true
-	
 	if FileAccess.file_exists(save_file_loc):
 		save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
 	else:
@@ -665,5 +649,3 @@ func _on_save_timeout() -> void:
 	
 	var text = JSON.stringify(save_obj, "\t")
 	FileAccess.open(save_file_loc, FileAccess.WRITE).store_string(text)
-	
-	save_file_busy = false
