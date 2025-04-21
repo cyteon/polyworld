@@ -74,10 +74,8 @@ func _process(delta: float) -> void:
 func _on_main_menu_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/menus/main.tscn")
 
-
 func _on_timeout_warning_timeout() -> void:
 	$Label.text = "Something is taking long... Stand by"
-
 
 func _on_timeout_confirmed_timeout() -> void:
 	connected = false

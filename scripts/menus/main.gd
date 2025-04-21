@@ -95,6 +95,5 @@ func _on_disable_chat_pressed() -> void:
 	Settings.settings.save(Settings.SETTINGS_PATH)
 	$ContentWarning.hide()
 
-
 func _on_check_box_toggled(toggled_on: bool) -> void:
 	$ContentWarning/Content/VBoxContainer/HBoxContainer/EnableChat.disabled = not toggled_on
