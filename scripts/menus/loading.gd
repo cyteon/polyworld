@@ -48,7 +48,7 @@ func _ready() -> void:
 		print("[Client] Authentication finished, loading...")
 	)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var status = ResourceLoader.load_threaded_get_status("res://scenes/world.tscn", progress)
 	
 	match status:

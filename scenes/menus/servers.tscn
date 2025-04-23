@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://d24i8n8sg6g47"]
+[gd_scene load_steps=3 format=3 uid="uid://d24i8n8sg6g47"]
 
 [ext_resource type="Script" uid="uid://cxftxgmofjmhg" path="res://scripts/menus/servers.gd" id="1_o8mf1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o8mf1"]
 
 [node name="Servers" type="Control"]
 layout_mode = 3
@@ -11,77 +13,149 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_o8mf1")
 
-[node name="BackButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 90.0
-offset_bottom = 61.0
-theme_override_font_sizes/font_size = 32
-text = "Back"
-
-[node name="RefreshButton" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -136.0
-offset_top = 8.0
-offset_right = -9.0
-offset_bottom = 61.0
-grow_horizontal = 0
-theme_override_font_sizes/font_size = 32
-text = "Refresh"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 8.0
-offset_top = 72.0
+offset_top = 8.0
 offset_right = -8.0
 offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ServerList" type="VBoxContainer" parent="ScrollContainer"]
+[node name="TopButtons" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="VBoxContainer/TopButtons"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Back"
+
+[node name="RefreshButton" type="Button" parent="VBoxContainer/TopButtons"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_font_sizes/font_size = 32
+text = "Refresh"
+
+[node name="FilterSettings" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="SecureOnly" type="CheckBox" parent="VBoxContainer/FilterSettings"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_o8mf1")
+text = "Secure only"
+
+[node name="UnsecureOnly" type="CheckBox" parent="VBoxContainer/FilterSettings"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_o8mf1")
+text = "Unsecure only"
+
+[node name="ExcludeFull" type="CheckBox" parent="VBoxContainer/FilterSettings"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_o8mf1")
+text = "Exclude full"
+
+[node name="ExcludeEmpty" type="CheckBox" parent="VBoxContainer/FilterSettings"]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_o8mf1")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_o8mf1")
+text = "Exclude empty"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ServerList" type="VBoxContainer" parent="VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Template" type="HBoxContainer" parent="ScrollContainer/ServerList"]
+[node name="Template" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/ServerList"]
 visible = false
 layout_mode = 2
 
-[node name="Button" type="Button" parent="ScrollContainer/ServerList/Template"]
+[node name="Button" type="Button" parent="VBoxContainer/ScrollContainer/ServerList/Template"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = " Join "
 
-[node name="Name" type="Label" parent="ScrollContainer/ServerList/Template"]
+[node name="Name" type="Label" parent="VBoxContainer/ScrollContainer/ServerList/Template"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
 text = "Server Name - Very Cool Seeeeeeeeeeeeee"
 text_overrun_behavior = 3
 
-[node name="Players" type="Label" parent="ScrollContainer/ServerList/Template"]
+[node name="Players" type="Label" parent="VBoxContainer/ScrollContainer/ServerList/Template"]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "4/100 players"
-horizontal_alignment = 1
+horizontal_alignment = 2
 
-[node name="Secure" type="Label" parent="ScrollContainer/ServerList/Template"]
+[node name="Secure" type="Label" parent="VBoxContainer/ScrollContainer/ServerList/Template"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
-text = "Unsecure Server"
-horizontal_alignment = 1
+text = "Unsecure"
+horizontal_alignment = 2
 
 [node name="HTTPRequest" type="HTTPRequest" parent="."]
 
-[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
-[connection signal="pressed" from="RefreshButton" to="." method="_on_refresh_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TopButtons/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TopButtons/RefreshButton" to="." method="_on_refresh_button_pressed"]
+[connection signal="toggled" from="VBoxContainer/FilterSettings/SecureOnly" to="." method="_on_secure_only_toggled"]
+[connection signal="toggled" from="VBoxContainer/FilterSettings/UnsecureOnly" to="." method="_on_unsecure_only_toggled"]
+[connection signal="toggled" from="VBoxContainer/FilterSettings/ExcludeFull" to="." method="_on_exclude_full_toggled"]
+[connection signal="toggled" from="VBoxContainer/FilterSettings/ExcludeEmpty" to="." method="_on_exclude_empty_toggled"]
 [connection signal="request_completed" from="HTTPRequest" to="." method="_request_completed"]
