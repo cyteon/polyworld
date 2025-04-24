@@ -47,6 +47,8 @@ func _ready() -> void:
 		connected = true
 		print("[Client] Authentication finished, loading...")
 	)
+	
+	$FunnyMessages.text = General.FUNNY_MESSAGES.pick_random()
 
 func _process(_delta: float) -> void:
 	var status = ResourceLoader.load_threaded_get_status("res://scenes/world.tscn", progress)
@@ -85,3 +87,7 @@ func _on_timeout_confirmed_timeout() -> void:
 	
 	$Details.show()
 	$ProgressBar.hide()
+
+
+func _on_change_funny_message_timeout() -> void:
+	$FunnyMessages.text = General.FUNNY_MESSAGES.pick_random()

@@ -4,9 +4,17 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_en1jp"]
 bg_color = Color(0, 0, 0, 0.619608)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_72pgf"]
 bg_color = Color(0, 0.466667, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="World" type="Control"]
 layout_mode = 3
@@ -58,10 +66,10 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = -56.0
-offset_right = -16.0
-offset_bottom = -11.0
+offset_left = 8.0
+offset_top = -80.0
+offset_right = -8.0
+offset_bottom = -35.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 32
@@ -71,15 +79,37 @@ max_value = 1.0
 step = 0.001
 
 [node name="TimeoutWarning" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 5.0
 one_shot = true
 autostart = true
 
 [node name="TimeoutConfirmed" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 10.0
 one_shot = true
+autostart = true
+
+[node name="FunnyMessages" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -568.0
+offset_top = -35.0
+offset_right = 576.0
+offset_bottom = -1.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Enter a funny message here or something"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ChangeFunnyMessage" type="Timer" parent="."]
+wait_time = 2.0
 autostart = true
 
 [connection signal="pressed" from="Details/MainMenuButton" to="." method="_on_main_menu_button_pressed"]
 [connection signal="timeout" from="TimeoutWarning" to="." method="_on_timeout_warning_timeout"]
 [connection signal="timeout" from="TimeoutConfirmed" to="." method="_on_timeout_confirmed_timeout"]
+[connection signal="timeout" from="ChangeFunnyMessage" to="." method="_on_change_funny_message_timeout"]

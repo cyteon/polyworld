@@ -1,0 +1,31 @@
+extends Node
+
+const FUNNY_MESSAGES = [
+	"Hint: do not eat the sword",
+	"Powered by hopes and dreams",
+	"Usual loading time: 2 years",
+	"Your PC is a potato",
+	"I am from mars",
+	"This game, is a game",
+	"A pickaxe is not edible",
+	"This is a loading screen if you didnt know",
+	"why did i even make these messages",
+	"comic sans is a good font",
+	"you == noob // true",
+	"you == pro // true",
+	"W for buying the game, unless u pirated it",
+	"i will throw a potato at you if u pirated this",
+	"im going to eat dirt",
+	"steam stole my 100$",
+	"oengåpawegabepgbeigwea",
+	"uowaiehf087wh8awehg",
+	"a a a a a a a a a a a a",
+	"u are cool for playing this game",
+	"this is a cool game (not based)",
+	"wait why am i writing these im supposed to be studying for an exam tmrw",
+	"dont do your homework, play polyworld",
+	"https://polyworld.xyz exists btw",
+	"made by cyteon @ https://cyteon.dev",
+	"pluh",
+	"BLEHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
+]
