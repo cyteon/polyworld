@@ -104,7 +104,8 @@ replication_config = SubResource("SceneReplicationConfig_3vyb7")
 script = SubResource("GDScript_3vyb7")
 
 [node name="Eyes" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.608, -0.261153)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.608, -0.250558)
+visibility_range_begin = 0.3
 mesh = SubResource("BoxMesh_3vyb7")
 
 [node name="Hold" type="Node3D" parent="."]
