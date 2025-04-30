@@ -207,9 +207,11 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, speed)
 			velocity.z = move_toward(velocity.z, 0, speed)
 		
-		if Input.is_action_pressed("sprint") and stamina > 0:
+		if Input.is_action_pressed("sprint") and stamina > 0 and velocity:
 			speed = normal_speed * 1.5
-			stamina -= 10 * delta
+			
+			if velocity != Vector3.ZERO:
+				stamina -= 10 * delta
 		else:
 			speed = normal_speed
 		
