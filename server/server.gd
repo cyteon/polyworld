@@ -336,13 +336,13 @@ func _peer_world_loaded():
 		if id != peer_id:
 			Network.rpc_id(peer_id, "_set_holding", id, peers[id].holding if peers[id].has("holding") else "")
 	
-	for item in $Items.get_children():
-		var i = item.duplicate()
-		
+	for i in $Items.get_children():
 		Util.set_owner_recursive(i, i)
 		
 		var p = PackedScene.new()
 		p.pack(i)
+		
+		print(i.name)
 		
 		Network.rpc_id(
 			peer_id,

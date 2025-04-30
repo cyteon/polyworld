@@ -29,8 +29,10 @@ func _despawn_item(path: NodePath) -> void:
 func _spawn_item(bytes, name_) -> void:
 	var node = bytes_to_var_with_objects(bytes).instantiate()
 	
+	print(node.name)
+	
 	$Items.add_child(node)
-	node.name = name_
+	#node.name = name_
 	node.freeze = false
 
 func _add_players(ids) -> void:
