@@ -130,6 +130,9 @@ func is_blocking_ui_visible() -> bool:
 	if $"../CanvasLayer/Control/PauseMenu".visible:
 		return true
 	
+	if $"../CanvasLayer/Control/Chatbox/Input/LineEdit".has_focus():
+		return true
+	
 	return false
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -140,7 +143,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
-	if event.is_action_pressed("chat") and enable_chat and not $"../CanvasLayer/Control/InventoryBG".visible:
+	if event.is_action_pressed("chat") and enable_chat and not is_blocking_ui_visible():
 		$"../CanvasLayer/Control/Chatbox/Input/LineEdit".grab_focus()
 	
 	if event is InputEventMouseMotion and not is_blocking_ui_visible():
@@ -195,6 +198,8 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("pause"):
 		if $"../CanvasLayer/Control/InventoryBG".visible:
 			$"../CanvasLayer/Control/InventoryBG".hide()
+		elif $"../CanvasLayer/Control/Chatbox/Input/LineEdit".has_focus():
+			$"../CanvasLayer/Control/Chatbox/Input/LineEdit".release_focus()
 		else:
 			$"../CanvasLayer/Control/PauseMenu".visible = not $"../CanvasLayer/Control/PauseMenu".visible
 			
@@ -234,7 +239,10 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
 	
-	if Input.is_action_just_pressed("inventory") and not $"../CanvasLayer/Control/PauseMenu".visible:
+	if Input.is_action_just_pressed("inventory") and (
+		not $"../CanvasLayer/Control/PauseMenu".visible
+		and not $"../CanvasLayer/Control/Chatbox/Input/LineEdit".has_focus()
+	):
 		$"../CanvasLayer/Control/InventoryBG".visible = not $"../CanvasLayer/Control/InventoryBG".visible
 			
 		if $"../CanvasLayer/Control/InventoryBG".visible:

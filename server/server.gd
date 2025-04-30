@@ -342,8 +342,6 @@ func _peer_world_loaded():
 		var p = PackedScene.new()
 		p.pack(i)
 		
-		print(i.name)
-		
 		Network.rpc_id(
 			peer_id,
 			"_spawn_item", 
