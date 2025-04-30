@@ -123,6 +123,15 @@ func _set_holding(peer: int, scene: String) -> void:
 	
 	$Hold.add_child(node)
 
+func is_blocking_ui_visible() -> bool:
+	if $"../CanvasLayer/Control/InventoryBG".visible:
+		return true
+	
+	if $"../CanvasLayer/Control/PauseMenu".visible:
+		return true
+	
+	return false
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
 		return
@@ -134,7 +143,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("chat") and enable_chat and not $"../CanvasLayer/Control/InventoryBG".visible:
 		$"../CanvasLayer/Control/Chatbox/Input/LineEdit".grab_focus()
 	
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion and not is_blocking_ui_visible():
 		rotate_y(deg_to_rad(-event.relative.x * .1))
 		
 		$Camera3D.rotate_x(deg_to_rad(-event.relative.y * .1))
@@ -194,7 +203,7 @@ func _physics_process(delta: float) -> void:
 			else:
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-	if not $"../CanvasLayer/Control/PauseMenu".visible: 
+	if not is_blocking_ui_visible():
 		if Input.is_action_just_pressed("jump") and is_on_floor():
 			velocity.y = JUMP_VELOCITY
 		
@@ -221,14 +230,17 @@ func _physics_process(delta: float) -> void:
 			if collider is BaseItem:
 				if add_item_to_inv(collider.duplicate()):
 					Network.rpc("_despawn_item", collider.get_path())
-		
-		if Input.is_action_just_pressed("inventory"):
-			$"../CanvasLayer/Control/InventoryBG".visible = not $"../CanvasLayer/Control/InventoryBG".visible
+	else:
+		velocity.x = move_toward(velocity.x, 0, speed)
+		velocity.z = move_toward(velocity.z, 0, speed)
+	
+	if Input.is_action_just_pressed("inventory") and not $"../CanvasLayer/Control/PauseMenu".visible:
+		$"../CanvasLayer/Control/InventoryBG".visible = not $"../CanvasLayer/Control/InventoryBG".visible
 			
-			if $"../CanvasLayer/Control/InventoryBG".visible:
-				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-			else:
-				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		if $"../CanvasLayer/Control/InventoryBG".visible:
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+		else:
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 	move_and_slide()
 	target_pos = global_position
