@@ -109,7 +109,7 @@ jobs:
 
   deployToSteam:
     name: Deploy to Steam 
-    needs: [export-mac, export-windows, export-linux]
+    needs: [export-mac, export-windows, export-linux, export-pck]
     runs-on: ubuntu-latest
     steps:
       - name: Set env
