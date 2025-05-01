@@ -143,7 +143,9 @@ jobs:
       - name: Uncompress config.vdf
         run: |
           mkdir -v -p /home/runner/Steam/config
-          echo "${{ secrets.STEAM_CONFIG_VDF}}" | base64 -d - | gunzip - > /home/runner/Steam/config/config.vdf
+          echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d - | gunzip - > /home/runner/Steam/config/config.vdf
+          STEAM_CONFIG_BASE64=$(base64 -w 0 /tmp/steam-config/config.vdf)
+          echo "STEAM_CONFIG_BASE64=$STEAM_CONFIG_BASE64" >> $GITHUB_ENV
 
       - name: Download Artifact
         uses:  actions/download-artifact@v4
@@ -152,7 +154,7 @@ jobs:
         uses: game-ci/steam-deploy@v3
         with:
           username: ${{ secrets.STEAM_USERNAME }}          
-          configVdf: /home/runner/Steam/config/config.vdf
+          configVdf: ${{ env.STEAM_CONFIG_BASE64 }}
           appId: 3650810
           buildDescription: ${{ env.RELEASE_VERSION }}
           releaseBranch: default
