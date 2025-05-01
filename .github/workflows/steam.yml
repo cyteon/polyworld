@@ -1,0 +1,167 @@
+name: "godot-ci export to steam"
+on:
+  push:
+    branches:
+      - release
+    tags:
+      - v*
+
+env:
+  GODOT_VERSION: 4.4.1
+  EXPORT_NAME: PolyWorld
+
+jobs:
+  export-pck:
+    name: Export PCK
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Export PCK
+        run: |
+          mkdir -v -p build/pck
+          godot -v --headless --verbose --export-pack "Linux Desktop" build/pck/$EXPORT_NAME.pck
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pck
+          path: build/pck
+
+  export-windows:
+    name: Windows Export
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.config/ # exampel has this on windows so i try
+          mv /root/.config/godot ~/.config/godot # ^
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Windows Build
+        run: |
+          mkdir -v -p build/windows 
+          godot -v --headless --verbose --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
+          rm -rf build/windows/$EXPORT_NAME.pck # cause pck is in shared depot
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: build/windows
+          
+  export-linux:
+    name: Linux Export
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Linux Build
+        run: |
+          mkdir -v -p build/linux
+          godot -v --headless --verbose --export-release "Linux Desktop" build/linux/$EXPORT_NAME.x86_64
+          rm -rf build/linux/$EXPORT_NAME.pck # cause pck is in shared depot
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: build/linux
+
+  export-mac:
+    name: Mac Export
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup godot
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_macos.universal.zip"
+          unzip -q Godot_v4.4.1-stable_macos.universal.zip
+          ls -R
+          mv Godot.app/Contents/MacOS/Godot godot
+          chmod +x godot
+      - name: Setup export templates
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
+          mkdir -p "/Users/runner/Library/Application Support/Godot/export_templates"
+          unzip Godot_v4.4.1-stable_export_templates.tpz -d "/Users/runner/Library/Application Support/Godot/export_templates"
+          mv "/Users/runner/Library/Application Support/Godot/export_templates/templates" "/Users/runner/Library/Application Support/Godot/export_templates/${GODOT_VERSION}.stable"
+        
+      - name: Mac Build
+        run: |
+          mkdir -v -p build/mac
+          ./godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app || true
+
+          if [ -d "build/mac/$EXPORT_NAME.app" ]; then
+            echo ".app exists, proceeding with export"
+          else
+            echo ".app does not exist, exiting"
+            exit 1
+          fi
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac
+          path: build/mac
+
+  deployToSteam:
+    name: Deploy to Steam 
+    needs: [export-mac, export-windows, export-linux, export-pck]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Set env
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/*/}
+          COMMIT_HASH=$(echo $GITHUB_SHA | cut -c1-7)
+          echo "RELEASE_VERSION=${BRANCH_NAME}-${COMMIT_HASH}" >> $GITHUB_ENV
+
+      - name: Test
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
+
+      - name: Uncompress config.vdf
+        run: |
+          mkdir -v -p /home/runner/Steam/config
+          echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d - | gunzip - > /home/runner/Steam/config/config.vdf
+          STEAM_CONFIG_BASE64=$(base64 -w 0 /home/runner/Steam/config/config.vdf)
+          echo "STEAM_CONFIG_BASE64=$STEAM_CONFIG_BASE64" >> $GITHUB_ENV
+
+      - name: Download Artifact
+        uses:  actions/download-artifact@v4
+
+      - name: Deploy to Steam
+        uses: game-ci/steam-deploy@v3
+        continue-on-error: true
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}          
+          configVdf: ${{ env.STEAM_CONFIG_BASE64 }}
+          appId: 3650810
+          buildDescription: ${{ env.RELEASE_VERSION }}
+          releaseBranch: default
+          depot1Path: pck
+          depot2Path: windows
+          depot3Path: linux
+          depot4Path: mac

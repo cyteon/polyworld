@@ -110,6 +110,11 @@ func _input(event: InputEvent) -> void:
 
 func setup_plugin() -> void:
 	"""Setup Wakatime plugin, download dependencies if needed, initialize menu"""
+	
+	# return if headless
+	if DisplayServer.get_name() == "headless":
+		return
+	
 	Utils.plugin_print("Setting up %s" % get_user_agent())
 	check_dependencies()
 	
