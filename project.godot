@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="PolyWorld"
-config/version="alpha/0.0.0"
+config/version="alpha/0.1"
 run/main_scene="uid://ckkqvmx41cg4t"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
