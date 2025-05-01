@@ -95,13 +95,13 @@ jobs:
           lfs: true
       - name: Setup godot
         run: |
-          get -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_macos.universal.zip
+          wget -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_macos.universal.zip
           unzip -q Godot_v4.4.1-stable_macos.universal.zip
           mv Godot_v4.4.1-stable_macos.universal.app/Contents/MacOS/Godot godot
           chmod +x godot
       - name: Setup export templates
         run: |
-          get -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
+          wget -q https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_export_templates.tpz
           mkdir -p ~/.local/share/godot/export_templates
           unzip Godot_v4.4.1-stable_export_templates.tpz -d ~/.local/share/godot/export_templates
           mv ~/.local/share/godot/export_templates/templates ~/.local/share/godot/export_templates/4.4.1.stable
