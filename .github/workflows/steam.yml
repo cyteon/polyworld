@@ -28,7 +28,7 @@ jobs:
       - name: Export PCK
         run: |
           mkdir -v -p build/pck
-          godot -v --export-pack "Linux Desktop" build/pck/$EXPORT_NAME.pck
+          godot -v --headless --export-pack "Linux Desktop" build/pck/$EXPORT_NAME.pck
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -52,7 +52,7 @@ jobs:
       - name: Windows Build
         run: |
           mkdir -v -p build/windows
-          godot -v --export-release "Windows Desktop" build/win/$EXPORT_NAME.exe
+          godot -v --headless --export-release "Windows Desktop" build/win/$EXPORT_NAME.exe
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -76,7 +76,7 @@ jobs:
       - name: Linux Build
         run: |
           mkdir -v -p build/linux
-          godot -v --export-release "Linux Desktop" build/linux/$EXPORT_NAME.x86_64
+          godot -v --headless --export-release "Linux Desktop" build/linux/$EXPORT_NAME.x86_64
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -100,7 +100,7 @@ jobs:
       - name: Mac Build
         run: |
           mkdir -v -p build/mac
-          godot -v --export-release "macOS" build/mac/$EXPORT_NAME.app
+          godot -v --headless --export-release "macOS" build/mac/$EXPORT_NAME.app
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
