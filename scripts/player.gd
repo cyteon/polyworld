@@ -24,7 +24,7 @@ var inventory_items: Array[BaseItem] = []
 
 @export var target_pos: Vector3 = Vector3.ZERO
 
-var enable_chat: bool = not Settings.settings.get_value("multiplayer", "disable_chat", false)
+var enable_chat: bool = not Settings.config.get_value("multiplayer", "disable_chat", false)
 
 func _ready() -> void:
 	if is_multiplayer_authority():

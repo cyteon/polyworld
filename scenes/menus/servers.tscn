@@ -30,13 +30,13 @@ layout_mode = 2
 
 [node name="BackButton" type="Button" parent="VBoxContainer/TopButtons"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "Back"
 
 [node name="RefreshButton" type="Button" parent="VBoxContainer/TopButtons"]
 layout_mode = 2
 size_flags_horizontal = 10
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "Refresh"
 
 [node name="FilterSettings" type="HBoxContainer" parent="VBoxContainer"]
@@ -46,7 +46,7 @@ alignment = 1
 [node name="SecureOnly" type="CheckBox" parent="VBoxContainer/FilterSettings"]
 layout_mode = 2
 size_flags_horizontal = 6
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 theme_override_styles/focus = SubResource("StyleBoxEmpty_o8mf1")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_o8mf1")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_o8mf1")
@@ -63,7 +63,7 @@ text = "Secure only"
 [node name="UnsecureOnly" type="CheckBox" parent="VBoxContainer/FilterSettings"]
 layout_mode = 2
 size_flags_horizontal = 6
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 theme_override_styles/focus = SubResource("StyleBoxEmpty_o8mf1")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_o8mf1")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_o8mf1")
@@ -80,7 +80,7 @@ text = "Unsecure only"
 [node name="ExcludeFull" type="CheckBox" parent="VBoxContainer/FilterSettings"]
 layout_mode = 2
 size_flags_horizontal = 6
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 theme_override_styles/focus = SubResource("StyleBoxEmpty_o8mf1")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_o8mf1")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_o8mf1")
@@ -97,7 +97,7 @@ text = "Exclude full"
 [node name="ExcludeEmpty" type="CheckBox" parent="VBoxContainer/FilterSettings"]
 layout_mode = 2
 size_flags_horizontal = 6
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 theme_override_styles/focus = SubResource("StyleBoxEmpty_o8mf1")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_o8mf1")
 theme_override_styles/disabled = SubResource("StyleBoxEmpty_o8mf1")
@@ -126,27 +126,27 @@ layout_mode = 2
 
 [node name="Button" type="Button" parent="VBoxContainer/ScrollContainer/ServerList/Template"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 32
 text = " Join "
 
 [node name="Name" type="Label" parent="VBoxContainer/ScrollContainer/ServerList/Template"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 42
 text = "Server Name - Very Cool Seeeeeeeeeeeeee"
 text_overrun_behavior = 3
 
 [node name="Players" type="Label" parent="VBoxContainer/ScrollContainer/ServerList/Template"]
 custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 text = "4/100 players"
 horizontal_alignment = 2
 
 [node name="Secure" type="Label" parent="VBoxContainer/ScrollContainer/ServerList/Template"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 text = "..."
 horizontal_alignment = 2
 

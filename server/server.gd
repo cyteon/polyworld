@@ -625,8 +625,8 @@ func _on_save_timeout() -> void:
 		var data = peers[peer]
 		
 		save_obj["players"][data.unique_id] = {
-			"hotbar": data.hotbar if "hotbar" in data else [],
-			"inventory": data.inventory if "inventory" in data else [],
+			"hotbar": data.hotbar if "hotbar" in data else "[]",
+			"inventory": data.inventory if "inventory" in data else "[]",
 			"health": get_node(str(peer)).health,
 			"stamina": get_node(str(peer)).stamina,
 			"hunger": get_node(str(peer)).hunger,

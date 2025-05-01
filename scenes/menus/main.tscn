@@ -4,8 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://d022mqen8qv4k" path="res://scenes/other/discord_rpc.tscn" id="2_wjjpd"]
 
 [sub_resource type="Theme" id="Theme_hnw6f"]
-default_font_size = 32
-LineEdit/font_sizes/font_size = 32
+default_font_size = 48
+LineEdit/font_sizes/font_size = 48
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wjjpd"]
 content_margin_left = 4.0
@@ -27,46 +27,56 @@ layout_mode = 0
 offset_left = 24.0
 offset_right = 379.0
 offset_bottom = 99.0
-theme_override_font_sizes/font_size = 72
+theme_override_font_sizes/font_size = 128
 text = "PolyWorld"
 
 [node name="Version" type="Label" parent="."]
 layout_mode = 0
-offset_left = 32.0
-offset_top = 76.0
-offset_right = 105.0
-offset_bottom = 99.0
-theme_override_font_sizes/font_size = 16
+offset_left = 36.0
+offset_top = 135.0
+offset_right = 180.0
+offset_bottom = 180.0
+theme_override_font_sizes/font_size = 32
 text = "0.0.0-DEV"
 
 [node name="Buttons" type="VBoxContainer" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
 offset_left = 16.0
-offset_top = 384.0
-offset_right = 264.0
-offset_bottom = 632.0
+offset_top = -262.0
+offset_right = 320.0
+offset_bottom = -16.0
+grow_vertical = 0
 alignment = 2
 
 [node name="ConnectButton" type="Button" parent="Buttons"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "Connect"
 
 [node name="ServersButton" type="Button" parent="Buttons"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "Servers"
+
+[node name="SettingsButton" type="Button" parent="Buttons"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Settings"
 
 [node name="QuitButton" type="Button" parent="Buttons"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "Quit"
 
 [node name="PopupPanel" type="PopupPanel" parent="."]
 transparent_bg = false
 mode = 2
 initial_position = 2
-size = Vector2i(500, 300)
+size = Vector2i(700, 410)
+visible = true
 borderless = false
 always_on_top = true
 transparent = false
@@ -77,8 +87,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 496.0
-offset_bottom = 296.0
+offset_right = 696.0
+offset_bottom = 406.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 6
@@ -86,24 +96,24 @@ alignment = 1
 
 [node name="Label" type="Label" parent="PopupPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "Connect to Server"
 horizontal_alignment = 1
 
 [node name="IPLabel" type="Label" parent="PopupPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 text = "Enter IP:"
 
 [node name="IPEdit" type="LineEdit" parent="PopupPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "127.0.0.1"
 placeholder_text = "IP"
 
 [node name="PortLabel" type="Label" parent="PopupPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 text = "Enter Port:"
 
 [node name="PortEdit" type="SpinBox" parent="PopupPanel/VBoxContainer"]
@@ -119,14 +129,14 @@ layout_mode = 2
 [node name="ActualConnectButton" type="Button" parent="PopupPanel/VBoxContainer/Buttons"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "Connect
 "
 
 [node name="PingServerButton" type="Button" parent="PopupPanel/VBoxContainer/Buttons"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 text = "Ping Server"
 
 [node name="PingError" type="Label" parent="PopupPanel/VBoxContainer"]
@@ -182,6 +192,7 @@ offset_right = -9.0
 offset_bottom = -9.0
 grow_horizontal = 0
 grow_vertical = 0
+theme_override_font_sizes/font_size = 32
 text = "Credits"
 
 [node name="Discord RPC" parent="." instance=ExtResource("2_wjjpd")]
@@ -283,6 +294,7 @@ text = "Disable Chat"
 
 [connection signal="pressed" from="Buttons/ConnectButton" to="." method="_on_connect_button_pressed"]
 [connection signal="pressed" from="Buttons/ServersButton" to="." method="_on_servers_button_pressed"]
+[connection signal="pressed" from="Buttons/SettingsButton" to="." method="_on_settings_button_pressed"]
 [connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="text_changed" from="PopupPanel/VBoxContainer/IPEdit" to="." method="_on_ip_edit_text_changed"]
 [connection signal="value_changed" from="PopupPanel/VBoxContainer/PortEdit" to="." method="_on_port_edit_value_changed"]
