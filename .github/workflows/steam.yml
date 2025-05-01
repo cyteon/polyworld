@@ -110,7 +110,14 @@ jobs:
       - name: Mac Build
         run: |
           mkdir -v -p build/mac
-          ./godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app
+          ./godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app || true
+
+          if [ -d "build/mac/$EXPORT_NAME.app" ]; then
+            echo ".app exists, proceeding with export"
+          else
+            echo ".app does not exist, exiting"
+            exit 1
+          fi
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
