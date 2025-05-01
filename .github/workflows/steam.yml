@@ -1,0 +1,145 @@
+name: "godot-ci export to steam"
+on:
+  push:
+    branches:
+      - release
+    tags:
+      - v*
+
+env:
+  GODOT_VERSION: 4.4.1
+  EXPORT_NAME: PolyWorld
+
+jobs:
+  export-pck:
+    name: Export PCK
+    runs-on: ubuntu-latest
+    container:
+      image: abarichello/godot-ci@4.4.1-stable
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+      - name: Export PCK
+        run: |
+          mkdir -v -p build/pck
+          godot -v --export "Linux Desktop" build/pck/$EXPORT_NAME.pck
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pck
+          path: build/pck
+
+  export-windows:
+    name: Windows Export
+    runs-on: ubuntu-latest
+    container:
+      image: abarichello/godot-ci@4.4.1-stable
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+      - name: Windows Build
+        run: |
+          mkdir -v -p build/windows
+          godot -v --export "Windows Desktop" build/win/$EXPORT_NAME.exe
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: build/windows
+          
+  export-linux:
+    name: Linux Export
+    runs-on: ubuntu-latest
+    container:
+      image: abarichello/godot-ci@4.4.1-stable
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+      - name: Linux Build
+        run: |
+          mkdir -v -p build/linux
+          godot -v --export "Linux Desktop" build/linux/$EXPORT_NAME.x86_64
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: build/linux
+
+  export-mac:
+    name: Mac Export
+    runs-on: ubuntu-latest
+    container:
+      image: abarichello/godot-ci@4.4.1-stable
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/templates
+          mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
+      - name: Mac Build
+        run: |
+          mkdir -v -p build/mac
+          godot -v --export "macOS" build/mac/$EXPORT_NAME.app
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac
+          path: build/mac
+
+  deployToSteam:
+    name: Deploy to Steam 
+    needs: [export-mac, export-windows, export-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/*/}
+          COMMIT_HASH=$(echo $GITHUB_SHA | cut -c1-7)
+          echo "RELEASE_VERSION=${BRANCH_NAME}-${COMMIT_HASH}" >> $GITHUB_ENV
+
+      - name: Test
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
+
+      - name: Uncompress config.vdf
+        run: |
+          mkdir -v -p /home/runner/Steam/config
+          echo "${{ secrets.STEAM_CONFIG_VDF}}" | base64 -d - | gunzip - > /home/runner/Steam/config/config.vdf
+
+      - name: Download Artifact
+        uses:  actions/download-artifact@v4
+
+      - name: Deploy to Steam
+        uses: game-ci/steam-deploy@v3
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}          
+          configVdf: /home/runner/Steam/config/config.vdf
+          appId: 3650810
+          buildDescription: ${{ env.RELEASE_VERSION }}
+          releaseBranch: default
+          depot1Path: pck
+          depot2Path: windows
+          depot3Path: linux
+          depot4Path: mac
