@@ -55,6 +55,7 @@ jobs:
         run: |
           mkdir -v -p build/windows 
           godot -v --headless --verbose --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
+          rm -rf build/windows/$EXPORT_NAME.pck # cause pck is in shared depot
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -79,6 +80,7 @@ jobs:
         run: |
           mkdir -v -p build/linux
           godot -v --headless --verbose --export-release "Linux Desktop" build/linux/$EXPORT_NAME.x86_64
+          rm -rf build/linux/$EXPORT_NAME.pck # cause pck is in shared depot
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -152,6 +154,7 @@ jobs:
 
       - name: Deploy to Steam
         uses: game-ci/steam-deploy@v3
+        continue-on-error: true
         with:
           username: ${{ secrets.STEAM_USERNAME }}          
           configVdf: ${{ env.STEAM_CONFIG_BASE64 }}
