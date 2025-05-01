@@ -1,6 +1,6 @@
 extends Control
 
-var save_file_loc: String = "user://server_save.json"
+var save_file_loc: String = OS.get_executable_path().get_base_dir() + "/save.json"
 
 var server_id: String = OS.get_unique_id()
 
@@ -203,6 +203,11 @@ func start_server():
 	Network.chatmsg_server.connect(_chatmsg)
 	
 	send_server_info()
+	
+	# save server on start so like u dont start, 
+	# initial stuff there, player join and leave which makes save file
+	# with only player info, then restart before safe and nothing there, causing a softlock i guess
+	_on_save_timeout()
 
 func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
 	var peer = multiplayer.get_remote_sender_id()
