@@ -102,6 +102,7 @@ jobs:
       - name: Mac Build
         run: |
           mkdir -v -p build/mac
+          rm -rf addons/godot-super-wakatime # i wanna try smth to maybe fix
           godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
