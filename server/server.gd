@@ -363,6 +363,27 @@ func _peer_world_loaded():
 			node.global_position,
 			node.name
 		)
+	
+	var data = peers.get(peer_id, null)
+	
+	if FileAccess.file_exists(save_file_loc):
+		var save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
+		
+		if data.unique_id in save_obj["players"]:
+			data.hotbar = save_obj["players"][data.unique_id].hotbar
+			data.inventory = save_obj["players"][data.unique_id].inventory
+			
+			peers.set(peer_id, data)
+			
+			Network.rpc_id(
+				peer_id, "_set_state",
+				str_to_var("Vector3" + save_obj["players"][data.unique_id].position),
+				save_obj["players"][data.unique_id].health,
+				save_obj["players"][data.unique_id].stamina,
+				save_obj["players"][data.unique_id].hunger,
+				str_to_var(save_obj["players"][data.unique_id].hotbar),
+				str_to_var(save_obj["players"][data.unique_id].inventory)
+			)
 
 func _peer_disconnected(peer_id: int):
 	var data = peers.get(peer_id)
@@ -524,28 +545,6 @@ func _authenticate_peer(unique_id: Variant, username: String, auth_ticket: Dicti
 	unique_id = str(unique_id)
 	data.unique_id = unique_id
 	data.username = username
-	
-	if FileAccess.file_exists(save_file_loc):
-		
-		var save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
-		
-		if unique_id in save_obj["players"]:
-			data.hotbar = save_obj["players"][unique_id].hotbar
-			data.inventory = save_obj["players"][unique_id].inventory
-			
-			peers.set(peer_id, data)
-			
-			await get_tree().create_timer(1).timeout
-			
-			Network.rpc_id(
-				peer_id, "_set_state",
-				str_to_var("Vector3" + save_obj["players"][unique_id].position),
-				save_obj["players"][unique_id].health,
-				save_obj["players"][unique_id].stamina,
-				save_obj["players"][unique_id].hunger,
-				str_to_var(save_obj["players"][unique_id].hotbar),
-				str_to_var(save_obj["players"][unique_id].inventory)
-			)
 
 func log_event(str: String, error = false):
 	print("[Server] %s" % str)
