@@ -1,5 +1,18 @@
 extends Control
 
+const RESOURCES_TO_SPAWN: Array = [
+	{
+		"scene": "res://scenes/world/harvestables/rock.tscn",
+		"weight": 1,
+		"offset": Vector3(0, 0, 0)
+	},
+	{
+		"scene": "res://scenes/world/harvestables/tree.tscn",
+		"weight": 2,
+		"offset": Vector3(0, -1, 0)
+	}
+]
+
 var save_file_loc: String = OS.get_executable_path().get_base_dir() + "/save.json"
 
 var server_id: String = OS.get_unique_id()
@@ -651,3 +664,29 @@ func _on_save_timeout() -> void:
 	
 	var text = JSON.stringify(save_obj, "\t")
 	FileAccess.open(save_file_loc, FileAccess.WRITE).store_string(text)
+
+
+func _on_spawn_resource_timeout() -> void:
+	var weighted = []
+	
+	for r in RESOURCES_TO_SPAWN:
+		for i in range(0, r.weight):
+			weighted.append(r)
+	
+	var resource: Dictionary = weighted.pick_random()
+	
+	var point = NavigationServer3D.map_get_random_point(
+		$NavigationRegion3D.get_navigation_map(), 1, true
+	) + resource.offset
+	
+	var scene = load(resource.scene).instantiate()
+	$World.add_child(scene)
+	scene.global_position = point
+	
+	Network.rpc(
+		"_spawn_scene",
+		$World.get_path(),
+		resource.scene,
+		point,
+		scene.name
+	)
