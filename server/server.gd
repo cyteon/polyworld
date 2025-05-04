@@ -362,7 +362,7 @@ func _peer_world_loaded():
 		Network.rpc_id(
 			peer_id,
 			"_spawn_item", 
-			var_to_bytes_with_objects(p),
+			var_to_bytes_with_objects(p)
 		)
 	
 	for node in $World.get_children():

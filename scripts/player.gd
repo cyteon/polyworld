@@ -86,7 +86,6 @@ func _take_damage(damage: int) -> void:
 			scene.global_position.y += 0.5
 			scene.global_position += -global_transform.basis.z.normalized()
 			
-			
 			Util.set_owner_recursive(scene, scene)
 			
 			Network.rpc(
