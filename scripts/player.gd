@@ -91,8 +91,7 @@ func _take_damage(damage: int) -> void:
 			
 			Network.rpc(
 				"_spawn_item", 
-				var_to_bytes_with_objects(scene),
-				scene.name
+				var_to_bytes_with_objects(scene)
 			)
 		
 		# TODO: spawn loc or sum
@@ -507,8 +506,7 @@ func _physics_process(delta: float) -> void:
 			
 			Network.rpc(
 				"_spawn_item", 
-				var_to_bytes_with_objects(p),
-				i.name
+				var_to_bytes_with_objects(p)
 			)
 
 func _on_send_data_to_save_timeout() -> void:

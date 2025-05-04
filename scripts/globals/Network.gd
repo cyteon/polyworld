@@ -11,15 +11,15 @@ var server_is_sccure: bool = false
 # aka: Server/Client -> Server/Client
 
 signal despawn_item(path: NodePath)
-signal spawn_item(bytes: PackedByteArray, name_: String) 
+signal spawn_item(bytes: PackedByteArray) 
 
 @rpc("any_peer", "call_local")
 func _despawn_item(path: NodePath):
 	despawn_item.emit(path)
 
 @rpc("any_peer", "call_remote")
-func _spawn_item(bytes: PackedByteArray, name_: String):
-	spawn_item.emit(bytes, name_)
+func _spawn_item(bytes: PackedByteArray):
+	spawn_item.emit(bytes)
 
 # -- Client -> Client -- #
 signal play_item_anim(peer: int)

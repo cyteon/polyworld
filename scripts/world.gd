@@ -28,11 +28,10 @@ func _despawn_item(path: NodePath) -> void:
 	if has_node(path):
 		get_node(path).queue_free()
 
-func _spawn_item(bytes, name_) -> void:
+func _spawn_item(bytes) -> void:
 	var node = bytes_to_var_with_objects(bytes).instantiate()
 	
 	$Items.add_child(node)
-	#node.name = name_
 	node.freeze = false
 
 func _add_players(ids) -> void:

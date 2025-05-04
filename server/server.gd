@@ -290,11 +290,10 @@ func _despawn_item(path: NodePath) -> void:
 	else:
 		push_warning("[Server Debug] Tried to free item that could not be found: %s" % path)
 
-func _spawn_item(bytes, name_) -> void:
+func _spawn_item(bytes) -> void:
 	var node = bytes_to_var_with_objects(bytes).instantiate()
 	
 	$Items.add_child(node)
-	node.name = name_
 	node.freeze = true
 
 func _attack_entity(path: NodePath, damage: int) -> void:
@@ -364,7 +363,6 @@ func _peer_world_loaded():
 			peer_id,
 			"_spawn_item", 
 			var_to_bytes_with_objects(p),
-			i.name
 		)
 	
 	for node in $World.get_children():
