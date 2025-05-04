@@ -448,6 +448,10 @@ func _physics_process(delta: float) -> void:
 		for child in $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_children():
 			if child.name not in remove_that_are_not:
 				child.queue_free()
+		
+		$"../CanvasLayer/Control/InventoryBG/Crafting/CantCraftAnything".visible = (
+			$"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_child_count() <= 1
+		)
 	
 	if Input.is_action_just_pressed("drop"):
 		if len(hotbar_items) >= current_hotbar_slot:
