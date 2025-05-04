@@ -191,7 +191,7 @@ jobs:
 
       - name: Cleanup after game deploy
         run: |
-          rm -rf BuildOutput
+          sudo rm -rf BuildOutput
 
       - name: Deploy Server to Steam
         uses: game-ci/steam-deploy@v3
