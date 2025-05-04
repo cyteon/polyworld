@@ -150,7 +150,7 @@ jobs:
           name: windows_server
           path: build/windows_server
 
-  deployToSteam:
+  deployGameToSteam:
     name: Deploy to Steam 
     needs: [export-mac, export-windows, export-linux, export-linux-server, export-windows-server]
     runs-on: ubuntu-22.04
@@ -188,6 +188,10 @@ jobs:
           depot2Path: windows
           depot3Path: linux
           depot4Path: mac
+
+      - name: Cleanup after game deploy
+        run: |
+          rm -rf BuildOutput
 
       - name: Deploy Server to Steam
         uses: game-ci/steam-deploy@v3
