@@ -39,7 +39,7 @@ func _ready() -> void:
 	
 	target_pos = global_position
 
-func _set_state(pos: Vector3, health_: int, stamina_: float, hunger_: float, hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
+func _set_state(pos: Vector3, health_: float, stamina_: float, hunger_: float, hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
 	global_position = pos if pos != Vector3(0, 0, 0) else $"../SpawnLoc".global_position
 	health = health_
 	stamina = stamina_

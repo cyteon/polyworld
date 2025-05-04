@@ -415,10 +415,10 @@ func _peer_disconnected(peer_id: int):
 	if SteamServer.secure():
 		SteamServer.endAuthSession(int(data.unique_id))
 	
-	var health = get_node(str(peer_id)).health
-	var stamina = get_node(str(peer_id)).stamina
-	var hunger = get_node(str(peer_id)).hunger
-	var pos = get_node(str(peer_id)).global_position
+	var health: float = get_node(str(peer_id)).health
+	var stamina: float = get_node(str(peer_id)).stamina
+	var hunger: float = get_node(str(peer_id)).hunger
+	var pos: Vector3 = get_node(str(peer_id)).global_position
 	
 	var save_obj = {
 		"players": {},
