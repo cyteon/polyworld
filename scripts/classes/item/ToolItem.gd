@@ -26,26 +26,31 @@ var is_ready = true
 func _process(_delta: float) -> void:
 	if get_parent().name != "Hold": return
 	
+	var player: CharacterBody3D = get_parent().get_parent()
+	
 	if Input.is_action_just_pressed("use"):
-		if len(get_parent().get_parent().hotbar_items) >= get_parent().get_parent().current_hotbar_slot:
-			var slot = get_parent().get_parent().hotbar_items[get_parent().get_parent().current_hotbar_slot - 1]
+		if player.is_blocking_ui_visible():
+			return
+		
+		if len(player.hotbar_items) >= player.current_hotbar_slot:
+			var slot = player.hotbar_items[player.current_hotbar_slot - 1]
 			
 			if slot.unique_id == unique_id and is_ready:
 				$AnimationPlayer.play("use")
-				Network.rpc("_play_item_anim", get_parent().get_parent().name.to_int())
+				Network.rpc("_play_item_anim", player.name.to_int())
 				is_ready = false
 				
-				if not get_parent().get_parent().get_node("Camera3D/ShortRaycast").is_colliding():
+				if not player.get_node("Camera3D/ShortRaycast").is_colliding():
 					return
 				
-				var collider = get_parent().get_parent().get_node("Camera3D/ShortRaycast").get_collider()
+				var collider = player.get_node("Camera3D/ShortRaycast").get_collider()
 				
 				if (
 					collider.is_in_group("Harvestable") and type == ToolType.HARVESTING
 					or collider.is_in_group("Mineable") and type == ToolType.MINING
 				):
-					get_parent().get_parent().hotbar_items[
-						get_parent().get_parent().current_hotbar_slot - 1
+					player.hotbar_items[
+						player.current_hotbar_slot - 1
 					].durability -= harvesting_reduces_dur_by
 					
 					collider.damage(harvestable_damage)
@@ -58,29 +63,29 @@ func _process(_delta: float) -> void:
 					item.show()
 					item.freeze = false
 					
-					get_parent().get_parent().add_item_to_inv(item)
+					player.add_item_to_inv(item)
 				elif damage > 0:
 					if collider.is_in_group("Player"):
-						get_parent().get_parent().hotbar_items[
-							get_parent().get_parent().current_hotbar_slot - 1
+						player.hotbar_items[
+							player.current_hotbar_slot - 1
 						].durability -= attacking_reduces_dur_by
 						
 						Network.rpc_id(1, "_attack_player", collider.name.to_int(), damage)
 					elif collider.is_in_group("Entity"):
-						get_parent().get_parent().hotbar_items[
-							get_parent().get_parent().current_hotbar_slot - 1
+						player.hotbar_items[
+							player.current_hotbar_slot - 1
 						].durability -= attacking_reduces_dur_by
 						
 						Network.rpc_id(1, "_attack_entity", collider.get_path(), damage)
 					elif collider.is_in_group("Harvestable") or collider.is_in_group("Mineable"):
-						get_parent().get_parent().hotbar_items[
-							get_parent().get_parent().current_hotbar_slot - 1
+						player.hotbar_items[
+							player.current_hotbar_slot - 1
 						].durability -= harvesting_reduces_dur_by
 				
-				if get_parent().get_parent().hotbar_items[
-						get_parent().get_parent().current_hotbar_slot - 1
+				if player.hotbar_items[
+						player.current_hotbar_slot - 1
 					].durability <= 0:
-						get_parent().get_parent().hotbar_items.remove_at(get_parent().get_parent().current_hotbar_slot - 1)
+						player.hotbar_items.remove_at(player.current_hotbar_slot - 1)
 
 
 func _on_animation_player_animation_finished(_anim_name: StringName) -> void:
