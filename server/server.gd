@@ -665,8 +665,10 @@ func _on_save_timeout() -> void:
 	var text = JSON.stringify(save_obj, "\t")
 	FileAccess.open(save_file_loc, FileAccess.WRITE).store_string(text)
 
-
 func _on_spawn_resource_timeout() -> void:
+	if $World.get_child_count() > 500:
+		return
+	
 	var weighted = []
 	
 	for r in RESOURCES_TO_SPAWN:
