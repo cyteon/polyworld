@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: true
       - name: Setup
         run: |
           mkdir -v -p ~/.config/ # exampel has this on windows so i try
@@ -47,6 +48,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: true
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
@@ -69,6 +71,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: true
       - name: Setup godot
         run: |
           wget -q "https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_macos.universal.zip"
@@ -110,6 +113,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: true
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
@@ -134,6 +138,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: true
       - name: Setup
         run: |
           mkdir -v -p ~/.config/ # exampel has this on windows so i try
