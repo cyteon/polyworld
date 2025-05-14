@@ -50,9 +50,9 @@ jobs:
       image: barichello/godot-ci:4.4.1
     steps:
       - name: Install SSH
-          run: |
-            sudo apt-get update
-            sudo apt-get install -y openssh-client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-client
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -155,7 +155,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y openssh-client
-        - name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           lfs: true
