@@ -19,8 +19,8 @@ jobs:
     steps:
       - name: Install SSH
         run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client
+          apt-get update
+          apt-get install -y openssh-client
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -51,8 +51,8 @@ jobs:
     steps:
       - name: Install SSH
         run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client
+          apt-get update
+          apt-get install -y openssh-client
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -122,8 +122,8 @@ jobs:
     steps:
       - name: Install SSH
         run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client
+          apt-get update
+          apt-get install -y openssh-client
         
       - name: Checkout
         uses: actions/checkout@v4
@@ -153,8 +153,8 @@ jobs:
     steps:
       - name: Install SSH
         run: |
-          sudo apt-get update
-          sudo apt-get install -y openssh-client
+          apt-get update
+          apt-get install -y openssh-client
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -218,7 +218,7 @@ jobs:
 
       - name: Cleanup after game deploy
         run: |
-          sudo rm -rf BuildOutput
+          rm -rf BuildOutput
 
       - name: Deploy Server to Steam
         uses: game-ci/steam-deploy@v3
