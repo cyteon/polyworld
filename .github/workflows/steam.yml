@@ -202,7 +202,7 @@ jobs:
       
       - name: Mask secrets
         run: |
-          echo "::add-mask::$STEAM_CONFIG_BASE64"
+          echo "::add-mask::${{ env.STEAM_CONFIG_BASE64 }}"
           echo "::add-mask::${{ secrets.STEAM_USERNAME }}"
           echo "::add-mask::${{ secrets.STEAM_CONFIG_VDF }}"
 
