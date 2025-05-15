@@ -198,11 +198,11 @@ jobs:
           mkdir -v -p /home/runner/Steam/config
           echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d - | gunzip - > /home/runner/Steam/config/config.vdf
           STEAM_CONFIG_BASE64=$(base64 -w 0 /home/runner/Steam/config/config.vdf)
+          echo "::add-mask::$STEAM_CONFIG_BASE64"
           echo "STEAM_CONFIG_BASE64=$STEAM_CONFIG_BASE64" >> $GITHUB_ENV
       
       - name: Mask secrets
         run: |
-          echo "::add-mask::${{ env.STEAM_CONFIG_BASE64 }}"
           echo "::add-mask::${{ secrets.STEAM_USERNAME }}"
           echo "::add-mask::${{ secrets.STEAM_CONFIG_VDF }}"
 
