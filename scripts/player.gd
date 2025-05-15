@@ -5,8 +5,10 @@ const JUMP_VELOCITY: float = 4.5
 var normal_speed: float = 5.0
 var speed: float = normal_speed
 
-# the ones with @export is to expose to synchronizers
-@export var health: int = 100
+# the ones with @export is to expose to synchronizers, not to edit
+@export var health: float = 100
+var last_damaged_at: int = 0
+
 var standard_health_regen_rate: float = .4
 # when regenerating it will remove this in addition to standard
 var health_hunger_extra_reduction: float = .3
@@ -24,7 +26,7 @@ var inventory_items: Array[BaseItem] = []
 
 @export var target_pos: Vector3 = Vector3.ZERO
 
-var enable_chat: bool = not Settings.settings.get_value("multiplayer", "disable_chat", false)
+var enable_chat: bool = not Settings.config.get_value("multiplayer", "disable_chat", false)
 
 func _ready() -> void:
 	if is_multiplayer_authority():
@@ -37,7 +39,7 @@ func _ready() -> void:
 	
 	target_pos = global_position
 
-func _set_state(pos: Vector3, health_: int, stamina_: float, hunger_: float, hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
+func _set_state(pos: Vector3, health_: float, stamina_: float, hunger_: float, hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
 	global_position = pos if pos != Vector3(0, 0, 0) else $"../SpawnLoc".global_position
 	health = health_
 	stamina = stamina_
@@ -61,6 +63,8 @@ func _set_state(pos: Vector3, health_: int, stamina_: float, hunger_: float, hot
 	
 func _take_damage(damage: int) -> void:
 	health -= damage
+	last_damaged_at = Time.get_unix_time_from_system()
+	
 	# TODO: maybe smth to indicate like sound effect or sum
 	# TODO: add death screen
 	
@@ -82,13 +86,11 @@ func _take_damage(damage: int) -> void:
 			scene.global_position.y += 0.5
 			scene.global_position += -global_transform.basis.z.normalized()
 			
-			
 			Util.set_owner_recursive(scene, scene)
 			
 			Network.rpc(
 				"_spawn_item", 
-				var_to_bytes_with_objects(scene),
-				scene.name
+				var_to_bytes_with_objects(scene)
 			)
 		
 		# TODO: spawn loc or sum
@@ -187,13 +189,27 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	
-	# Have this not inside the if not visible statement
-	# so u still get stamina even if in pause menu cause it dosent actually pause
-	if stamina < 100 and not Input.is_action_pressed("sprint"):
-		stamina += 5 * delta
+	var use_standard_hunger_rate: bool = true
+	
+	if stamina < 100 and hunger > 10 and not Input.is_action_pressed("sprint"):
 		hunger -= delta * fast_hunger_reduction
-	else:
+		stamina += 5 * delta
+		use_standard_hunger_rate = false
+	
+	if health < 100 and hunger > 10 and Time.get_unix_time_from_system() - last_damaged_at > 5:
+		hunger -= delta * fast_hunger_reduction
+		health += delta * 0.5
+		use_standard_hunger_rate = false
+	
+	if use_standard_hunger_rate:
 		hunger -= delta * standard_hunger_reduction
+	
+	
+	
+	if hunger < 0:
+		hunger = 0
+	elif hunger > 100:
+		hunger = 100
 	
 	if Input.is_action_just_pressed("pause"):
 		if $"../CanvasLayer/Control/InventoryBG".visible:
@@ -448,6 +464,10 @@ func _physics_process(delta: float) -> void:
 		for child in $"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_children():
 			if child.name not in remove_that_are_not:
 				child.queue_free()
+		
+		$"../CanvasLayer/Control/InventoryBG/Crafting/CantCraftAnything".visible = (
+			$"../CanvasLayer/Control/InventoryBG/Crafting/ScrollContainer/GridContainer".get_child_count() <= 1
+		)
 	
 	if Input.is_action_just_pressed("drop"):
 		if len(hotbar_items) >= current_hotbar_slot:
@@ -485,8 +505,7 @@ func _physics_process(delta: float) -> void:
 			
 			Network.rpc(
 				"_spawn_item", 
-				var_to_bytes_with_objects(p),
-				i.name
+				var_to_bytes_with_objects(p)
 			)
 
 func _on_send_data_to_save_timeout() -> void:

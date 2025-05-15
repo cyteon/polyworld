@@ -10,6 +10,15 @@ func _ready() -> void:
 	multiplayer.connected_to_server.connect(func(): 
 		print("[Client] Connection established")
 		
+		if len(Steam.getAuthSessionTicket().keys()) == 0:
+			multiplayer.multiplayer_peer.close()
+			$TimeoutConfirmed.stop()
+
+			$Label.text = "Unable to authenticate"
+			$Details/Label.text = "Generating steam authentication ticket failed\nIs steam running?"
+			$Details.show()
+			$ProgressBar.hide()
+		
 		Network.rpc_id(
 			get_multiplayer_authority(),
 			"_authenticate", 
@@ -22,9 +31,13 @@ func _ready() -> void:
 	)
 	
 	multiplayer.connection_failed.connect(func(): 
+		$TimeoutConfirmed.stop()
+		
 		print("[Client] Connection to server failed :(")
 		$Label.text = "Failed to connect :("
+		
 		multiplayer.multiplayer_peer.close()
+		$TimeoutConfirmed.stop()
 		
 		$Details.show()
 		$ProgressBar.hide()
@@ -34,7 +47,9 @@ func _ready() -> void:
 		connected = false
 		
 		$Label.text = "Failed to connect to server: %s" % reason
+		
 		multiplayer.multiplayer_peer.close()
+		$TimeoutConfirmed.stop()
 		
 		$Details.show()
 		$Details/Label.text = details
@@ -57,11 +72,23 @@ func _process(_delta: float) -> void:
 		ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
 			print("[Client] THREAD_LOAD_INVALID_RESOURCE")
 			$Label.text = "Connected to server :D... Failed to load"
+			
+			multiplayer.multiplayer_peer.close()
+			$TimeoutConfirmed.stop()
+			
+			$Details.show()
+			$ProgressBar.hide()
 		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 			$ProgressBar.value = progress[0]
 		ResourceLoader.THREAD_LOAD_FAILED:
 			print("[Client] THREAD_LOAD_FAILED")
 			$Label.text = "Connected to server :D... Failed to load"
+			
+			multiplayer.multiplayer_peer.close()
+			$TimeoutConfirmed.stop()
+			
+			$Details.show()
+			$ProgressBar.hide()
 		ResourceLoader.THREAD_LOAD_LOADED:
 			if not connected: return
 			#if len(Network.player_ids_to_spawn_on_world_entry) == 0:

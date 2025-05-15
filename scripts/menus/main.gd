@@ -3,7 +3,7 @@ extends Control
 func _ready() -> void:
 	$Version.text = ProjectSettings.get_setting("application/config/version")
 	
-	if not Settings.settings.get_value("multiplayer", "chat_notice_viewed", false):
+	if not Settings.config.get_value("multiplayer", "chat_notice_viewed", false):
 		$ContentWarning.show()
 	
 	for arg in OS.get_cmdline_args():
@@ -84,16 +84,20 @@ func _on_servers_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/menus/servers.tscn")
 
 func _on_enable_chat_pressed() -> void:
-	Settings.settings.set_value("multiplayer", "chat_notice_viewed", true)
-	Settings.settings.set_value("multiplayer", "disable_chat", false)
-	Settings.settings.save(Settings.SETTINGS_PATH)
+	Settings.config.set_value("multiplayer", "chat_notice_viewed", true)
+	Settings.config.set_value("multiplayer", "disable_chat", false)
+	Settings.config.save(Settings.SETTINGS_PATH)
 	$ContentWarning.hide()
 	
 func _on_disable_chat_pressed() -> void:
-	Settings.settings.set_value("multiplayer", "chat_notice_viewed", true)
-	Settings.settings.set_value("multiplayer", "disable_chat", true)
-	Settings.settings.save(Settings.SETTINGS_PATH)
+	Settings.config.set_value("multiplayer", "chat_notice_viewed", true)
+	Settings.config.set_value("multiplayer", "disable_chat", true)
+	Settings.config.save(Settings.SETTINGS_PATH)
 	$ContentWarning.hide()
 
 func _on_check_box_toggled(toggled_on: bool) -> void:
 	$ContentWarning/Content/VBoxContainer/HBoxContainer/EnableChat.disabled = not toggled_on
+
+
+func _on_settings_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/menus/settings.tscn")

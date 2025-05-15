@@ -4,47 +4,29 @@ on:
     branches:
       - release
     tags:
-      - v*
+      - "**"
 
 env:
   GODOT_VERSION: 4.4.1
   EXPORT_NAME: PolyWorld
 
 jobs:
-  export-pck:
-    name: Export PCK
-    runs-on: ubuntu-22.04
-    container:
-      image: barichello/godot-ci:4.4.1
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          lfs: true
-      - name: Setup
-        run: |
-          mkdir -v -p ~/.local/share/godot/export_templates
-          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
-      - name: Export PCK
-        run: |
-          mkdir -v -p build/pck
-          godot -v --headless --verbose --export-pack "Linux Desktop" build/pck/$EXPORT_NAME.pck
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pck
-          path: build/pck
-
   export-windows:
-    name: Windows Export
+    name: Windows Desktop Export
     runs-on: ubuntu-22.04
     container:
       image: barichello/godot-ci:4.4.1
     steps:
+      - name: Install SSH
+        run: |
+          apt-get update
+          apt-get install -y openssh-client
       - name: Checkout
         uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
       - name: Setup
         run: |
           mkdir -v -p ~/.config/ # exampel has this on windows so i try
@@ -55,7 +37,6 @@ jobs:
         run: |
           mkdir -v -p build/windows 
           godot -v --headless --verbose --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
-          rm -rf build/windows/$EXPORT_NAME.pck # cause pck is in shared depot
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -63,15 +44,21 @@ jobs:
           path: build/windows
           
   export-linux:
-    name: Linux Export
+    name: Linux Desktop Export
     runs-on: ubuntu-22.04
     container:
       image: barichello/godot-ci:4.4.1
     steps:
+      - name: Install SSH
+        run: |
+          apt-get update
+          apt-get install -y openssh-client
       - name: Checkout
         uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
       - name: Setup
         run: |
           mkdir -v -p ~/.local/share/godot/export_templates
@@ -80,7 +67,6 @@ jobs:
         run: |
           mkdir -v -p build/linux
           godot -v --headless --verbose --export-release "Linux Desktop" build/linux/$EXPORT_NAME.x86_64
-          rm -rf build/linux/$EXPORT_NAME.pck # cause pck is in shared depot
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -95,6 +81,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
       - name: Setup godot
         run: |
           wget -q "https://github.com/godotengine/godot/releases/download/4.4.1-stable/Godot_v4.4.1-stable_macos.universal.zip"
@@ -125,10 +113,73 @@ jobs:
         with:
           name: mac
           path: build/mac
+  
+  export-linux-server:
+    name: Linux Server Export
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Install SSH
+        run: |
+          apt-get update
+          apt-get install -y openssh-client
+        
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Linux Build
+        run: |
+          mkdir -v -p build/linux_server
+          godot -v --headless --verbose --export-release "Linux Server" build/linux_server/${EXPORT_NAME}_Server.x86_64
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux_server
+          path: build/linux_server
+  
+  export-windows-server:
+    name: Windows Server Export
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:4.4.1
+    steps:
+      - name: Install SSH
+        run: |
+          apt-get update
+          apt-get install -y openssh-client
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.config/ # exampel has this on windows so i try
+          mv /root/.config/godot ~/.config/godot # ^
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Windows Build
+        run: |
+          mkdir -v -p build/windows_server 
+          godot -v --headless --verbose --export-release "Windows Server" build/windows_server/${EXPORT_NAME}_Server.exe
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows_server
+          path: build/windows_server
 
-  deployToSteam:
+  deployGameToSteam:
     name: Deploy to Steam 
-    needs: [export-mac, export-windows, export-linux, export-pck]
+    needs: [export-mac, export-windows, export-linux, export-linux-server, export-windows-server]
     runs-on: ubuntu-22.04
     steps:
       - name: Set env
@@ -148,11 +199,17 @@ jobs:
           echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d - | gunzip - > /home/runner/Steam/config/config.vdf
           STEAM_CONFIG_BASE64=$(base64 -w 0 /home/runner/Steam/config/config.vdf)
           echo "STEAM_CONFIG_BASE64=$STEAM_CONFIG_BASE64" >> $GITHUB_ENV
+      
+      - name: Mask secrets
+        run: |
+          echo "::add-mask::${{ env.STEAM_CONFIG_BASE64 }}"
+          echo "::add-mask::${{ secrets.STEAM_USERNAME }}"
+          echo "::add-mask::${{ secrets.STEAM_CONFIG_VDF }}"
 
       - name: Download Artifact
         uses:  actions/download-artifact@v4
 
-      - name: Deploy to Steam
+      - name: Deploy Game to Steam
         uses: game-ci/steam-deploy@v3
         continue-on-error: true
         with:
@@ -161,7 +218,22 @@ jobs:
           appId: 3650810
           buildDescription: ${{ env.RELEASE_VERSION }}
           releaseBranch: default
-          depot1Path: pck
           depot2Path: windows
           depot3Path: linux
           depot4Path: mac
+
+      - name: Cleanup after game deploy
+        run: |
+          rm -rf BuildOutput
+
+      - name: Deploy Server to Steam
+        uses: game-ci/steam-deploy@v3
+        continue-on-error: true
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}          
+          configVdf: ${{ env.STEAM_CONFIG_BASE64 }}
+          appId: 3651340
+          buildDescription: ${{ env.RELEASE_VERSION }}
+          releaseBranch: default
+          depot2Path: windows_server
+          depot3Path: linux_server

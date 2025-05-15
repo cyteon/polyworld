@@ -27,10 +27,11 @@ script = ExtResource("1_en1jp")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
-offset_left = 8.0
-offset_right = 311.0
-offset_bottom = 39.0
-theme_override_font_sizes/font_size = 28
+offset_left = 16.0
+offset_top = 8.0
+offset_right = 362.0
+offset_bottom = 53.0
+theme_override_font_sizes/font_size = 32
 text = "Connecting to server..."
 
 [node name="Details" type="VBoxContainer" parent="."]
@@ -72,7 +73,7 @@ offset_right = -8.0
 offset_bottom = -35.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 48
 theme_override_styles/background = SubResource("StyleBoxFlat_en1jp")
 theme_override_styles/fill = SubResource("StyleBoxFlat_72pgf")
 max_value = 1.0

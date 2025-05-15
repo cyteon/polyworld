@@ -1,6 +1,19 @@
 extends Control
 
-var save_file_loc: String = "user://server_save.json"
+const RESOURCES_TO_SPAWN: Array = [
+	{
+		"scene": "res://scenes/world/harvestables/rock.tscn",
+		"weight": 1,
+		"offset": Vector3(0, 0, 0)
+	},
+	{
+		"scene": "res://scenes/world/harvestables/tree.tscn",
+		"weight": 2,
+		"offset": Vector3(0, -1, 0)
+	}
+]
+
+var save_file_loc: String = OS.get_executable_path().get_base_dir() + "/save.json"
 
 var server_id: String = OS.get_unique_id()
 
@@ -203,6 +216,11 @@ func start_server():
 	Network.chatmsg_server.connect(_chatmsg)
 	
 	send_server_info()
+	
+	# save server on start so like u dont start, 
+	# initial stuff there, player join and leave which makes save file
+	# with only player info, then restart before safe and nothing there, causing a softlock i guess
+	_on_save_timeout()
 
 func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
 	var peer = multiplayer.get_remote_sender_id()
@@ -272,11 +290,10 @@ func _despawn_item(path: NodePath) -> void:
 	else:
 		push_warning("[Server Debug] Tried to free item that could not be found: %s" % path)
 
-func _spawn_item(bytes, name_) -> void:
+func _spawn_item(bytes) -> void:
 	var node = bytes_to_var_with_objects(bytes).instantiate()
 	
 	$Items.add_child(node)
-	node.name = name_
 	node.freeze = true
 
 func _attack_entity(path: NodePath, damage: int) -> void:
@@ -345,8 +362,7 @@ func _peer_world_loaded():
 		Network.rpc_id(
 			peer_id,
 			"_spawn_item", 
-			var_to_bytes_with_objects(p),
-			i.name
+			var_to_bytes_with_objects(p)
 		)
 	
 	for node in $World.get_children():
@@ -358,6 +374,27 @@ func _peer_world_loaded():
 			node.global_position,
 			node.name
 		)
+	
+	var data = peers.get(peer_id, null)
+	
+	if FileAccess.file_exists(save_file_loc):
+		var save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
+		
+		if data.unique_id in save_obj["players"]:
+			data.hotbar = save_obj["players"][data.unique_id].hotbar
+			data.inventory = save_obj["players"][data.unique_id].inventory
+			
+			peers.set(peer_id, data)
+			
+			Network.rpc_id(
+				peer_id, "_set_state",
+				str_to_var("Vector3" + save_obj["players"][data.unique_id].position),
+				save_obj["players"][data.unique_id].health,
+				save_obj["players"][data.unique_id].stamina,
+				save_obj["players"][data.unique_id].hunger,
+				str_to_var(save_obj["players"][data.unique_id].hotbar),
+				str_to_var(save_obj["players"][data.unique_id].inventory)
+			)
 
 func _peer_disconnected(peer_id: int):
 	var data = peers.get(peer_id)
@@ -376,10 +413,10 @@ func _peer_disconnected(peer_id: int):
 	if SteamServer.secure():
 		SteamServer.endAuthSession(int(data.unique_id))
 	
-	var health = get_node(str(peer_id)).health
-	var stamina = get_node(str(peer_id)).stamina
-	var hunger = get_node(str(peer_id)).hunger
-	var pos = get_node(str(peer_id)).global_position
+	var health: float = get_node(str(peer_id)).health
+	var stamina: float = get_node(str(peer_id)).stamina
+	var hunger: float = get_node(str(peer_id)).hunger
+	var pos: Vector3 = get_node(str(peer_id)).global_position
 	
 	var save_obj = {
 		"players": {},
@@ -519,28 +556,6 @@ func _authenticate_peer(unique_id: Variant, username: String, auth_ticket: Dicti
 	unique_id = str(unique_id)
 	data.unique_id = unique_id
 	data.username = username
-	
-	if FileAccess.file_exists(save_file_loc):
-		
-		var save_obj = JSON.parse_string(FileAccess.get_file_as_string(save_file_loc))
-		
-		if unique_id in save_obj["players"]:
-			data.hotbar = save_obj["players"][unique_id].hotbar
-			data.inventory = save_obj["players"][unique_id].inventory
-			
-			peers.set(peer_id, data)
-			
-			await get_tree().create_timer(1).timeout
-			
-			Network.rpc_id(
-				peer_id, "_set_state",
-				str_to_var("Vector3" + save_obj["players"][unique_id].position),
-				save_obj["players"][unique_id].health,
-				save_obj["players"][unique_id].stamina,
-				save_obj["players"][unique_id].hunger,
-				str_to_var(save_obj["players"][unique_id].hotbar),
-				str_to_var(save_obj["players"][unique_id].inventory)
-			)
 
 func log_event(str: String, error = false):
 	print("[Server] %s" % str)
@@ -620,8 +635,8 @@ func _on_save_timeout() -> void:
 		var data = peers[peer]
 		
 		save_obj["players"][data.unique_id] = {
-			"hotbar": data.hotbar if "hotbar" in data else [],
-			"inventory": data.inventory if "inventory" in data else [],
+			"hotbar": data.hotbar if "hotbar" in data else "[]",
+			"inventory": data.inventory if "inventory" in data else "[]",
 			"health": get_node(str(peer)).health,
 			"stamina": get_node(str(peer)).stamina,
 			"hunger": get_node(str(peer)).hunger,
@@ -647,3 +662,31 @@ func _on_save_timeout() -> void:
 	
 	var text = JSON.stringify(save_obj, "\t")
 	FileAccess.open(save_file_loc, FileAccess.WRITE).store_string(text)
+
+func _on_spawn_resource_timeout() -> void:
+	if $World.get_child_count() > 500:
+		return
+	
+	var weighted = []
+	
+	for r in RESOURCES_TO_SPAWN:
+		for i in range(0, r.weight):
+			weighted.append(r)
+	
+	var resource: Dictionary = weighted.pick_random()
+	
+	var point = NavigationServer3D.map_get_random_point(
+		$NavigationRegion3D.get_navigation_map(), 1, true
+	) + resource.offset
+	
+	var scene = load(resource.scene).instantiate()
+	$World.add_child(scene)
+	scene.global_position = point
+	
+	Network.rpc(
+		"_spawn_scene",
+		$World.get_path(),
+		resource.scene,
+		point,
+		scene.name
+	)

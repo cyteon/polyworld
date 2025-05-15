@@ -3,8 +3,10 @@ extends Node3D
 func _ready() -> void:
 	push_warning("[Client] Entered world") # for time refrence in debugger
 	
-	if Settings.settings.get_value("multiplayer", "disable_chat", false) or not Network.server_is_sccure:
+	if Settings.config.get_value("multiplayer", "disable_chat", false) or not Network.server_is_sccure:
 		$CanvasLayer/Control/Chatbox.hide()
+	
+	RenderingServer.viewport_set_measure_render_time(get_tree().root.get_viewport_rid(), true)
 	
 	Network.spawn_scene.connect(_spawn_scene)
 	Network.spawn_item.connect(_spawn_item)
@@ -26,11 +28,10 @@ func _despawn_item(path: NodePath) -> void:
 	if has_node(path):
 		get_node(path).queue_free()
 
-func _spawn_item(bytes, name_) -> void:
+func _spawn_item(bytes) -> void:
 	var node = bytes_to_var_with_objects(bytes).instantiate()
 	
 	$Items.add_child(node)
-	#node.name = name_
 	node.freeze = false
 
 func _add_players(ids) -> void:
@@ -85,3 +86,32 @@ func _on_line_edit_text_submitted(new_text: String) -> void:
 	
 	$CanvasLayer/Control/Chatbox/Input/LineEdit.release_focus()
 	$CanvasLayer/Control/Chatbox/Input/LineEdit.text = ""
+
+
+func _on_update_perf_monitor_info_timeout() -> void:
+	var rid = get_tree().root.get_viewport_rid()
+	var fps: int = Engine.get_frames_per_second()
+	
+	if fps > 50 && fps < 70:
+		$CanvasLayer/Control/PerfMonitor/FPS.text = "[color=yellow]%s[/color] FPS" % fps
+	elif fps < 50:
+		$CanvasLayer/Control/PerfMonitor/FPS.text = "[color=red]%s[/color] FPS" % fps
+	else:
+		$CanvasLayer/Control/PerfMonitor/FPS.text = "[color=green]%s[/color] FPS" % fps
+	
+	$CanvasLayer/Control/PerfMonitor/FrameTime.text = "Frame Time: %sms" % snapped(
+		Performance.get_monitor(Performance.TIME_PROCESS) * 1000, 0.01
+	)
+	
+	$CanvasLayer/Control/PerfMonitor/PhysicsTime.text = "Phys. Time: %sms" % snapped(
+		Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000, 0.01
+	)
+	
+	$CanvasLayer/Control/PerfMonitor/CPUTime.text = "CPU Time: %sms" % snapped(
+		RenderingServer.viewport_get_measured_render_time_cpu(rid) + RenderingServer.get_frame_setup_time_cpu(), 
+		0.01
+	)
+	
+	$CanvasLayer/Control/PerfMonitor/GPUTime.text = "GPU Time: %sms" % snapped(
+		RenderingServer.viewport_get_measured_render_time_gpu(rid), 0.01
+	)

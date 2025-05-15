@@ -13,6 +13,9 @@ func _process(_delta: float) -> void:
 	if not player.is_multiplayer_authority(): return
 	
 	if Input.is_action_just_pressed("use"):
+		if player.is_blocking_ui_visible():
+			return
+		
 		# TODO: play eating sound or sum
 		player.health += increase_health
 		player.hunger += increase_hunger

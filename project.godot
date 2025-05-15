@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="PolyWorld"
-config/version="alpha-0.0.0"
+config/version="alpha/0.2.1"
 run/main_scene="uid://ckkqvmx41cg4t"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
@@ -20,7 +20,6 @@ config/icon="res://icon.svg"
 
 Network="*res://scripts/globals/Network.gd"
 Recipes="*res://scripts/globals/Recipes.gd"
-DiscordRPCLoader="*res://addons/discord-rpc-gd/nodes/discord_autoload.gd"
 Util="*res://scripts/globals/Util.gd"
 Steamworks="*res://scripts/globals/Steamworks.gd"
 Settings="*res://scripts/globals/Settings.gd"
@@ -33,6 +32,8 @@ file_logging/enable_file_logging=true
 
 [display]
 
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 

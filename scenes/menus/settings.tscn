@@ -1,0 +1,301 @@
+[gd_scene load_steps=6 format=3 uid="uid://dcvnl12v6a8vh"]
+
+[ext_resource type="Script" uid="uid://bj5lm2de7hir7" path="res://scripts/menus/settings.gd" id="1_del6v"]
+[ext_resource type="Texture2D" uid="uid://c706a0n3y3vfc" path="res://assets/images/icons/toggle/toggle_on.png" id="2_e7wif"]
+[ext_resource type="Texture2D" uid="uid://bmpys30snn1jp" path="res://assets/images/icons/toggle/toggle_off.png" id="3_g2810"]
+
+[sub_resource type="Theme" id="Theme_del6v"]
+default_font_size = 48
+LineEdit/font_sizes/font_size = 48
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e7wif"]
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_del6v")
+
+[node name="Back" type="Button" parent="."]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 168.0
+offset_bottom = 91.0
+theme_override_font_sizes/font_size = 48
+text = "Back"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 112.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+
+[node name="Graphics" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(450, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="HBoxContainer/Graphics"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Graphics"
+
+[node name="MaxFPSNote" type="Label" parent="HBoxContainer/Graphics"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_font_sizes/font_size = 18
+text = "0 = unlimited "
+horizontal_alignment = 1
+
+[node name="MaxFPS" type="HBoxContainer" parent="HBoxContainer/Graphics"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Graphics/MaxFPS"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Max FPS"
+
+[node name="SpinBox" type="SpinBox" parent="HBoxContainer/Graphics/MaxFPS"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme = SubResource("Theme_del6v")
+max_value = 999.0
+suffix = "fps"
+
+[node name="AntiAliasing" type="HBoxContainer" parent="HBoxContainer/Graphics"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Graphics/AntiAliasing"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Anti Aliasing"
+
+[node name="OptionButton" type="OptionButton" parent="HBoxContainer/Graphics/AntiAliasing"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme = SubResource("Theme_del6v")
+theme_override_font_sizes/font_size = 48
+item_count = 4
+popup/item_0/text = "Off"
+popup/item_0/id = 0
+popup/item_1/text = "2X"
+popup/item_1/id = 1
+popup/item_2/text = "4X"
+popup/item_2/id = 2
+popup/item_3/text = "8X"
+popup/item_3/id = 3
+
+[node name="FXAA" type="HBoxContainer" parent="HBoxContainer/Graphics"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Graphics/FXAA"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "FXAA"
+
+[node name="CheckButton" type="CheckButton" parent="HBoxContainer/Graphics/FXAA"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_e7wif")
+theme_override_icons/checked = ExtResource("2_e7wif")
+theme_override_icons/unchecked = ExtResource("3_g2810")
+
+[node name="TAA" type="HBoxContainer" parent="HBoxContainer/Graphics"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Graphics/TAA"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "TAA"
+
+[node name="CheckButton" type="CheckButton" parent="HBoxContainer/Graphics/TAA"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_e7wif")
+theme_override_icons/checked = ExtResource("2_e7wif")
+theme_override_icons/unchecked = ExtResource("3_g2810")
+
+[node name="VSync" type="HBoxContainer" parent="HBoxContainer/Graphics"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Graphics/VSync"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "V-Sync"
+
+[node name="CheckButton" type="CheckButton" parent="HBoxContainer/Graphics/VSync"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_e7wif")
+theme_override_icons/checked = ExtResource("2_e7wif")
+theme_override_icons/unchecked = ExtResource("3_g2810")
+
+[node name="Display" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="HBoxContainer/Display"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Display"
+
+[node name="FullScreen" type="HBoxContainer" parent="HBoxContainer/Display"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Display/FullScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Fullscreen"
+
+[node name="CheckButton" type="CheckButton" parent="HBoxContainer/Display/FullScreen"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_e7wif")
+theme_override_icons/checked = ExtResource("2_e7wif")
+theme_override_icons/unchecked = ExtResource("3_g2810")
+
+[node name="Resolution" type="HBoxContainer" parent="HBoxContainer/Display"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Display/Resolution"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Resolution"
+
+[node name="OptionButton" type="OptionButton" parent="HBoxContainer/Display/Resolution"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme = SubResource("Theme_del6v")
+theme_override_font_sizes/font_size = 48
+item_count = 4
+popup/item_0/text = "2560x1440"
+popup/item_0/id = 0
+popup/item_1/text = "1920x1080"
+popup/item_1/id = 1
+popup/item_2/text = "1600x900"
+popup/item_2/id = 2
+popup/item_3/text = "1280x720"
+popup/item_3/id = 3
+
+[node name="Other" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(450, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="HBoxContainer/Other"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 64
+text = "Other"
+
+[node name="DisabeChat" type="HBoxContainer" parent="HBoxContainer/Other"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Other/DisabeChat"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Disable Chat"
+
+[node name="CheckButton" type="CheckButton" parent="HBoxContainer/Other/DisabeChat"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_e7wif")
+theme_override_icons/checked = ExtResource("2_e7wif")
+theme_override_icons/unchecked = ExtResource("3_g2810")
+
+[node name="PerfMonitor" type="HBoxContainer" parent="HBoxContainer/Other"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/Other/PerfMonitor"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Perf. monitor"
+
+[node name="CheckButton" type="CheckButton" parent="HBoxContainer/Other/PerfMonitor"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_styles/focus = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal_mirrored = SubResource("StyleBoxEmpty_e7wif")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_e7wif")
+theme_override_icons/checked = ExtResource("2_e7wif")
+theme_override_icons/unchecked = ExtResource("3_g2810")
+
+[connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
+[connection signal="value_changed" from="HBoxContainer/Graphics/MaxFPS/SpinBox" to="." method="_value_changed"]
+[connection signal="item_selected" from="HBoxContainer/Graphics/AntiAliasing/OptionButton" to="." method="_value_changed"]
+[connection signal="toggled" from="HBoxContainer/Graphics/FXAA/CheckButton" to="." method="_value_changed"]
+[connection signal="toggled" from="HBoxContainer/Graphics/TAA/CheckButton" to="." method="_value_changed"]
+[connection signal="toggled" from="HBoxContainer/Graphics/VSync/CheckButton" to="." method="_value_changed"]
+[connection signal="toggled" from="HBoxContainer/Display/FullScreen/CheckButton" to="." method="_value_changed"]
+[connection signal="item_selected" from="HBoxContainer/Display/Resolution/OptionButton" to="." method="_value_changed"]
+[connection signal="toggled" from="HBoxContainer/Other/DisabeChat/CheckButton" to="." method="_value_changed"]
+[connection signal="toggled" from="HBoxContainer/Other/PerfMonitor/CheckButton" to="." method="_value_changed"]

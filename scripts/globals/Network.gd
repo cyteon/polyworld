@@ -11,15 +11,15 @@ var server_is_sccure: bool = false
 # aka: Server/Client -> Server/Client
 
 signal despawn_item(path: NodePath)
-signal spawn_item(bytes: PackedByteArray, name_: String) 
+signal spawn_item(bytes: PackedByteArray) 
 
 @rpc("any_peer", "call_local")
 func _despawn_item(path: NodePath):
 	despawn_item.emit(path)
 
 @rpc("any_peer", "call_remote")
-func _spawn_item(bytes: PackedByteArray, name_: String):
-	spawn_item.emit(bytes, name_)
+func _spawn_item(bytes: PackedByteArray):
+	spawn_item.emit(bytes)
 
 # -- Client -> Client -- #
 signal play_item_anim(peer: int)
@@ -47,7 +47,7 @@ signal add_players(ids)
 signal remove_player(id: int)
 signal take_damage(damage: int)
 signal spawn_scene(node: NodePath, scene: String, position: Vector3, name_: String)
-signal set_state(position: Vector3, health: int, stamina: float, hunger: float, hotbar: PackedByteArray, inventory: PackedByteArray)
+signal set_state(position: Vector3, health: float, stamina: float, hunger: float, hotbar: PackedByteArray, inventory: PackedByteArray)
 signal chatmsg(content: String, username: String, id: String)
 
 @rpc("authority")
@@ -76,7 +76,7 @@ func _spawn_scene(node: NodePath, scene: String, position: Vector3, name_: Strin
 	spawn_scene.emit(node, scene, position, name_)
 
 @rpc("authority")
-func _set_state(position: Vector3, health: int, stamina: float, hunger: float, hotbar: PackedByteArray, inventory: PackedByteArray):
+func _set_state(position: Vector3, health: float, stamina: float, hunger: float, hotbar: PackedByteArray, inventory: PackedByteArray):
 	set_state.emit(position, health, stamina, hunger, hotbar, inventory)
 
 @rpc("authority")
