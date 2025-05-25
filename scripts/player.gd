@@ -21,7 +21,13 @@ var standard_hunger_reduction: float = .4
 var fast_hunger_reduction: float = .6
 
 var current_hotbar_slot: int = 1
-var hotbar_items: Array[BaseItem] = []
+var hotbar_items: Dictionary = {
+	1: null,
+	2: null,
+	3: null,
+	4: null,
+	5: null,	
+}
 var inventory_items: Array[BaseItem] = []
 
 @export var target_pos: Vector3 = Vector3.ZERO
@@ -45,16 +51,19 @@ func _set_state(pos: Vector3, health_: float, stamina_: float, hunger_: float, h
 	stamina = stamina_
 	hunger = hunger_
 	
-	hotbar_items = []
+	hotbar_items = {}
 	inventory_items = []
 	
-	var h = bytes_to_var_with_objects(hotbar)
+	var h: Dictionary = bytes_to_var_with_objects(hotbar)
 	var v = bytes_to_var_with_objects(inventory)
 	
 	if h:
-		for h_item in h:
-			var item = h_item.instantiate()
-			hotbar_items.append(item)
+		for k in h.keys():
+			if h[k] != null:
+				var item = h[k].instantiate()
+				hotbar_items[k] = item
+			else:
+				hotbar_items[k] = null
 	
 	if v:
 		for i_item in v:
@@ -69,8 +78,8 @@ func _take_damage(damage: int) -> void:
 	# TODO: add death screen
 	
 	if health <= 0:
-		var all_items = hotbar_items + inventory_items
-		hotbar_items = []
+		var all_items = hotbar_items.values() + inventory_items
+		hotbar_items = {}
 		inventory_items = []
 		
 		for item in all_items:
@@ -155,23 +164,31 @@ func _unhandled_input(event: InputEvent) -> void:
 		$Camera3D.rotation.x = clamp($Camera3D.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
 func add_item_to_inv(item: BaseItem) -> bool:
-	for slot in hotbar_items:
+	for k in hotbar_items.keys():
+		if hotbar_items[k] and hotbar_items[k].unique_id == item.unique_id and item.stackable:
+			hotbar_items[k].item_count += item.item_count
+			return true
+	
+	var first_free_slot = 0
+
+	for k in hotbar_items.keys():
+		if hotbar_items[k] == null:
+			first_free_slot = k
+			break
+	
+	if first_free_slot != 0:
+		hotbar_items[first_free_slot] = item
+		return true
+	
+	for slot in inventory_items:
 		if slot.unique_id == item.unique_id and item.stackable:
 			slot.item_count += item.item_count
 			return true
 	
-	if len(hotbar_items) == 5:
-		for slot in inventory_items:
-			if slot.unique_id == item.unique_id and item.stackable:
-				slot.item_count += item.item_count
-				return true
-		
-		if len(inventory_items) == 30:
-			return false
-		
-		inventory_items.append(item)
-	else:
-		hotbar_items.append(item)
+	if len(inventory_items) == 30:
+		return false
+	
+	inventory_items.append(item)
 	
 	return true
 
@@ -203,8 +220,6 @@ func _physics_process(delta: float) -> void:
 	
 	if use_standard_hunger_rate:
 		hunger -= delta * standard_hunger_reduction
-	
-	
 	
 	if hunger < 0:
 		hunger = 0
@@ -288,8 +303,8 @@ func _physics_process(delta: float) -> void:
 		else:
 			hotbar_slot.color = Color.from_hsv(0.6, 1, 1, 0.4)
 		
-		if len(hotbar_items) >= hotbar_slot.name.to_int():
-			var item = hotbar_items[hotbar_slot.name.to_int() - 1]
+		if hotbar_items[hotbar_slot.name.to_int()] != null:
+			var item = hotbar_items[hotbar_slot.name.to_int()]
 			
 			hotbar_slot.get_node("TextureRect").texture = load(item.icon_path)
 			
@@ -325,7 +340,7 @@ func _physics_process(delta: float) -> void:
 					item_to_hold = true
 					
 					if $Hold.get_child_count() == 0 or ($Hold/Item and $Hold/Item.unique_id != item.unique_id):
-						var node = hotbar_items[current_hotbar_slot - 1].duplicate()
+						var node = hotbar_items[current_hotbar_slot].duplicate()
 						node.name = "Item"
 						
 						for child in $Hold.get_children():
@@ -470,22 +485,22 @@ func _physics_process(delta: float) -> void:
 		)
 	
 	if Input.is_action_just_pressed("drop"):
-		if len(hotbar_items) >= current_hotbar_slot:
-			var item = hotbar_items[current_hotbar_slot - 1]
+		if hotbar_items[current_hotbar_slot] != null:
+			var item = hotbar_items[current_hotbar_slot]
 			
 			var slot = get_node(
 				"../CanvasLayer/Control/Hotbar/%s" % current_hotbar_slot
 			)
 			
-			if hotbar_items[current_hotbar_slot - 1].stackable:
-				hotbar_items[current_hotbar_slot - 1].item_count -= 1
+			if hotbar_items[current_hotbar_slot].stackable:
+				hotbar_items[current_hotbar_slot].item_count -= 1
 				
-				if hotbar_items[current_hotbar_slot - 1].item_count <= 0:
-					hotbar_items.remove_at(current_hotbar_slot - 1)
+				if hotbar_items[current_hotbar_slot].item_count <= 0:
+					hotbar_items[current_hotbar_slot] = null
 					slot.get_node("TextureRect").texture = null
 					slot.get_node("ItemCount").text = ""
 			else:
-				hotbar_items.remove_at(current_hotbar_slot - 1)
+				hotbar_items[current_hotbar_slot] = null
 				slot.get_node("TextureRect").texture = null
 				slot.get_node("ItemCount").text = ""
 			
@@ -509,17 +524,22 @@ func _physics_process(delta: float) -> void:
 			)
 
 func _on_send_data_to_save_timeout() -> void:
-	var encoded_hotbar = []
+	var encoded_hotbar = {}
 	var encoded_inv = []
 	
-	for h_item in hotbar_items:
-		var item = h_item.duplicate()
+	for k in hotbar_items.keys():
+		if hotbar_items[k] == null:
+			encoded_hotbar[k] = null
+			continue
+		
+		var item = hotbar_items[k]
+		
 		for c in item.get_children():
 			c.owner = item
 		
 		var new = PackedScene.new()
 		new.pack(item)
-		encoded_hotbar.append(new)
+		encoded_hotbar[k] = new
 	
 	for i_item in inventory_items:
 		var item = i_item.duplicate()
@@ -529,6 +549,9 @@ func _on_send_data_to_save_timeout() -> void:
 		var new = PackedScene.new()
 		new.pack(item)
 		encoded_inv.append(new)
+	
+	print(encoded_hotbar)
+	print(encoded_inv)
 	
 	Network.rpc_id(
 		1,

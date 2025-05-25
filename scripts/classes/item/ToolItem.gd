@@ -33,7 +33,7 @@ func _process(_delta: float) -> void:
 			return
 		
 		if len(player.hotbar_items) >= player.current_hotbar_slot:
-			var slot = player.hotbar_items[player.current_hotbar_slot - 1]
+			var slot = player.hotbar_items[player.current_hotbar_slot]
 			
 			if slot.unique_id == unique_id and is_ready:
 				$AnimationPlayer.play("use")
@@ -50,7 +50,7 @@ func _process(_delta: float) -> void:
 					or collider.is_in_group("Mineable") and type == ToolType.MINING
 				):
 					player.hotbar_items[
-						player.current_hotbar_slot - 1
+						player.current_hotbar_slot
 					].durability -= harvesting_reduces_dur_by
 					
 					collider.damage(harvestable_damage)
@@ -67,25 +67,25 @@ func _process(_delta: float) -> void:
 				elif damage > 0:
 					if collider.is_in_group("Player"):
 						player.hotbar_items[
-							player.current_hotbar_slot - 1
+							player.current_hotbar_slot
 						].durability -= attacking_reduces_dur_by
 						
 						Network.rpc_id(1, "_attack_player", collider.name.to_int(), damage)
 					elif collider.is_in_group("Entity"):
 						player.hotbar_items[
-							player.current_hotbar_slot - 1
+							player.current_hotbar_slot
 						].durability -= attacking_reduces_dur_by
 						
 						Network.rpc_id(1, "_attack_entity", collider.get_path(), damage)
 					elif collider.is_in_group("Harvestable") or collider.is_in_group("Mineable"):
 						player.hotbar_items[
-							player.current_hotbar_slot - 1
+							player.current_hotbar_slot
 						].durability -= harvesting_reduces_dur_by
 				
 				if player.hotbar_items[
-						player.current_hotbar_slot - 1
-					].durability <= 0:
-						player.hotbar_items.remove_at(player.current_hotbar_slot - 1)
+					player.current_hotbar_slot
+				].durability <= 0:
+					player.hotbar_items[player.current_hotbar_slot] = null
 
 
 func _on_animation_player_animation_finished(_anim_name: StringName) -> void:

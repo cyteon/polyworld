@@ -21,7 +21,7 @@ func _process(_delta: float) -> void:
 		player.hunger += increase_hunger
 		player.stamina += increase_stamina
 		
-		player.hotbar_items[player.current_hotbar_slot - 1].item_count -= 1
+		player.hotbar_items[player.current_hotbar_slot].item_count -= 1
 		
-		if player.hotbar_items[player.current_hotbar_slot - 1].item_count <= 0:
-			player.hotbar_items.remove_at(player.current_hotbar_slot - 1)
+		if player.hotbar_items[player.current_hotbar_slot].item_count <= 0:
+			player.hotbar_items[player.current_hotbar_slot] = null

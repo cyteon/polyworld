@@ -37,8 +37,7 @@ func damage(damage_: int) -> void:
 
 			Network.rpc(
 				"_spawn_item",
-				var_to_bytes_with_objects(p),
-				item.name
+				var_to_bytes_with_objects(p)
 			)
 
 		Network.rpc(

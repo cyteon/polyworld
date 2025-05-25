@@ -227,7 +227,7 @@ func _inv_data(hotbar: PackedByteArray, inventory: PackedByteArray) -> void:
 	
 	if peer in peers:
 		peers[peer].hotbar = hotbar
-		peers[peer].inventory = hotbar
+		peers[peer].inventory = inventory
 
 func _chatmsg(content: String) -> void:
 	var peer: int = multiplayer.get_remote_sender_id()
@@ -386,14 +386,17 @@ func _peer_world_loaded():
 			
 			peers.set(peer_id, data)
 			
+			var hotbar = str_to_var(data.hotbar) if data.hotbar is String else var_to_bytes({})
+			var inventory = str_to_var(data.inventory) if data.inventory is String else var_to_bytes([])
+			
 			Network.rpc_id(
 				peer_id, "_set_state",
 				str_to_var("Vector3" + save_obj["players"][data.unique_id].position),
 				save_obj["players"][data.unique_id].health,
 				save_obj["players"][data.unique_id].stamina,
 				save_obj["players"][data.unique_id].hunger,
-				str_to_var(save_obj["players"][data.unique_id].hotbar),
-				str_to_var(save_obj["players"][data.unique_id].inventory)
+				hotbar,
+				inventory
 			)
 
 func _peer_disconnected(peer_id: int):
