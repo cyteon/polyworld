@@ -5,6 +5,7 @@ func _ready() -> void:
 	
 	if Settings.config.get_value("multiplayer", "disable_chat", false) or not Network.server_is_sccure:
 		$CanvasLayer/Control/Chatbox.hide()
+	$CanvasLayer/Control/PerfMonitor.visible = Settings.perf_monitor
 	
 	RenderingServer.viewport_set_measure_render_time(get_tree().root.get_viewport_rid(), true)
 	

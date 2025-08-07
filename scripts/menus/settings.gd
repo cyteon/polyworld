@@ -32,6 +32,7 @@ func _value_changed(_val) -> void:
 	Settings.vsync = $HBoxContainer/Graphics/VSync/CheckButton.button_pressed
 	
 	Settings.fullscreen = $HBoxContainer/Display/FullScreen/CheckButton.button_pressed
+	
 	Settings.resolution = $HBoxContainer/Display/Resolution/OptionButton.selected
 	$HBoxContainer/Display/Resolution/OptionButton.disabled = Settings.fullscreen
 	

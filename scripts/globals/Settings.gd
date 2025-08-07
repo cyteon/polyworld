@@ -39,15 +39,16 @@ func apply() -> void:
 	get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA if fxaa else Viewport.SCREEN_SPACE_AA_DISABLED
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if vsync else DisplayServer.VSYNC_DISABLED)
 	
-	match resolution:
-		0:
-			get_window().set_size(Vector2(2560, 1440))
-		1:
-			get_window().set_size(Vector2(1920, 1080))
-		2:
-			get_window().set_size(Vector2(1600, 900))
-		3:
-			get_window().set_size(Vector2(1280, 720))
+	if not fullscreen:
+		match resolution:
+			0:
+				get_window().set_size(Vector2(2560, 1440))
+			1:
+				get_window().set_size(Vector2(1920, 1080))
+			2:
+				get_window().set_size(Vector2(1600, 900))
+			3:
+				get_window().set_size(Vector2(1280, 720))
 	
 	DisplayServer.window_set_mode(
 		DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen
