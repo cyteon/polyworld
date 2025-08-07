@@ -303,8 +303,9 @@ func _physics_process(delta: float) -> void:
 		else:
 			hotbar_slot.color = Color.from_hsv(0.6, 1, 1, 0.4)
 		
-		if hotbar_items[hotbar_slot.name.to_int()] != null:
-			var item = hotbar_items[hotbar_slot.name.to_int()]
+		var idx = hotbar_slot.name.to_int()
+		if len(hotbar_items) - 1 > idx and hotbar_items[idx] != null:
+			var item = hotbar_items[idx]
 			
 			hotbar_slot.get_node("TextureRect").texture = load(item.icon_path)
 			

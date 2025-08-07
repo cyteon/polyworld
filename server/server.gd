@@ -87,28 +87,28 @@ func handle_cmdline_arg(arg) -> void:
 				if value.is_valid_int():
 					port = value.to_int()
 				else:
-					print("[Server] %s (port) is not a valid integer" % value)
+					log_event("%s (port) is not a valid integer" % value)
 			"advertise_host":
 				advertise_host = value
-				print("[Server] Advertising host %s" % value)
+				log_event("Advertising host %s" % value)
 			"advertise_port":
 				if value.is_valid_int():
 					advertise_port = value.to_int()
-					print("[Server] Advertising port %s" % value)
+					log_event("Advertising port %s" % value)
 				else:
-					print("[Server] %s (advertise_port) is not a valid integer" % value)
+					log_event("%s (advertise_port) is not a valid integer" % value)
 			"server_name":
 				server_name = value
-				print("[Server] Set server name to '%s'" % value)
+				log_event("Set server name to '%s'" % value)
 				
 				if value.find(" ") <= -1:
 					print("[Hint] Use '%20' for space if the above only has 1 word/is missing spaces")
 			"max_players":
 				if value.is_valid_int():
 					max_players = value.to_int()
-					print("[Server] Setting max players to %s" % value)
+					log_event("Setting max players to %s" % value)
 				else:
-					print("[Server] %s (max_players) is not a valid integer" % value)
+					log_event("%s (max_players) is not a valid integer" % value)
 
 func start_server():
 	if FileAccess.file_exists(save_file_loc):
@@ -158,7 +158,7 @@ func start_server():
 		ProjectSettings.get_setting("application/config/version")
 	)
 	
-	print("[Server] %s, status code %s" % [res.verbal, res.status])
+	log_event("%s, status code %s" % [res.verbal, res.status])
 	
 	SteamServer.setServerName(server_name)
 	SteamServer.setMaxPlayerCount(max_players)
@@ -167,7 +167,7 @@ func start_server():
 	SteamServer.setAdvertiseServerActive(true)
 	
 	SteamServer.server_connected.connect(func():
-		print("[Server] Connected to steam")
+		log_event("Connected to steam")
 		
 		var error: int = network.create_server(port)
 		
@@ -184,15 +184,15 @@ func start_server():
 	)
 	
 	SteamServer.server_connect_failure.connect(func(result: int, retrying: bool):
-		print("[Server] Failed to connect to steam, status code %s. Retrying = %s" % [result, retrying])
+		log_event("Failed to connect to steam, status code %s. Retrying = %s" % [result, retrying])
 		
 		match result:
 			SteamServer.RESULT_INVALID_PARAM:
-				print("[Server] Status code 8 = \"Invalid Paramter\" (is your GSLT correct?)")
+				log_event("Status code 8 = \"Invalid Paramter\" (is your GSLT correct?)")
 	)
 	
 	SteamServer.server_disconnected.connect(func(result):
-		print("[Server] Lost connection to steam, status code %s" % result)
+		log_event("Lost connection to steam, status code %s" % result)
 	)
 	
 	SteamServer.validate_auth_ticket_response.connect(_auth_ticket_response)
@@ -271,7 +271,7 @@ func _chatmsg(content: String) -> void:
 		waits += 0.5
 		
 		if waits >= 60.0:
-			print("[Server] HTTP Client Busy for 1 minute, aborting")
+			log_event("HTTP Client Busy for 1 minute, aborting")
 	
 	$MessagesHTTP.request(
 		"%s/api/messages" % Network.backend_url,
@@ -313,7 +313,7 @@ func _attack_player(target_id: int, damage: int) -> void:
 	
 	# ShortRaycast is 1.5m, but we have some more incase lag or shit
 	if distance > 2.5:
-		print("[Server] %s attacked %s but was %s away, might be network lag or smth else" % [peer, target_id, distance])
+		log_event("%s attacked %s but was %s away, might be network lag or smth else" % [peer, target_id, distance])
 		return
 	
 	Network.rpc_id(target_id, "_take_damage", damage)
@@ -402,7 +402,7 @@ func _peer_world_loaded():
 func _peer_disconnected(peer_id: int):
 	var data = peers.get(peer_id)
 	
-	log_event("Peer disconnected: %s" % peer_id)
+	log_event("%s has left the game (peer id: %s)" % [peers[peer_id].username, peer_id])
 	peers.erase(peer_id)
 
 	$Info/Players.text = "Players: %s" % len(peers)
@@ -440,7 +440,10 @@ func _peer_disconnected(peer_id: int):
 		}
 		
 	var text = JSON.stringify(save_obj, "\t")
-	FileAccess.open(save_file_loc, FileAccess.WRITE).store_string(text)
+	var file = FileAccess.open(save_file_loc, FileAccess.WRITE)
+	
+	if file:
+		file.store_string(text)
 	
 
 func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
@@ -469,7 +472,7 @@ func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
 		#AUTH_SESSION_RESPONSE_AUTH_TICKET_INVALID_ALREADY_USED
 		#AUTH_SESSION_RESPONSE_AUTH_TICKET_INVALID
 		SteamServer.AUTH_SESSION_RESPONSE_PUBLISHER_ISSUED_BAN:
-			print("[Server] Auth failed SteamID %s (peer %s): User is banned from secure servers" % [owner_id, id_peer_map[owner_id]])
+			log_event("Auth failed for SteamID %s (peer %s): User is banned from secure servers" % [owner_id, id_peer_map[owner_id]])
 			
 			Network.rpc_id(
 				id_peer_map[owner_id], "_disconnect", 
@@ -478,7 +481,7 @@ func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
 			)
 		#AUTH_SESSION_RESPONSE_AUTH_TICKET_NETWORK_IDENTITY_FAILURE
 		_:
-			print("[Server] Auth failed SteamID %s (peer %s): Unknown Error" % [owner_id, id_peer_map[owner_id]])
+			log_event("Auth failed for SteamID %s (peer %s): Unknown Error" % [owner_id, id_peer_map[owner_id]])
 			
 			Network.rpc_id(
 				id_peer_map[owner_id], "_disconnect", 
@@ -491,12 +494,12 @@ func _authenticate_peer(unique_id: Variant, username: String, auth_ticket: Dicti
 	var data = peers.get(peer_id, null)
 	
 	if data == null:
-		print("[Server] Peer tried to authorize but has disconnected")
+		log_event("Peer tried to authorize but has disconnected")
 		return
 	
 	if SteamServer.secure():
 		if unique_id is not int:
-			print("[Server] Disconnecting peer %s, ID (%s) was not an int, could not proceed with authentication and server is secure" % [peer_id, unique_id])
+			log_event("Disconnecting peer %s, ID (%s) was not an int, could not proceed with authentication and server is secure" % [peer_id, unique_id])
 			Network.rpc_id(peer_id, "_disconnect", "Authentication to secure server failed")
 			
 			await get_tree().create_timer(0.5).timeout
@@ -513,35 +516,35 @@ func _authenticate_peer(unique_id: Variant, username: String, auth_ticket: Dicti
 		if result != 0:
 			match result:
 				SteamServer.BEGIN_AUTH_SESSION_RESULT_INVALID_TICKET:
-					print("[Server] Auth failed for SteamID %s (peer %s): invalid auth ticket" % [unique_id, peer_id])
+					log_event("Auth failed for SteamID %s (peer %s): invalid auth ticket" % [unique_id, peer_id])
 					Network.rpc_id(
 						peer_id, "_disconnect", 
 						"Authentication to secure server failed",
 						"Your client provided the server an invalid auth ticket.\nTry to reconnect, or restart your game if that does not work"
 					)
 				SteamServer.BEGIN_AUTH_SESSION_RESULT_DUPLICATE_REQUEST:
-					print("[Server] Auth failed for SteamID %s (peer %s): duplicate auth request" % [unique_id, peer_id])
+					log_event("Auth failed for SteamID %s (peer %s): duplicate auth request" % [unique_id, peer_id])
 					Network.rpc_id(
 						peer_id, "_disconnect", 
 						"Authentication to secure server failed",
 						"The server has recieved a duplicate authentication attempt.\nTry to reconnect or restart your game."
 					)
 				SteamServer.BEGIN_AUTH_SESSION_RESULT_INVALID_VERSION:
-					print("[Server] Auth failed for SteamID %s (peer %s): outdated steamworks interface (contact polyworld dev)" % [unique_id, peer_id])
+					log_event("Auth failed for SteamID %s (peer %s): outdated steamworks interface (contact polyworld dev)" % [unique_id, peer_id])
 					Network.rpc_id(
 						peer_id, "_disconnect", 
 						"Authentication to secure server failed",
 						"Your client appears to be using an outdated steamworks interface.\nMake sure your game is updated to the latest version"
 					)
 				SteamServer.BEGIN_AUTH_SESSION_RESULT_GAME_MISMATCH:
-					print("[Server] Auth failed for SteamID %s (peer %s): wrong appID (contact polyworld dev)" % [unique_id, peer_id])
+					log_event("Auth failed for SteamID %s (peer %s): wrong appID (contact polyworld dev)" % [unique_id, peer_id])
 					Network.rpc_id(
 						peer_id, "_disconnect", 
 						"Authentication to secure server failed",
 						"Your client appears to have tried to authenticate with an auth ticket that dosent match the server appID\nTry to restart your game"
 					)
 				SteamServer.BEGIN_AUTH_SESSION_RESULT_EXPIRED_TICKET:
-					print("[Server] Auth failed for SteamID %s (Peer %s): auth ticket timeout" % [unique_id, peer_id])
+					log_event("Auth failed for SteamID %s (Peer %s): auth ticket timeout" % [unique_id, peer_id])
 					Network.rpc_id(
 						peer_id, "_disconnect", 
 						"Authentication to secure server timeouted",
@@ -559,6 +562,8 @@ func _authenticate_peer(unique_id: Variant, username: String, auth_ticket: Dicti
 	unique_id = str(unique_id)
 	data.unique_id = unique_id
 	data.username = username
+	
+	log_event("%s has joined the game (peer id: %s)" % [username, peer_id])
 
 func log_event(str: String, error = false):
 	print("[Server] %s" % str)
@@ -609,7 +614,7 @@ func send_server_info() -> void:
 		waits += 0.5
 		
 		if waits >= 60.0:
-			print("[Server] HTTP Client Busy for 1 minute, aborting")
+			log_event("HTTP Client Busy for 1 minute, aborting")
 	
 	$ServerInfoHTTP.request(
 		"%s/api/servers" % Network.backend_url, 
@@ -664,7 +669,10 @@ func _on_save_timeout() -> void:
 		})
 	
 	var text = JSON.stringify(save_obj, "\t")
-	FileAccess.open(save_file_loc, FileAccess.WRITE).store_string(text)
+	var file = FileAccess.open(save_file_loc, FileAccess.WRITE)
+	
+	if file:
+		file.store_string(text)
 
 func _on_spawn_resource_timeout() -> void:
 	if $World.get_child_count() > 500:
