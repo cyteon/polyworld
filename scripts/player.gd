@@ -34,6 +34,8 @@ var inventory_items: Array[BaseItem] = []
 
 var enable_chat: bool = not Settings.config.get_value("multiplayer", "disable_chat", false)
 
+var last_item_collider: BaseItem
+
 func _ready() -> void:
 	if is_multiplayer_authority():
 		Network.take_damage.connect(_take_damage)
@@ -260,12 +262,27 @@ func _physics_process(delta: float) -> void:
 		else:
 			speed = normal_speed
 		
-		if Input.is_action_just_released("interact") and $Camera3D/RayCast3D.is_colliding():
+		if $Camera3D/RayCast3D.is_colliding():
 			var collider = $Camera3D/RayCast3D.get_collider()
 			
 			if collider is BaseItem:
-				if add_item_to_inv(collider.duplicate()):
-					Network.rpc("_despawn_item", collider.get_path())
+				if collider != last_item_collider:
+					if last_item_collider:
+						last_item_collider.disable_outline()
+					last_item_collider = collider
+					collider.enable_outline()
+				
+				if Input.is_action_just_released("interact"):
+					if add_item_to_inv(collider.duplicate()):
+						Network.rpc("_despawn_item", collider.get_path())
+			else:
+				if last_item_collider:
+					last_item_collider.disable_outline()
+				last_item_collider = null
+		else:
+			if last_item_collider:
+				last_item_collider.disable_outline()
+			last_item_collider = null
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
@@ -550,9 +567,6 @@ func _on_send_data_to_save_timeout() -> void:
 		var new = PackedScene.new()
 		new.pack(item)
 		encoded_inv.append(new)
-	
-	print(encoded_hotbar)
-	print(encoded_inv)
 	
 	Network.rpc_id(
 		1,
