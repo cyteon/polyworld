@@ -444,7 +444,8 @@ func _peer_disconnected(peer_id: int):
 	
 	if file:
 		file.store_string(text)
-	
+	else:
+		log_event("Failed to open save file, error %s" % [FileAccess.get_open_error()])
 
 func _auth_ticket_response(_auth_id: int, response: int, owner_id: int):
 	if not SteamServer.secure():
@@ -673,6 +674,8 @@ func _on_save_timeout() -> void:
 	
 	if file:
 		file.store_string(text)
+	else:
+		log_event("Failed to open save file, error %s" % [FileAccess.get_open_error()])
 
 func _on_spawn_resource_timeout() -> void:
 	if $World.get_child_count() > 500:

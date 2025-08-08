@@ -26,7 +26,7 @@ var hotbar_items: Dictionary = {
 	2: null,
 	3: null,
 	4: null,
-	5: null,	
+	5: null,
 }
 var inventory_items: Array[BaseItem] = []
 
@@ -171,16 +171,23 @@ func add_item_to_inv(item: BaseItem) -> bool:
 			hotbar_items[k].item_count += item.item_count
 			return true
 	
-	var first_free_slot = 0
+	var first_free_slot = 1
 
-	for k in hotbar_items.keys():
-		if hotbar_items[k] == null:
-			first_free_slot = k
-			break
+	if len(hotbar_items) < 5:
+		first_free_slot = len(hotbar_items) + 1
+	else:
+		for k in hotbar_items.keys():
+			if hotbar_items[k] == null:
+				first_free_slot = k
+				break
 	
-	if first_free_slot != 0:
+	if first_free_slot != 1:
 		hotbar_items[first_free_slot] = item
 		return true
+	else:
+		if hotbar_items.get(1) == null:
+			hotbar_items[1] = item
+			return true
 	
 	for slot in inventory_items:
 		if slot.unique_id == item.unique_id and item.stackable:
@@ -321,7 +328,7 @@ func _physics_process(delta: float) -> void:
 			hotbar_slot.color = Color.from_hsv(0.6, 1, 1, 0.4)
 		
 		var idx = hotbar_slot.name.to_int()
-		if len(hotbar_items) - 1 > idx and hotbar_items[idx] != null:
+		if hotbar_items.get(idx) != null:
 			var item = hotbar_items[idx]
 			
 			hotbar_slot.get_node("TextureRect").texture = load(item.icon_path)
@@ -358,7 +365,7 @@ func _physics_process(delta: float) -> void:
 					item_to_hold = true
 					
 					if $Hold.get_child_count() == 0 or ($Hold/Item and $Hold/Item.unique_id != item.unique_id):
-						var node = hotbar_items[current_hotbar_slot].duplicate()
+						var node = hotbar_items.get(current_hotbar_slot).duplicate()
 						node.name = "Item"
 						
 						for child in $Hold.get_children():
@@ -399,7 +406,7 @@ func _physics_process(delta: float) -> void:
 			var reqs_met: int = 0
 			
 			for material in recipe.requires:
-				for item in hotbar_items:
+				for item in hotbar_items.values():
 					if item.unique_id == material and item.item_count >= recipe.requires[material].amount:
 						reqs_met += 1
 						break
@@ -421,7 +428,7 @@ func _physics_process(delta: float) -> void:
 					add_item_to_inv(load(recipe.scene).instantiate())
 					
 					for material in recipe.requires:
-						for item in hotbar_items:
+						for item in hotbar_items.values():
 							if item.unique_id == material and item.item_count >= recipe.requires[material].amount:
 								item.item_count -= recipe.requires[material].amount
 								
@@ -503,7 +510,7 @@ func _physics_process(delta: float) -> void:
 		)
 	
 	if Input.is_action_just_pressed("drop"):
-		if hotbar_items[current_hotbar_slot] != null:
+		if len(hotbar_items) > 0 and hotbar_items.get(current_hotbar_slot) != null:
 			var item = hotbar_items[current_hotbar_slot]
 			
 			var slot = get_node(
