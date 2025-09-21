@@ -101,7 +101,7 @@ jobs:
           mkdir -v -p build/mac
           ./godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app || true
 
-          tree build/mac
+          ls build/mac
 
           if [ -d "build/mac/$EXPORT_NAME.app" ]; then
             echo ".app exists, proceeding with export"
