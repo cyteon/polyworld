@@ -221,7 +221,7 @@ jobs:
           releaseBranch: default
           depot2Path: windows
           depot3Path: linux
-          depot4Path: mac
+          #depot4Path: mac
 
       - name: Cleanup after game deploy
         run: |
