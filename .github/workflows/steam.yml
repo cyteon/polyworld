@@ -1,0 +1,239 @@
+name: "godot-ci export to steam"
+on:
+  push:
+    branches:
+      - release
+    tags:
+      - "**"
+
+env:
+  GODOT_VERSION: 4.5
+  EXPORT_NAME: PolyWorld
+
+jobs:
+  export-windows:
+    name: Windows Desktop Export
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:${GODOT_VERSION}
+    steps:
+      - name: Install SSH
+        run: |
+          apt-get update
+          apt-get install -y openssh-client
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.config/ # exampel has this on windows so i try
+          mv /root/.config/godot ~/.config/godot # ^
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Windows Build
+        run: |
+          mkdir -v -p build/windows 
+          godot -v --headless --verbose --export-release "Windows Desktop" build/windows/$EXPORT_NAME.exe
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: build/windows
+          
+  export-linux:
+    name: Linux Desktop Export
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:${GODOT_VERSION}
+    steps:
+      - name: Install SSH
+        run: |
+          apt-get update
+          apt-get install -y openssh-client
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Linux Build
+        run: |
+          mkdir -v -p build/linux
+          godot -v --headless --verbose --export-release "Linux Desktop" build/linux/$EXPORT_NAME.x86_64
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: build/linux
+
+  export-mac:
+    name: Mac Export
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
+      - name: Setup godot
+        run: |
+          wget -q "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_macos.universal.zip"
+          unzip -q Godot_v${GODOT_VERSION}-stable_macos.universal.zip
+          ls -R
+          mv Godot.app/Contents/MacOS/Godot godot
+          chmod +x godot
+      - name: Setup export templates
+        run: |
+          wget -q https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
+          mkdir -p "/Users/runner/Library/Application Support/Godot/export_templates"
+          unzip Godot_v${GODOT_VERSION}-stable_export_templates.tpz -d "/Users/runner/Library/Application Support/Godot/export_templates"
+          mv "/Users/runner/Library/Application Support/Godot/export_templates/templates" "/Users/runner/Library/Application Support/Godot/export_templates/${GODOT_VERSION}.stable"
+        
+      - name: Mac Build
+        run: |
+          mkdir -v -p build/mac
+          ./godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app || true
+
+          if [ -d "build/mac/$EXPORT_NAME.app" ]; then
+            echo ".app exists, proceeding with export"
+          else
+            echo ".app does not exist, exiting"
+            exit 1
+          fi
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac
+          path: build/mac
+  
+  export-linux-server:
+    name: Linux Server Export
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:${GODOT_VERSION}
+    steps:
+      - name: Install SSH
+        run: |
+          apt-get update
+          apt-get install -y openssh-client
+        
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Linux Build
+        run: |
+          mkdir -v -p build/linux_server
+          godot -v --headless --verbose --export-release "Linux Server" build/linux_server/${EXPORT_NAME}_Server.x86_64
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux_server
+          path: build/linux_server
+  
+  export-windows-server:
+    name: Windows Server Export
+    runs-on: ubuntu-22.04
+    container:
+      image: barichello/godot-ci:${GODOT_VERSION}
+    steps:
+      - name: Install SSH
+        run: |
+          apt-get update
+          apt-get install -y openssh-client
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          submodules: true
+          ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.config/ # example has this on windows so i try
+          mv /root/.config/godot ~/.config/godot # this too, idk why it works but it does
+          mkdir -v -p ~/.local/share/godot/export_templates
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+      - name: Windows Build
+        run: |
+          mkdir -v -p build/windows_server 
+          godot -v --headless --verbose --export-release "Windows Server" build/windows_server/${EXPORT_NAME}_Server.exe
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows_server
+          path: build/windows_server
+
+  deployGameToSteam:
+    name: Deploy to Steam
+    needs: [export-mac, export-windows, export-linux, export-linux-server, export-windows-server]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Set env
+        run: |
+          BRANCH_NAME=${GITHUB_REF#refs/*/}
+          COMMIT_HASH=$(echo $GITHUB_SHA | cut -c1-7)
+          echo "RELEASE_VERSION=${BRANCH_NAME}-${COMMIT_HASH}" >> $GITHUB_ENV
+
+      - name: Test
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
+
+      - name: Uncompress config.vdf
+        run: |
+          mkdir -v -p /home/runner/Steam/config
+          echo "${{ secrets.STEAM_CONFIG_VDF }}" | base64 -d - | gunzip - > /home/runner/Steam/config/config.vdf
+          STEAM_CONFIG_BASE64=$(base64 -w 0 /home/runner/Steam/config/config.vdf)
+          echo "::add-mask::$STEAM_CONFIG_BASE64"
+          echo "STEAM_CONFIG_BASE64=$STEAM_CONFIG_BASE64" >> $GITHUB_ENV
+
+      - name: Mask secrets
+        run: |
+          echo "::add-mask::${{ secrets.STEAM_USERNAME }}"
+          echo "::add-mask::${{ secrets.STEAM_CONFIG_VDF }}"
+
+      - name: Download Artifact
+        uses:  actions/download-artifact@v4
+
+      - name: Deploy Game to Steam
+        uses: game-ci/steam-deploy@v3
+        continue-on-error: true
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}
+          configVdf: ${{ env.STEAM_CONFIG_BASE64 }}
+          appId: 3650810
+          buildDescription: ${{ env.RELEASE_VERSION }}
+          releaseBranch: default
+          depot2Path: windows
+          depot3Path: linux
+          depot4Path: mac
+
+      - name: Cleanup after game deploy
+        run: |
+          sudo rm -rf BuildOutput
+
+      - name: Deploy Server to Steam
+        uses: game-ci/steam-deploy@v3
+        continue-on-error: true
+        with:
+          username: ${{ secrets.STEAM_USERNAME }}
+          configVdf: ${{ env.STEAM_CONFIG_BASE64 }}
+          appId: 3651340
+          buildDescription: ${{ env.RELEASE_VERSION }}
+          releaseBranch: default
+          depot2Path: windows_server
+          depot3Path: linux_server
