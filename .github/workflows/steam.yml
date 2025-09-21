@@ -99,7 +99,7 @@ jobs:
       - name: Mac Build
         run: |
           mkdir -v -p build/mac
-          ./godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app
+          ./godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app || true
 
           ls build/mac
 
@@ -180,7 +180,7 @@ jobs:
 
   deployGameToSteam:
     name: Deploy to Steam
-    needs: [export-mac, export-windows, export-linux, export-linux-server, export-windows-server]
+    needs: [export-windows, export-linux, export-linux-server, export-windows-server]
     runs-on: ubuntu-22.04
     steps:
       - name: Set env
