@@ -102,7 +102,7 @@ jobs:
         run: |
           cd game
           mkdir -v -p build/mac
-          ./godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app || true
+          ../godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app || true
 
           ls build/mac
 
