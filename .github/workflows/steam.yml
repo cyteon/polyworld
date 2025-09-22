@@ -62,6 +62,8 @@ jobs:
           ssh-key: ${{ secrets.SUBMODULE_SSH_KEY }}
       - name: Setup
         run: |
+          mkdir -v -p ~/.config/ 
+          mv /root/.config/godot ~/.config/godot
           mkdir -v -p ~/.local/share/godot/export_templates
           mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
       - name: Linux Build
