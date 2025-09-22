@@ -17,6 +17,10 @@ config/use_custom_user_dir=true
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+steam="*res://globals/steam.gd"
+
 [display]
 
 window/size/viewport_width=1920
@@ -31,3 +35,7 @@ window/size/window_height_override=720
 [rendering]
 
 textures/vram_compression/import_etc2_astc=true
+
+[steam]
+
+initialization/app_id=3650810
