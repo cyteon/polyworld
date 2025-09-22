@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="PolyWorld"
-config/version="0.0.0"
+config/version="dev/1.0.0"
 run/main_scene="uid://dtc2k8m47vp0q"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.5", "Forward Plus")
