@@ -100,6 +100,7 @@ jobs:
           mv "/Users/runner/Library/Application Support/Godot/export_templates/templates" "/Users/runner/Library/Application Support/Godot/export_templates/${GODOT_VERSION}.stable"
       - name: Mac Build
         run: |
+          cd game
           mkdir -v -p build/mac
           ./godot -v --headless --verbose --export-release "macOS" build/mac/$EXPORT_NAME.app || true
 
@@ -115,7 +116,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mac
-          path: build/mac
+          path: game/build/mac
   
   export-linux-server:
     name: Linux Server Export
@@ -140,13 +141,14 @@ jobs:
           mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
       - name: Linux Build
         run: |
+          cd server
           mkdir -v -p build/linux_server
           godot -v --headless --verbose --export-release "Linux Server" build/linux_server/${EXPORT_NAME}_Server.x86_64
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux_server
-          path: build/linux_server
+          path: server/build/linux_server
   
   export-windows-server:
     name: Windows Server Export
@@ -172,13 +174,14 @@ jobs:
           mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
       - name: Windows Build
         run: |
+          cd server
           mkdir -v -p build/windows_server 
           godot -v --headless --verbose --export-release "Windows Server" build/windows_server/${EXPORT_NAME}_Server.exe
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows_server
-          path: build/windows_server
+          path: server/build/windows_server
 
   deployGameToSteam:
     name: Deploy to Steam
