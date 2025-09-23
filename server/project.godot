@@ -17,7 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-log="*res://globals/log.gd"
+Log="*res://globals/log.gd"
+Network="*res://globals/network.gd"
 
 [debug]
 
@@ -32,3 +33,9 @@ display_server/driver.linuxbsd="headless"
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+[steam]
+
+initialization/app_id=0
+initialization/initialize_on_startup=false
+initialization/embed_callbacks=false

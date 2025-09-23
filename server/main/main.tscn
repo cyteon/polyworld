@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://sryrhvrma77e"]
+[gd_scene load_steps=4 format=3 uid="uid://sryrhvrma77e"]
 
 [ext_resource type="Script" uid="uid://ds7hw2agctpqu" path="res://main/main.gd" id="1_53q0u"]
+[ext_resource type="Script" uid="uid://ccmagb28e5u8k" path="res://modules/steam.gd" id="2_pjrb6"]
+[ext_resource type="Script" uid="uid://bu6fyfkfwrfha" path="res://modules/peer.gd" id="3_xwkvk"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_53q0u")
+
+[node name="Steam" type="Node" parent="."]
+script = ExtResource("2_pjrb6")
+
+[node name="Peer" type="Node" parent="."]
+script = ExtResource("3_xwkvk")
