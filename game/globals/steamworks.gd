@@ -56,6 +56,7 @@ func ping_server(host: String, port: int) -> Dictionary:
 					"vac": int(buffer.get_u8()) == 1,
 					"version": read_str(buffer),
 					"edf": buffer.get_u8(),
+					"ping": Time.get_ticks_msec() - start_time
 				}
 				
 				if data.edf & 0x80:

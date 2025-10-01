@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dtc2k8m47vp0q"]
+[gd_scene load_steps=7 format=3 uid="uid://dtc2k8m47vp0q"]
 
 [ext_resource type="Script" uid="uid://bgycj32hwow36" path="res://menus/main/main.gd" id="1_c6wqw"]
 
@@ -16,6 +16,15 @@ corner_radius_bottom_left = 8
 [sub_resource type="Theme" id="Theme_rhomd"]
 default_font_size = 24
 LineEdit/font_sizes/font_size = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rhomd"]
+bg_color = Color(0.072842695, 0.072842605, 0.072842635, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 8.0
+expand_margin_right = 8.0
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -127,6 +136,7 @@ text = "Quit"
 alignment = 0
 
 [node name="ServerConnectMenu" type="Panel" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -188,9 +198,134 @@ theme = SubResource("Theme_rhomd")
 max_value = 65535.0
 value = 6070.0
 
+[node name="ServerInfo" type="Control" parent="ServerConnectMenu/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Grid" type="GridContainer" parent="ServerConnectMenu/VBoxContainer/ServerInfo"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 4
+columns = 2
+
+[node name="Ping" type="Panel" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_rhomd")
+
+[node name="Title" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid/Ping"]
+layout_mode = 0
+offset_right = 57.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 16
+text = "Ping"
+
+[node name="Value" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid/Ping"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -17.0
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "12000ms"
+horizontal_alignment = 1
+
+[node name="PlayerCount" type="Panel" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_rhomd")
+
+[node name="Title" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid/PlayerCount"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 16
+text = "Players"
+
+[node name="Value" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid/PlayerCount"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -17.0
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "100/20"
+horizontal_alignment = 1
+
+[node name="Version" type="Panel" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_rhomd")
+
+[node name="Title" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid/Version"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 16
+text = "Version"
+
+[node name="Value" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid/Version"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -17.0
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "dev/1.0.0.0"
+horizontal_alignment = 1
+
+[node name="Secure" type="Panel" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_rhomd")
+
+[node name="Title" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid/Secure"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 16
+text = "Secure/VAC"
+
+[node name="Value" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerInfo/Grid/Secure"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -17.0
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "yes"
+horizontal_alignment = 1
+
 [node name="HBoxContainer" type="HBoxContainer" parent="ServerConnectMenu/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 10
+size_flags_vertical = 8
 
 [node name="QueryButton" type="Button" parent="ServerConnectMenu/VBoxContainer/HBoxContainer"]
 layout_mode = 2
