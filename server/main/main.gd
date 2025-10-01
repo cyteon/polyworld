@@ -38,6 +38,7 @@ func _ready() -> void:
 	SteamServer.setServerName("An Server")
 	SteamServer.setMaxPlayerCount(5)
 	SteamServer.setProduct("3650810")
+	
 	SteamServer.setDedicatedServer(true)
 	SteamServer.setAdvertiseServerActive(true)
 	

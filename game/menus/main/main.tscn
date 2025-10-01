@@ -1,6 +1,21 @@
-[gd_scene load_steps=2 format=3 uid="uid://dtc2k8m47vp0q"]
+[gd_scene load_steps=6 format=3 uid="uid://dtc2k8m47vp0q"]
 
 [ext_resource type="Script" uid="uid://bgycj32hwow36" path="res://menus/main/main.gd" id="1_c6wqw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c6wqw"]
+
+[sub_resource type="Theme" id="Theme_c6wqw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c6wqw"]
+bg_color = Color(0.12941177, 0.12941177, 0.12941177, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="Theme" id="Theme_rhomd"]
+default_font_size = 24
+LineEdit/font_sizes/font_size = 24
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -11,27 +26,186 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_c6wqw")
 
-[node name="Title" type="Label" parent="."]
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 199.00632
+offset_top = -609.10504
+offset_right = 584.06055
+offset_bottom = 562.0657
+grow_vertical = 2
+rotation = 0.17453292
+color = Color(0.12955844, 0.12955847, 0.12955844, 1)
+
+[node name="Title" type="Label" parent="ColorRect"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -39.5
-offset_right = 39.5
-offset_bottom = 23.0
+offset_left = -165.18805
+offset_top = 69.27182
+offset_right = 150.81197
+offset_bottom = 157.27182
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 96
+rotation = -0.17453292
+theme_override_font_sizes/font_size = 64
 text = "PolyWorld"
 
-[node name="Version" type="Label" parent="."]
+[node name="ConnectButton" type="Button" parent="ColorRect"]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -149.02496
+offset_top = -68.17377
+offset_right = 127.97505
+offset_bottom = -23.173767
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.17453292
+theme_override_colors/font_hover_color = Color(0.15040003, 0.6767999, 0.94, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_c6wqw")
+text = "Connect to server"
+alignment = 0
+
+[node name="SettingsButton" type="Button" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -149.08925
+offset_top = -22.4682
+offset_right = 127.91075
+offset_bottom = 22.5318
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.17453292
+theme_override_colors/font_hover_color = Color(0.15040003, 0.6767999, 0.94, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_c6wqw")
+disabled = true
+text = "Settings"
+alignment = 0
+
+[node name="QuitButton" type="Button" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -149.15355
+offset_top = 23.237366
+offset_right = 127.84645
+offset_bottom = 68.237366
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.17453292
+theme_override_colors/font_hover_color = Color(0.15040003, 0.6767999, 0.94, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_c6wqw")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_c6wqw")
+text = "Quit"
+alignment = 0
+
+[node name="ServerConnectMenu" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -220.0
+offset_right = 576.0
+offset_bottom = 228.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_c6wqw")
+theme_override_styles/panel = SubResource("StyleBoxFlat_c6wqw")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ServerConnectMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -26.0
-offset_right = 65.0
-offset_bottom = -3.0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 16
-text = "version"
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -32.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="ServerConnectMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Connect to server"
+
+[node name="ServerAddress" type="VBoxContainer" parent="ServerConnectMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerAddress"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Server domain or IP"
+
+[node name="LineEdit" type="LineEdit" parent="ServerConnectMenu/VBoxContainer/ServerAddress"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "127.0.0.1"
+placeholder_text = "Server domain or IP"
+
+[node name="ServerPort" type="VBoxContainer" parent="ServerConnectMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ServerConnectMenu/VBoxContainer/ServerPort"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Server port"
+
+[node name="SpinBox" type="SpinBox" parent="ServerConnectMenu/VBoxContainer/ServerPort"]
+layout_mode = 2
+theme = SubResource("Theme_rhomd")
+max_value = 65535.0
+value = 6070.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ServerConnectMenu/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="QueryButton" type="Button" parent="ServerConnectMenu/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
+text = "Query server info"
+
+[node name="FinalConnectButton2" type="Button" parent="ServerConnectMenu/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
+text = "Connect"
+
+[connection signal="pressed" from="ColorRect/ConnectButton" to="." method="_on_connect_button_pressed"]
+[connection signal="pressed" from="ColorRect/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="ColorRect/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="ServerConnectMenu/VBoxContainer/HBoxContainer/QueryButton" to="." method="_on_query_button_pressed"]
+[connection signal="pressed" from="ServerConnectMenu/VBoxContainer/HBoxContainer/FinalConnectButton2" to="." method="_on_final_connect_button_2_pressed"]

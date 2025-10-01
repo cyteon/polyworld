@@ -13,6 +13,7 @@ func _server_disconnected(result: int) -> void:
 	if Network.server_secure:
 		Log.error("steam disconnected with result code: %s" % result)
 		Log.error("as server mode is 'secure', this error is fatal")
+		get_tree().quit()
 	else:
 		Log.warn("steam disconnected with result code %s, this error is not fatal as server mode is 'insecure'")
 
