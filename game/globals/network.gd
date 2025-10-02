@@ -26,7 +26,7 @@ func _authenticated() -> void:
 
 # CLIENT _CLIENT
 
-signal state_change(state: Dictionary)
+signal state_change(bitmask: int, values: Array)
 @rpc("any_peer", "call_remote", "unreliable")
-func _state_change(state: Dictionary) -> void:
-	state_change.emit(state)
+func _state_change(bitmask: int, values: Array) -> void:
+	state_change.emit(bitmask, values)

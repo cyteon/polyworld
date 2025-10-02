@@ -30,4 +30,4 @@ func _authenticated(): pass
 # i gotta have these here or error
 
 @rpc("any_peer", "call_remote", "unreliable")
-func _state_change(_state: Dictionary) -> void: pass
+func _state_change(_bitmask: int, _values: Array) -> void: pass
