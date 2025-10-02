@@ -54,14 +54,7 @@ func _ready() -> void:
 				multiplayer.multiplayer_peer = Network.peer
 				Log.info("server running port %s" % Network.port)
 	)
-	
-	SteamServer.server_connect_failure.connect($Steam._server_connect_failure)
-	SteamServer.server_disconnected.connect($Steam._server_disconnected)
-	SteamServer.validate_auth_ticket_response.connect($Steam._validate_auth_ticket_response)
-	
+
 	Log.info("connecting to steam...")
 	
 	SteamServer.logOnAnonymous()
-	
-	Network.peer.peer_connected.connect($Peer._peer_connected)
-	Network.peer.peer_disconnected.connect($Peer._peer_disconnected)

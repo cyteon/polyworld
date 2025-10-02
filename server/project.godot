@@ -30,6 +30,15 @@ file_logging/enable_file_logging=true
 display_server/driver.windows="headless"
 display_server/driver.linuxbsd="headless"
 
+[editor]
+
+run/main_run_args="--unsecure"
+
+[physics]
+
+2d/physics_engine="Dummy"
+3d/physics_engine="Dummy"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

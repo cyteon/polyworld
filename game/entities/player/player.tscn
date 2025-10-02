@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://bh6cj0k27xore"]
+
+[ext_resource type="Script" uid="uid://cfapr7rlr405n" path="res://entities/player/player.gd" id="1_symyc"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_sfv1e"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_symyc"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_symyc"]
+material = SubResource("StandardMaterial3D_symyc")
+size = Vector3(0.4, 0.2, 0.2)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sfv1e"]
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_symyc")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_sfv1e")
+
+[node name="Eyes" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.521, -0.419)
+visibility_range_begin = 0.2
+mesh = SubResource("BoxMesh_symyc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_sfv1e")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.52118236, -0.23250619)

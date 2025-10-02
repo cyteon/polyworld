@@ -1,3 +1,31 @@
-[gd_scene format=3 uid="uid://cewgtisukwr1h"]
+[gd_scene load_steps=5 format=3 uid="uid://cewgtisukwr1h"]
+
+[ext_resource type="Script" uid="uid://bhvgcu8pxkcsw" path="res://world/world.gd" id="1_6xmxd"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_g312j"]
+
+[sub_resource type="Sky" id="Sky_6xmxd"]
+sky_material = SubResource("ProceduralSkyMaterial_g312j")
+
+[sub_resource type="Environment" id="Environment_tcf2h"]
+background_mode = 2
+sky = SubResource("Sky_6xmxd")
 
 [node name="World" type="Node3D"]
+script = ExtResource("1_6xmxd")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+use_collision = true
+size = Vector3(100, 1, 100)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_tcf2h")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 0.8660255, 0.50000006, 0, -0.50000006, 0.8660255, 0, 6, 0)
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://bh6cj0k27xore")
+spawn_path = NodePath("../Players")
+
+[node name="Players" type="Node3D" parent="."]

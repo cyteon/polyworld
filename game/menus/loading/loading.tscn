@@ -8,7 +8,7 @@ bg_color = Color(0.12941177, 0.12941177, 0.12941177, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8u13h"]
 bg_color = Color(0, 0.61666656, 1, 1)
 
-[node name="Loading" type="Control"]
+[node name="World" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -88,6 +88,13 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
 text = "Return to menu"
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://bh6cj0k27xore")
+spawn_path = NodePath("../Players")
+
+[node name="Players" type="Node3D" parent="."]
+process_mode = 4
 
 [connection signal="pressed" from="ErrorScreen/VBoxContainer/HBoxContainer/ReconnectButton" to="." method="_on_reconnect_button_pressed"]
 [connection signal="pressed" from="ErrorScreen/VBoxContainer/HBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

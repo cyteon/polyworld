@@ -18,7 +18,7 @@ func _ready() -> void:
 			print("[Loading] Generated steam authentication ticket")
 		
 		Network.rpc_id(
-			get_multiplayer_authority(),
+			1,
 			"_authenticate", 
 			Steamworks.steam_id,
 			Steamworks.steam_username,
@@ -85,6 +85,8 @@ func _process(delta: float) -> void:
 			if not connected: return
 			
 			print("[Loading] Finished loading")
+			
+			$Players.reparent(get_viewport())
 			
 			get_tree().change_scene_to_packed(ResourceLoader.load_threaded_get("res://world/world.tscn"))
 
