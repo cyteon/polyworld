@@ -80,11 +80,11 @@ func _physics_process(delta: float) -> void:
 		if rotation.y != last_rot_y:
 			bitmask |= 1 << 0
 			values.append(rotation.y)
-			#last_rot_y = rotation.y
+			last_rot_y = rotation.y
 		if position != last_pos:
 			bitmask |= 1 << 1
 			values.append(position)
-			#last_pos = position
+			last_pos = position
 		
 		if values.size() > 0:
 			Network.rpc("_state_change", bitmask, values)
