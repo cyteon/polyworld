@@ -31,7 +31,7 @@ func _ready() -> void:
 	else:
 		Log.error("failed to initialize steam server: %s" % steam_res.verbal)
 		
-		if server_mode == SteamServer.SERVER_MODE_AUTHENTICATION_AND_SECURE:
+		if SteamServer.secure():
 			Log.error("current server mode is 'secure', unable to proceed without steam")
 			get_tree().quit()
 	

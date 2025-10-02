@@ -1,8 +1,15 @@
 extends Node
 
+var steam_id: int
+var steam_username: String
+
 func _ready() -> void:
 	var initialize_response: Dictionary = Steam.steamInitEx()
-	print("SteamWorks | %s" % initialize_response)
+	print("[SteamWorks] %s" % initialize_response)
+	
+	if initialize_response.status == OK:
+		steam_id = Steam.getSteamID()
+		steam_username = Steam.getPersonaName()
 
 func _process(_delta: float) -> void:
 	Steam.run_callbacks()
@@ -26,14 +33,14 @@ func ping_server(host: String, port: int) -> Dictionary:
 			var packet: PackedByteArray = udp.get_packet()
 			
 			if packet[4] == 0x41:
-				print("SteamWorks | Got challenge packet request while querying server")
+				print("[SteamWorks] Got challenge packet request while querying server")
 				
 				var retry: PackedByteArray = payload + packet.slice(5, packet.size())
 				udp.put_packet(retry)
 				
 				start_time = Time.get_ticks_msec()
 			elif packet[4] == 0x49:
-				print("SteamWorks | Got server query response")
+				print("[SteamWorks] Got server query response")
 				
 				var buffer: StreamPeerBuffer = StreamPeerBuffer.new()
 				buffer.data_array = packet
@@ -73,7 +80,7 @@ func ping_server(host: String, port: int) -> Dictionary:
 				
 				return data
 	
-	print("SteamWorks | Querying server info timed out")
+	print("[SteamWorks] Querying server info timed out")
 	
 	return {}
 

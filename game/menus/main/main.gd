@@ -44,5 +44,23 @@ func _query_server_result(result: Dictionary) -> void:
 	$ServerConnectMenu/VBoxContainer/ServerInfo/Status.hide()
 	$ServerConnectMenu/VBoxContainer/ServerInfo/Grid.show()
 
-func _on_final_connect_button_2_pressed() -> void:
-	pass # Replace with function body.
+
+func _on_final_connect_button_pressed() -> void:
+	$ServerConnectMenu/VBoxContainer/ServerInfo/Grid.hide()
+	$ServerConnectMenu/VBoxContainer/ServerInfo/Status.show()
+	$ServerConnectMenu/VBoxContainer/ServerInfo/Status.text = "connecting..."
+	
+	var res = Network.peer.create_client(
+		$ServerConnectMenu/VBoxContainer/ServerAddress/LineEdit.text,
+		$ServerConnectMenu/VBoxContainer/ServerPort/SpinBox.value
+	)
+	
+	Network.server_host = $ServerConnectMenu/VBoxContainer/ServerAddress/LineEdit.text
+	Network.server_port = $ServerConnectMenu/VBoxContainer/ServerPort/SpinBox.value
+	
+	if res == OK:
+		multiplayer.multiplayer_peer = Network.peer
+		$ServerConnectMenu/VBoxContainer/ServerInfo/Status.text = "loading server..."
+		get_tree().change_scene_to_file("res://menus/loading/loading.tscn")
+	else:
+		$ServerConnectMenu/VBoxContainer/ServerInfo/Status.text = "failed to connect"
