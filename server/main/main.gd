@@ -35,13 +35,15 @@ func _ready() -> void:
 			Log.error("current server mode is 'secure', unable to proceed without steam")
 			get_tree().quit()
 	
+	Log.info("connecting to steam...")
+	
 	SteamServer.setServerName("An Server")
 	SteamServer.setMaxPlayerCount(5)
 	SteamServer.setProduct("3650810")
 	
 	SteamServer.setDedicatedServer(true)
 	SteamServer.setAdvertiseServerActive(true)
-	
+		
 	# i have this here instead of $Steam cause still initializing server stuff
 	SteamServer.server_connected.connect(func():
 		Log.info("steam successfully connected")
@@ -54,7 +56,5 @@ func _ready() -> void:
 				multiplayer.multiplayer_peer = Network.peer
 				Log.info("server running port %s" % Network.port)
 	)
-
-	Log.info("connecting to steam...")
 	
 	SteamServer.logOnAnonymous()

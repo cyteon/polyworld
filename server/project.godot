@@ -34,6 +34,10 @@ display_server/driver.linuxbsd="headless"
 
 run/main_run_args="--unsecure"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_super-wakatime/plugin.cfg")
+
 [physics]
 
 2d/physics_engine="Dummy"
